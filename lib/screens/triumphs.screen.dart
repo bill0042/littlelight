@@ -17,6 +17,14 @@ class TriumphsScreen extends StatefulWidget {
 class _TriumphsScreenState extends State<TriumphsScreen> {
   DestinySettingsService settings = DestinySettingsService();
 
+  Map<int, String> get rootNodesBgPaths => {
+        settings.statsRootNode: "assets/imgs/triumphs-stats-list-item.png",
+        settings.medalsRootNode: "assets/imgs/triumphs-medals-list-item.png",
+        settings.loreRootNode: "assets/imgs/triumphs-lore-list-item.png",
+        settings.exoticCatalystsRootNode:
+            "assets/imgs/triumphs-catalysts-list-item.png",
+      };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: appBar(context), body: body(context));
@@ -49,20 +57,38 @@ class _TriumphsScreenState extends State<TriumphsScreen> {
           columns: MediaQueryHelper(context)
               .responsiveValue<int>(4, tablet: 6, laptop: 8, desktop: 10),
         ),
-        buildRootItem(context, settings.loreRootNode)
+        Container(height: 8),
+        buildRootItem(context, settings.medalsRootNode),
+        Container(height: 8),
+        buildRootItem(context, settings.exoticCatalystsRootNode),
+        Container(height: 8),
+        buildRootItem(context, settings.loreRootNode),
+        Container(height: 8),
+        buildRootItem(context, settings.statsRootNode),
       ]));
 
   Widget buildRootItem(BuildContext context, int nodeHash) {
     return Container(
-        height: 120,
+        key: Key("rootNode_$nodeHash"),
         child: DefinitionProviderWidget<DestinyPresentationNodeDefinition>(
             nodeHash,
             (def) => Stack(
                   children: [
-                    QueuedNetworkImage(
-                      imageUrl: BungieApiService.url(
-                          def.displayProperties.iconSequences[0].frames[0]),
-                    )
+                    Image.asset(rootNodesBgPaths[nodeHash]),
+                    Positioned.fill(
+                        child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Flexible(flex: 25, child: Container()),
+                        Expanded(
+                            flex: 75,
+                            child: Container(
+                                child: Text(
+                              def.displayProperties.name.toUpperCase(),
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            )))
+                      ],
+                    ))
                   ],
                 )));
   }

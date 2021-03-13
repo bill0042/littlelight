@@ -86,4 +86,10 @@ class DestinySettingsService {
   int get sealsRootNode {
     return _currentSettings?.destiny2CoreSettings?.medalsRootNode ?? 1652422747;
   }
+
+  int get exoticCatalystsRootNode {
+    return _currentSettings
+            ?.destiny2CoreSettings?.exoticCatalystsRootNodeHash ??
+        511607103;
+  }
 }

@@ -1,11 +1,13 @@
 import 'package:bungie_api/enums/destiny_scope.dart';
 import 'package:bungie_api/models/destiny_presentation_node_component.dart';
 import 'package:bungie_api/models/destiny_presentation_node_definition.dart';
+import 'package:bungie_api/models/destiny_record_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/shimmer_helper.dart';
+import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 
 class SealItemWidget extends StatefulWidget {
@@ -38,13 +40,15 @@ class _SealItemWidgetState extends State<SealItemWidget> {
       alignment: Alignment.center,
       children: [
         buildIcon(context),
+        Positioned(child: buildLabel(context), top: 0),
         Positioned(child: buildTriumphScore(context), bottom: 0),
         Positioned.fill(
             child: Material(
+                clipBehavior: Clip.hardEdge,
+                borderRadius: BorderRadius.vertical(
+                    top: Radius.zero, bottom: Radius.circular(100)),
                 color: Colors.transparent,
-                child: InkResponse(
-                  containedInkWell: true,
-                  highlightShape: BoxShape.rectangle,
+                child: InkWell(
                   onTap: () {},
                 )))
       ],
@@ -69,16 +73,14 @@ class _SealItemWidgetState extends State<SealItemWidget> {
       );
 
   Widget buildLabel(BuildContext context) {
-    var score = triumphScore;
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
         decoration: BoxDecoration(
-            border: Border.all(
-                width: .5, color: Theme.of(context).colorScheme.onPrimary),
             borderRadius: BorderRadius.circular(4),
             color: Theme.of(context).cardColor),
-        child: Text(
-          "${score?.progressValue}/${score?.completionValue}",
+        child: ManifestText<DestinyRecordDefinition>(
+          definition.completionRecordHash,
+          textExtractor: (def) => def.titleInfo.titlesByGender["Male"],
           style: TextStyle(fontSize: 12),
         ));
   }
