@@ -17,7 +17,7 @@ class TriumphCategoriesGridWidget extends StatefulWidget {
       this.nodeHash,
       this.rows = 2,
       this.columns = 3,
-      this.itemAspectRatio = 1})
+      this.itemAspectRatio = 0.9})
       : super(key: key);
   @override
   _TriumphCategoriesGridWidgetState createState() =>

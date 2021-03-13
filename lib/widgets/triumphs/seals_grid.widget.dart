@@ -17,7 +17,7 @@ class SealsGridWidget extends StatefulWidget {
       this.nodeHash,
       this.rows = 1,
       this.columns = 4,
-      this.itemAspectRatio = 1})
+      this.itemAspectRatio = .8})
       : super(key: key);
   @override
   _SealsGridWidgetState createState() => _SealsGridWidgetState();

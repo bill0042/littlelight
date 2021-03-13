@@ -30,6 +30,7 @@ class _TriumphsScreenState extends State<TriumphsScreen> {
             Scaffold.of(context).openDrawer();
           },
         ),
+        centerTitle: false,
         title: ManifestText<DestinyPresentationNodeDefinition>(
             settings.triumphsRootNode),
       );
