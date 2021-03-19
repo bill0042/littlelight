@@ -8,10 +8,14 @@ import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/shimmer_helper.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 
+typedef OnTriumphCategoryTap = Function(int nodeHash);
+
 class TriumphCategoryItemWidget extends StatefulWidget {
   final int nodeHash;
+  final OnTriumphCategoryTap onTap;
 
-  TriumphCategoryItemWidget({Key key, this.nodeHash}) : super(key: key);
+  TriumphCategoryItemWidget({Key key, this.nodeHash, this.onTap})
+      : super(key: key);
   @override
   _TriumphCategoryItemWidgetState createState() =>
       _TriumphCategoryItemWidgetState();
@@ -29,7 +33,7 @@ class _TriumphCategoryItemWidgetState extends State<TriumphCategoryItemWidget> {
   void getDefinition() async {
     definition = await ManifestService()
         .getDefinition<DestinyPresentationNodeDefinition>(widget.nodeHash);
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   @override
@@ -52,7 +56,7 @@ class _TriumphCategoryItemWidgetState extends State<TriumphCategoryItemWidget> {
 
   buildIcon(BuildContext context) => AspectRatio(
       aspectRatio: 1,
-      child: Stack(children: [
+      child: Stack(alignment: Alignment.center, children: [
         Image.asset(
           "assets/imgs/triumph_bg.png",
           fit: BoxFit.contain,
@@ -69,8 +73,9 @@ class _TriumphCategoryItemWidgetState extends State<TriumphCategoryItemWidget> {
           clipBehavior: Clip.antiAlias,
           color: Colors.transparent,
           child: InkWell(
-            onTap: () {},
-          ),
+              onTap: widget.onTap != null
+                  ? () => widget.onTap(widget.nodeHash)
+                  : null),
         )
       ]));
 

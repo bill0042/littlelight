@@ -1,5 +1,6 @@
 import 'package:bungie_api/models/destiny_presentation_node_definition.dart';
 import 'package:flutter/material.dart';
+import 'package:little_light/routes/triumph_category.route.dart';
 import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:little_light/services/profile/destiny_settings.service.dart';
 import 'package:little_light/utils/media_query_helper.dart';
@@ -43,21 +44,64 @@ class _TriumphsScreenState extends State<TriumphsScreen> {
             settings.triumphsRootNode),
       );
 
-  Widget body(BuildContext context) => SingleChildScrollView(
+  Widget body(BuildContext context) {
+    var mq = MediaQueryHelper(context);
+    if (mq.isLandscape && mq.tabletOrBigger) {
+      return bodyLandscape(context);
+    }
+    return bodyPortrait(context);
+  }
+
+  Widget bodyLandscape(BuildContext context) {
+    return Container(
+        padding: EdgeInsets.all(16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Flexible(
+                flex: 8,
+                child: SingleChildScrollView(
+                    child: Column(
+                  children: [
+                    triumphs(context),
+                    seals(context),
+                  ],
+                ))),
+            Container(
+              width: 16,
+            ),
+            Flexible(
+              flex: 4,
+              child: SingleChildScrollView(child: rootItems(context)),
+            )
+          ],
+        ));
+  }
+
+  Widget bodyPortrait(BuildContext context) => SingleChildScrollView(
       padding: EdgeInsets.all(8),
       child: Column(children: [
-        TriumphCategoriesGridWidget(
-          nodeHash: settings.triumphsRootNode,
-          columns: MediaQueryHelper(context)
-              .responsiveValue<int>(3, tablet: 4, laptop: 5, desktop: 8),
-        ),
-        SealsGridWidget(
-          nodeHash: settings.sealsRootNode,
-          rows: 1,
-          columns: MediaQueryHelper(context)
-              .responsiveValue<int>(4, tablet: 6, laptop: 8, desktop: 10),
-        ),
+        triumphs(context),
+        seals(context),
         Container(height: 8),
+        rootItems(context)
+      ]));
+
+  Widget triumphs(BuildContext context) => TriumphCategoriesGridWidget(
+        nodeHash: settings.triumphsRootNode,
+        columns: MediaQueryHelper(context)
+            .responsiveValue<int>(3, tablet: 4, laptop: 5),
+        onItemTap: (nodeHash) => openTriumphCategory(nodeHash),
+      );
+
+  Widget seals(BuildContext context) => SealsGridWidget(
+        nodeHash: settings.sealsRootNode,
+        rows: 1,
+        columns: MediaQueryHelper(context)
+            .responsiveValue<int>(4, tablet: 6, laptop: 8, desktop: 10),
+      );
+
+  Widget rootItems(BuildContext context) => Column(children: [
         buildRootItem(context, settings.medalsRootNode),
         Container(height: 8),
         buildRootItem(context, settings.exoticCatalystsRootNode),
@@ -65,7 +109,7 @@ class _TriumphsScreenState extends State<TriumphsScreen> {
         buildRootItem(context, settings.loreRootNode),
         Container(height: 8),
         buildRootItem(context, settings.statsRootNode),
-      ]));
+      ]);
 
   Widget buildRootItem(BuildContext context, int nodeHash) {
     return Container(
@@ -91,5 +135,9 @@ class _TriumphsScreenState extends State<TriumphsScreen> {
                     ))
                   ],
                 )));
+  }
+
+  openTriumphCategory(int nodeHash) {
+    Navigator.of(context).push(TriumphCategoryRoute(nodeHash));
   }
 }

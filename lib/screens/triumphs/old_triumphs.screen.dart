@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:little_light/screens/presentation_node.screen.dart';
-import 'package:little_light/screens/triumph_search.screen.dart';
+import 'package:little_light/screens/triumphs/triumph_search.screen.dart';
 import 'package:little_light/services/profile/destiny_settings.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/selected_page_persistence.dart';

@@ -11,12 +11,14 @@ class TriumphCategoriesGridWidget extends StatefulWidget {
   final int columns;
   final int rows;
   final double itemAspectRatio;
+  final OnTriumphCategoryTap onItemTap;
 
   TriumphCategoriesGridWidget(
       {Key key,
       this.nodeHash,
       this.rows = 2,
       this.columns = 3,
+      this.onItemTap,
       this.itemAspectRatio = 0.9})
       : super(key: key);
   @override
@@ -82,7 +84,10 @@ class _TriumphCategoriesGridWidgetState
   @override
   Widget buildItem(
       BuildContext context, DestinyPresentationNodeChildEntry child) {
-    return TriumphCategoryItemWidget(nodeHash: child.presentationNodeHash);
+    return TriumphCategoryItemWidget(
+      nodeHash: child.presentationNodeHash,
+      onTap: widget.onItemTap,
+    );
   }
 
   @override
