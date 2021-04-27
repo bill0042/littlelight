@@ -1,12 +1,10 @@
 import 'package:bungie_api/models/destiny_presentation_node_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:little_light/routes/triumph_category.route.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:little_light/services/profile/destiny_settings.service.dart';
 import 'package:little_light/utils/media_query_helper.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
-import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:little_light/widgets/triumphs/seals_grid.widget.dart';
 import 'package:little_light/widgets/triumphs/triumph_categories_grid.widget.dart';
 

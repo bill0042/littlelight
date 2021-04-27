@@ -4,8 +4,8 @@ import 'package:little_light/mixins/route_params.mixin.dart';
 import 'package:little_light/routes/triumph_category.route.dart';
 import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
-import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
+import 'package:little_light/widgets/triumphs/triumph_subcategories_list.widget.dart';
 import 'package:little_light/widgets/triumphs/triumph_subcategories_tab_bar.widget.dart';
 
 class TriumphCategoryScreen extends StatefulWidget {
@@ -56,8 +56,23 @@ class _TriumphCategoryScreenState extends State<TriumphCategoryScreen>
     return DefaultTabController(
         length: definition.children.presentationNodes.length,
         child: Column(
-          children: [TriumphSubcategoriesTabBarWidget(definition)],
+          children: [
+            Padding(
+                padding: EdgeInsets.all(8),
+                child: TriumphSubcategoriesTabBarWidget(definition)),
+            Expanded(
+                child: TabBarView(
+              children: definition.children.presentationNodes
+                  .map(
+                      (p) => subcategoriesList(context, p.presentationNodeHash))
+                  .toList(),
+            ))
+          ],
         ));
+  }
+
+  Widget subcategoriesList(BuildContext context, int nodeHash) {
+    return TriumphSubcategoriesListWidget(nodeHash);
   }
 
   AppBar appBar(BuildContext context) => AppBar(

@@ -64,6 +64,7 @@ class TriumphSubcategoriesTabBarWidget extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(color: Theme.of(context).colorScheme.onPrimary),
         ),
+        padding: EdgeInsets.all(4),
         child: ManifestImageWidget<DestinyPresentationNodeDefinition>(hash));
   }
 }

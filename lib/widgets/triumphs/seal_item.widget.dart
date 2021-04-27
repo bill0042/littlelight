@@ -40,7 +40,6 @@ class _SealItemWidgetState extends State<SealItemWidget> {
       alignment: Alignment.center,
       children: [
         buildIcon(context),
-        Positioned(child: buildLabel(context), top: 0),
         Positioned(child: buildTriumphScore(context), bottom: 0),
         Positioned.fill(
             child: Material(
@@ -71,19 +70,6 @@ class _SealItemWidgetState extends State<SealItemWidget> {
         alignment: Alignment.center,
         imageUrl: BungieApiService.url(definition.displayProperties.icon),
       );
-
-  Widget buildLabel(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4),
-            color: Theme.of(context).cardColor),
-        child: ManifestText<DestinyRecordDefinition>(
-          definition.completionRecordHash,
-          textExtractor: (def) => def.titleInfo.titlesByGender["Male"],
-          style: TextStyle(fontSize: 12),
-        ));
-  }
 
   Widget buildTriumphScore(BuildContext context) {
     var score = triumphScore;
