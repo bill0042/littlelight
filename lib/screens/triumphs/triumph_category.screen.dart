@@ -5,6 +5,7 @@ import 'package:little_light/routes/triumph_category.route.dart';
 import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
+import 'package:little_light/widgets/icon_fonts/littlelight_icons.dart';
 import 'package:little_light/widgets/triumphs/triumph_subcategories_list.widget.dart';
 import 'package:little_light/widgets/triumphs/triumph_subcategories_tab_bar.widget.dart';
 
@@ -60,6 +61,7 @@ class _TriumphCategoryScreenState extends State<TriumphCategoryScreen>
             Padding(
                 padding: EdgeInsets.all(8),
                 child: TriumphSubcategoriesTabBarWidget(definition)),
+            Row(children: [Icon(LittleLightIcons.triumph)]),
             Expanded(
                 child: TabBarView(
               children: definition.children.presentationNodes

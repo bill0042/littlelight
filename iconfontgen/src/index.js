@@ -26,7 +26,7 @@ async function checkSVGDimensions(fileList){
 
     for(var filename of fileList){
         let {width,height} = await getSVGDimension(filename);
-        if(width != 32 || height!=32){
+        if(height!=32){
             wrongDimensionFiles.push({
                 filename:filename,
                 width:width,

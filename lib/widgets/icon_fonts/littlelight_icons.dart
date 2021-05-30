@@ -4,7 +4,7 @@ class LittleLightIcons {
   LittleLightIcons._();
 
   static const _kFontFam = 'LittleLightIcons';
-  static const _kFontPkg = 'littlelight';
+  static const _kFontPkg = null;
 
   static const IconData ammo_heavy = IconData(0xe000, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData ammo_primary = IconData(0xe001, fontFamily: _kFontFam, fontPackage: _kFontPkg);
@@ -61,7 +61,9 @@ class LittleLightIcons {
   static const IconData resources = IconData(0xe034, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData stagger = IconData(0xe035, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData strength = IconData(0xe036, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData vanguard = IconData(0xe037, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData vanguard2 = IconData(0xe038, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData triumph = IconData(0xe037, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData triumphs_total = IconData(0xe038, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData vanguard = IconData(0xe039, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData vanguard2 = IconData(0xe03a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   
 }
