@@ -1,4 +1,6 @@
 import 'package:bungie_api/models/destiny_item_component.dart';
+import 'package:bungie_api/models/destiny_item_plug_base.dart';
+import 'package:bungie_api/models/destiny_item_socket_state.dart';
 import 'package:http/http.dart' as http;
 import 'package:little_light/models/wish_list.dart';
 import 'package:little_light/services/littlelight/parsers/dim_wishlist.parser.dart';
@@ -20,9 +22,9 @@ class WishlistsService {
 
   init() async {
     Map<int, WishlistItem> items;
-    try{
+    try {
       items = await _loadPreParsed();
-    }catch(_){}
+    } catch (_) {}
     this._wishlists = await _loadFromStorage(items == null);
     if (items != null) {
       _items = items;
@@ -31,10 +33,10 @@ class WishlistsService {
     this.updateWishlists();
   }
 
-  countBuilds(){
+  countBuilds() {
     var count = 0;
     _items.forEach((key, value) {
-      count+=value?.builds?.length ?? 0;
+      count += value?.builds?.length ?? 0;
     });
     print(count);
   }
@@ -64,13 +66,6 @@ class WishlistsService {
     bool needsParsing = false;
     for (var wishlist in _wishlists) {
       bool needUpdate = wishlist.updatedAt.isBefore(minimumDate);
-      var wishlistDefaultPath = "https://raw.githubusercontent.com/LittleLightForDestiny/littlelight_wishlists/master/littlelight_default.json";
-      if (wishlist.url != wishlistDefaultPath && wishlist.isDefault){
-        wishlist.url = wishlistDefaultPath;
-        wishlist.isDefault = true;
-        needUpdate = true;
-      }
-
       if (needUpdate) {
         await _downloadWishlist(wishlist);
       }
@@ -122,13 +117,13 @@ class WishlistsService {
   }
 
   Future<void> _parseWishlist(Wishlist wishlist, String contents) async {
-    try{
+    try {
       var parser = LittleLightWishlistParser();
       var w = await parser.parse(contents);
       wishlist.name = w.name ?? wishlist.name ?? "";
       wishlist.description = w.description ?? wishlist.description ?? "";
       return;
-    }catch(_){}
+    } catch (_) {}
     var parser = DimWishlistParser();
     parser.parse(contents);
   }
@@ -143,7 +138,7 @@ class WishlistsService {
   }
 
   Future<String> _downloadWishlist(Wishlist wishlist) async {
-    var res = await http.get(wishlist.url);
+    var res = await http.get(Uri.parse(wishlist.url));
     storage.saveRawFile(StorageKeys.rawWishlists, wishlist.filename, res.body);
     wishlist.updatedAt = DateTime.now();
     return res.body;
@@ -155,18 +150,30 @@ class WishlistsService {
     return _items[itemHash]?.perks[plugItemHash] ?? Set();
   }
 
-  Set<WishlistTag> getWishlistBuildTags(DestinyItemComponent item) {
-    if (item == null) return null;
-    var reusable = ProfileService().getItemReusablePlugs(item.itemInstanceId);
-    var sockets = ProfileService().getItemSockets(item.itemInstanceId);
+  Set<WishlistTag> getWishlistBuildTags({
+    int itemHash,
+    @Deprecated('Use itemHash, reusablePlugs and sockets instead')
+        DestinyItemComponent item,
+    Map<String, List<DestinyItemPlugBase>> reusablePlugs,
+    List<DestinyItemSocketState> sockets,
+  }) {
+    itemHash ??= item?.itemHash;
+    reusablePlugs ??=
+        ProfileService().getItemReusablePlugs(item?.itemInstanceId);
+    sockets ??= ProfileService().getItemSockets(item?.itemInstanceId);
+    if ([itemHash, reusablePlugs, sockets].contains(null)) {
+      return null;
+    }
     Set<int> availablePlugs = Set();
-    reusable?.values?.forEach((plugs) =>
+    reusablePlugs?.values?.forEach((plugs) =>
         plugs.forEach((plug) => availablePlugs.add(plug.plugItemHash)));
-    sockets?.map((plug) => availablePlugs.add(plug.plugHash))?.toSet();
+    sockets?.forEach((plug) => availablePlugs.add(plug.plugHash));
     if (availablePlugs?.length == 0) return null;
-    var wish = _items[item?.itemHash];
+    var wish = _items[itemHash];
     var builds = wish?.builds?.where((build) {
-      return build.perks.every((element) => element.any((e)=>availablePlugs.contains(e)) || element.length == 0);
+      return build.perks.every((element) =>
+          element.any((e) => availablePlugs.contains(e)) ||
+          element.length == 0);
     });
     if ((builds?.length ?? 0) == 0) return null;
     Set<WishlistTag> tags = Set();
@@ -188,7 +195,9 @@ class WishlistsService {
     var wish = _items[item?.itemHash];
 
     var builds = wish?.builds?.where((build) {
-      return build.perks.every((element) => element.any((e)=>availablePlugs.contains(e)) || element.length == 0);
+      return build.perks.every((element) =>
+          element.any((e) => availablePlugs.contains(e)) ||
+          element.length == 0);
     });
     if ((builds?.length ?? 0) == 0) return null;
     Set<String> notes = Set();
@@ -198,12 +207,12 @@ class WishlistsService {
     return notes;
   }
 
-  addToWishList(String name, int hash, List<List<int>> perks, Set<WishlistTag> specialties,
-      Set<String> notes) {
+  addToWishList(String name, int hash, List<List<int>> perks,
+      Set<WishlistTag> specialties, Set<String> notes) {
     var wishlist =
         _items[hash] = _items[hash] ?? WishlistItem.builder(itemHash: hash);
-    var build =
-        WishlistBuild.builder(name:name, perks: perks.map((p) => p.toSet()).toList());
+    var build = WishlistBuild.builder(
+        name: name, perks: perks.map((p) => p.toSet()).toList());
     build.notes.addAll(notes.where((n) => (n?.length ?? 0) > 0));
     build.tags.addAll(specialties.where((s) => s != null));
     for (var p in perks) {
