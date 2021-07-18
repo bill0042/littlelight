@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
+import 'package:little_light/services/manifest/manifest.service.dart';
 
 class DevToolsScreen extends StatelessWidget {
   final Map<String, TextEditingController> fieldControllers = Map();
@@ -32,11 +33,11 @@ class DevToolsScreen extends StatelessWidget {
                         context,
                         "Clear Data",
                         () async {
+                          await ManifestService().reset();
                           await StorageService.language().purge();
                           await StorageService.membership().purge();
                           await StorageService.account().purge();
                           await StorageService.global().purge();
-                          print(StorageService.getAccount());
                         },
                       ),
                       buildDivider(context),
