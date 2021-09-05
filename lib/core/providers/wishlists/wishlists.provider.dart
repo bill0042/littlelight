@@ -5,8 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:little_light/core/providers/global_container/global.container.dart';
 import 'package:little_light/models/wish_list.dart';
-import 'package:little_light/services/littlelight/parsers/dim_wishlist.parser.dart';
-import 'package:little_light/services/littlelight/parsers/littlelight_wishlist.parser.dart';
+import 'package:little_light/core/providers/wishlists/parsers/dim_wishlist.parser.dart';
+import 'package:little_light/core/providers/wishlists/parsers/littlelight_wishlist.parser.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 
