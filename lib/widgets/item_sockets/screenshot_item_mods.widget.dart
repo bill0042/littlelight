@@ -29,7 +29,7 @@ class ScreenShotItemModsWidget extends BaseItemSocketsWidget {
             controller: controller);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return ScreenShotItemModsWidgetState();
   }
 }

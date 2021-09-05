@@ -10,7 +10,7 @@ class ItemLoreWidget extends StatefulWidget {
   ItemLoreWidget(this.hash, {Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return ItemLoreWidgetState();
   }
 }

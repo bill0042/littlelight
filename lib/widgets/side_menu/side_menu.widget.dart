@@ -38,7 +38,7 @@ class SideMenuWidget extends StatefulWidget {
   SideMenuWidget({Key key, this.onPageChange}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return SideMenuWidgetState();
   }
 }

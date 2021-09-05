@@ -77,7 +77,7 @@ class TabMenuButton extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => new TabMenuButtonState();
+  createState() => new TabMenuButtonState();
 }
 
 class TabMenuButtonState extends State<TabMenuButton> {
@@ -128,7 +128,7 @@ class TabMenuButtonState extends State<TabMenuButton> {
 
 class VaultTabMenuButton extends TabMenuButton {
   @override
-  State<StatefulWidget> createState() => new VaultTabMenuButtonState();
+  createState() => new VaultTabMenuButtonState();
 }
 
 class VaultTabMenuButtonState extends TabMenuButtonState {

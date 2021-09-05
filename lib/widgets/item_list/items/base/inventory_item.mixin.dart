@@ -2,11 +2,12 @@ import 'package:bungie_api/enums/damage_type.dart';
 import 'package:bungie_api/enums/destiny_item_type.dart';
 import 'package:bungie_api/enums/item_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:little_light/core/providers/wishlists/wishlists.provider.dart';
 import 'package:little_light/models/wish_list.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/littlelight/item_notes.service.dart';
-import 'package:little_light/services/littlelight/wishlists.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateless_item.widget.dart';
 import 'package:little_light/widgets/common/item_icon/item_icon.widget.dart';
@@ -19,7 +20,7 @@ mixin InventoryItemMixin implements BaseDestinyStatelessItemWidget {
   final String uniqueId = "";
   final Widget trailing = null;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Stack(
       children: <Widget>[
         background(context),
@@ -141,7 +142,8 @@ mixin InventoryItemMixin implements BaseDestinyStatelessItemWidget {
 
   Widget nameBar(BuildContext context) {
     return ItemNameBarWidget(item, definition, instanceInfo,
-        trailing: namebarTrailingWidget(context),
+        trailing: Consumer(
+            builder: (context, ref, _) => namebarTrailingWidget(context, ref)),
         padding: EdgeInsets.only(
             left: iconSize + padding * 2,
             top: padding,
@@ -159,13 +161,16 @@ mixin InventoryItemMixin implements BaseDestinyStatelessItemWidget {
             color: Colors.blueGrey.shade900,
             padding: EdgeInsets.only(
                 top: titleFontSize + padding * 2, left: iconSize),
-            child: wishlistBackground(context)));
+            child: Consumer(
+                builder: (context, ref, _) =>
+                    wishlistBackground(context, ref))));
   }
 
-  Widget wishlistBackground(BuildContext context) {
+  Widget wishlistBackground(BuildContext context, WidgetRef ref) {
     final reusable = profile.getItemReusablePlugs(item?.itemInstanceId);
     final sockets = profile.getItemSockets(item?.itemInstanceId);
-    final tags = WishlistsService().getWishlistBuildTags(
+    final wishlist = ref.read(wishlistProvider);
+    final tags = wishlist.getWishlistBuildTags(
         itemHash: item?.itemHash, reusablePlugs: reusable, sockets: sockets);
     if (tags == null) return Container();
     if (tags.contains(WishlistTag.PVE) && tags.contains(WishlistTag.PVP)) {
@@ -200,11 +205,12 @@ mixin InventoryItemMixin implements BaseDestinyStatelessItemWidget {
     return Container();
   }
 
-  Widget namebarTrailingWidget(BuildContext context) {
+  Widget namebarTrailingWidget(BuildContext context, WidgetRef ref) {
     List<Widget> items = [];
     final reusable = profile.getItemReusablePlugs(item?.itemInstanceId);
     final sockets = profile.getItemSockets(item?.itemInstanceId);
-    final wishlistTags = WishlistsService().getWishlistBuildTags(
+    final wishlist = ref.read(wishlistProvider);
+    final wishlistTags = wishlist.getWishlistBuildTags(
         itemHash: item?.itemHash, reusablePlugs: reusable, sockets: sockets);
     var notes = ItemNotesService()
         .getNotesForItem(item?.itemHash, item?.itemInstanceId);

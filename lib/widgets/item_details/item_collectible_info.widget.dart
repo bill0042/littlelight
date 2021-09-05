@@ -10,7 +10,7 @@ class ItemCollectibleInfoWidget extends StatefulWidget {
   ItemCollectibleInfoWidget(this.hash, {Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return ItemCollectibleInfoWidgetState();
   }
 }

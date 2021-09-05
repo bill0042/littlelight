@@ -1,35 +1,35 @@
 import 'package:drag_list/drag_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
 import 'package:little_light/models/item_notes_tag.dart';
 import 'package:little_light/models/wish_list.dart';
 import 'package:little_light/screens/add_wishlist.screen.dart';
 import 'package:little_light/services/littlelight/item_notes.service.dart';
-import 'package:little_light/services/littlelight/wishlists.service.dart';
 import 'package:little_light/services/user_settings/character_sort_parameter.dart';
 import 'package:little_light/services/user_settings/item_sort_parameter.dart';
 import 'package:little_light/services/user_settings/user_settings.service.dart';
 import 'package:little_light/utils/platform_capabilities.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/littlelight_custom.dialog.dart';
-
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/flutter/center_icon_workaround.dart';
-
 import 'package:little_light/widgets/item_tags/item_tag.widget.dart';
 import 'package:little_light/widgets/option_sheets/free_slots_slider.widget.dart';
 import 'package:screen/screen.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   final UserSettingsService settings = new UserSettingsService();
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends ConsumerState<SettingsScreen>
+    with WishlistsConsumerState {
   List<ItemSortParameter> itemOrdering;
   List<ItemSortParameter> pursuitOrdering;
   Set<String> priorityTags;
@@ -41,7 +41,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     itemOrdering = widget.settings.itemOrdering;
     pursuitOrdering = widget.settings.pursuitOrdering;
     priorityTags = widget.settings.priorityTags;
-    wishlists = WishlistsService().getWishlists();
+    wishlists = wishlistsService.getWishlists();
   }
 
   @override
@@ -198,7 +198,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     useRootNavigator: true,
                     context: context,
                     builder: (context) => buildProcessingDialog(context));
-                wishlists = await WishlistsService().addWishlist(wishlist);
+                wishlists = await wishlistsService.addWishlist(wishlist);
                 Navigator.of(context).pop();
                 setState(() {});
               }
@@ -264,13 +264,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                           context: context,
                                           builder: (context) =>
                                               buildProcessingDialog(context));
-                                      wishlists = await WishlistsService()
+                                      wishlists = await wishlistsService
                                           .removeWishlist(w);
-                                      wishlists = await WishlistsService()
-                                          .addWishlist(w);
+                                      wishlists =
+                                          await wishlistsService.addWishlist(w);
                                       Navigator.of(context).pop();
                                       setState(() {});
-                                      WishlistsService().countBuilds();
+                                      wishlistsService.countBuilds();
                                     }),
                                 Container(
                                   width: 8,
@@ -287,7 +287,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                           context: context,
                                           builder: (context) =>
                                               buildProcessingDialog(context));
-                                      wishlists = await WishlistsService()
+                                      wishlists = await wishlistsService
                                           .removeWishlist(w);
                                       Navigator.of(context).pop();
                                       setState(() {});

@@ -18,7 +18,7 @@ class LoadoutDestinationsWidget extends StatefulWidget {
   LoadoutDestinationsWidget(this.loadout, {Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return LoadoutDestinationsWidgetState();
   }
 }
@@ -29,7 +29,7 @@ class LoadoutDestinationsWidgetState extends State<LoadoutDestinationsWidget> {
   @override
   void initState() {
     super.initState();
-    
+
     freeSlots = UserSettingsService().defaultFreeSlots;
   }
 
@@ -38,7 +38,9 @@ class LoadoutDestinationsWidgetState extends State<LoadoutDestinationsWidget> {
     var screenPadding = MediaQuery.of(context).padding;
     return Container(
         color: Colors.blueGrey.shade800,
-        padding: EdgeInsets.only(left: max(screenPadding.left, 4), right: max(screenPadding.right, 4)),
+        padding: EdgeInsets.only(
+            left: max(screenPadding.left, 4),
+            right: max(screenPadding.right, 4)),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           FreeSlotsSliderWidget(
             initialValue: freeSlots,

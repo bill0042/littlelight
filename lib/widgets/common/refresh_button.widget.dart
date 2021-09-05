@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 
-
 typedef String ExtractTextFromData(dynamic data);
 
 class RefreshButtonWidget extends StatefulWidget {
@@ -14,25 +13,27 @@ class RefreshButtonWidget extends StatefulWidget {
   RefreshButtonWidget({Key key, this.padding}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return RefreshButtonWidgetState();
   }
 }
 
-class RefreshButtonWidgetState extends State<RefreshButtonWidget> with TickerProviderStateMixin {
+class RefreshButtonWidgetState extends State<RefreshButtonWidget>
+    with TickerProviderStateMixin {
   AnimationController rotationController;
   StreamSubscription<NotificationEvent> subscription;
 
   @override
   void initState() {
     super.initState();
-    rotationController = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    rotationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
     subscription = widget.notifications.listen((event) {
       handleNotification(event);
     });
   }
 
-  void dispose(){
+  void dispose() {
     subscription.cancel();
     rotationController.dispose();
     super.dispose();
@@ -40,16 +41,15 @@ class RefreshButtonWidgetState extends State<RefreshButtonWidget> with TickerPro
 
   void handleNotification(NotificationEvent event) async {
     switch (event.type) {
-
       case NotificationType.receivedUpdate:
-      rotationController.stop();
-      break;
+        rotationController.stop();
+        break;
 
       default:
         rotationController.repeat();
         break;
     }
-    setState((){});
+    setState(() {});
   }
 
   @override
@@ -57,31 +57,32 @@ class RefreshButtonWidgetState extends State<RefreshButtonWidget> with TickerPro
     return Stack(
       alignment: Alignment.center,
       children: <Widget>[
-        Container(
-          padding: widget.padding,
-          child:buildRotatingIcon()),
-        Positioned.fill(child:buildTapHandler()),
+        Container(padding: widget.padding, child: buildRotatingIcon()),
+        Positioned.fill(child: buildTapHandler()),
       ],
     );
   }
 
-  Widget buildTapHandler(){
+  Widget buildTapHandler() {
     return Material(
-      color:Colors.transparent,
-      child:InkWell(
-        enableFeedback: !rotationController.isAnimating,
-        onTap: (){ 
-          if(!rotationController.isAnimating){
-            widget.profile.fetchProfileData();
-          }
-        },
-      )
-    );
+        color: Colors.transparent,
+        child: InkWell(
+          enableFeedback: !rotationController.isAnimating,
+          onTap: () {
+            if (!rotationController.isAnimating) {
+              widget.profile.fetchProfileData();
+            }
+          },
+        ));
   }
 
-  Widget buildRotatingIcon(){
-    return RotationTransition(turns: Tween(begin: 0.0, end: 1.0).animate(rotationController),
-    child: Icon(Icons.refresh, color:rotationController.isAnimating ? Colors.grey.shade500 : Colors.white),
+  Widget buildRotatingIcon() {
+    return RotationTransition(
+      turns: Tween(begin: 0.0, end: 1.0).animate(rotationController),
+      child: Icon(Icons.refresh,
+          color: rotationController.isAnimating
+              ? Colors.grey.shade500
+              : Colors.white),
     );
   }
 }

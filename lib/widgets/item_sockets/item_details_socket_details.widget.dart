@@ -99,7 +99,7 @@ class ItemDetailsSocketDetailsWidgetState
       buildSandBoxPerks(context),
       buildStats(context),
       buildObjectives(context),
-      buildWishlistInfo(context),
+      buildWishlistInfo(context, ref),
     ];
     return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

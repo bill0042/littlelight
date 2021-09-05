@@ -10,7 +10,6 @@ import 'package:little_light/widgets/common/equip_on_character.button.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/transfer_destinations/base_transfer_destinations.widget.dart';
 
-
 class ScreenshotTransferDestinationsWidget
     extends BaseTransferDestinationsWidget {
   final InventoryService inventory = new InventoryService();
@@ -30,7 +29,7 @@ class ScreenshotTransferDestinationsWidget
             characterId: characterId);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return ScreenshotTransferDestinationsState();
   }
 }
@@ -96,12 +95,12 @@ class ScreenshotTransferDestinationsState<
     return Row(
         children: destinations
             .map((destination) => EquipOnCharacterButton(
-                fontSize: widget.pixelSize*16,
+                fontSize: widget.pixelSize * 16,
                 borderSize: widget.pixelSize * 3,
                 characterId: destination.characterId,
                 type: destination.type,
                 iconSize: 96 * widget.pixelSize,
-                key:Key("${destination.action}_${destination.characterId}"),
+                key: Key("${destination.action}_${destination.characterId}"),
                 onTap: () {
                   transferTap(destination, context);
                 }))

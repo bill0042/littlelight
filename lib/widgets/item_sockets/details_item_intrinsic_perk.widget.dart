@@ -26,7 +26,7 @@ class DetailsItemIntrinsicPerkWidget extends BaseItemSocketsWidget {
             controller: controller);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return DetailsItemArmorExoticPerkWidgetState();
   }
 }

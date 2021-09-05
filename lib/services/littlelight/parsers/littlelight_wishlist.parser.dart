@@ -2,16 +2,16 @@ import 'dart:convert';
 
 import 'package:little_light/models/littlelight_wishlist.dart';
 import 'package:little_light/models/wish_list.dart';
-import 'package:little_light/services/littlelight/wishlists.service.dart';
+import 'package:little_light/services/littlelight/parsers/wishlist.parser.dart';
 
-class LittleLightWishlistParser {
+class LittleLightWishlistParser extends WishlistParser {
   Future<LittleLightWishlist> parse(String text) async {
     var json = jsonDecode(text);
     var wishlist = LittleLightWishlist.fromJson(json);
 
     for (var item in wishlist.data) {
       var tags = parseTags(item.tags);
-      WishlistsService().addToWishList(
+      onAddToWishlist(
           originalWishlist: item.originalWishlist ?? wishlist.name ?? "",
           name: item.name,
           hash: item.hash,

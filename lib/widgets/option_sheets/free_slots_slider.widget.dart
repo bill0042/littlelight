@@ -17,7 +17,7 @@ class FreeSlotsSliderWidget extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return FreeSlotsSliderWidgetState();
   }
 }
@@ -28,7 +28,7 @@ class FreeSlotsSliderWidgetState extends State<FreeSlotsSliderWidget> {
   @override
   void initState() {
     super.initState();
-    
+
     freeSlots = widget.initialValue;
   }
 

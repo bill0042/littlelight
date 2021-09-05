@@ -27,7 +27,7 @@ class ItemDetailDuplicatesWidget extends BaseDestinyStatefulItemWidget {
             key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return ItemDetailDuplicatesWidgetState();
   }
 }

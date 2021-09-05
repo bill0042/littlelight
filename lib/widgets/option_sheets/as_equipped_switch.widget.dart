@@ -10,7 +10,7 @@ class AsEquippedSwitchWidget extends StatefulWidget {
   const AsEquippedSwitchWidget({Key key, this.onChanged}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return AsEquippedSwitchWidgetState();
   }
 }
@@ -20,16 +20,16 @@ class AsEquippedSwitchWidgetState extends State<AsEquippedSwitchWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.symmetric(horizontal:16, vertical: 4),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         child: Row(
           children: <Widget>[
-            Expanded(child:TranslatedTextWidget("As Equipped")),
+            Expanded(child: TranslatedTextWidget("As Equipped")),
             Switch(
               value: asEquipped,
               onChanged: (bool value) {
                 asEquipped = value;
                 setState(() {});
-                if(widget.onChanged != null){
+                if (widget.onChanged != null) {
                   widget.onChanged(asEquipped);
                 }
               },

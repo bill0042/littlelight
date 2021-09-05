@@ -1,18 +1,19 @@
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
+import 'package:bungie_api/models/destiny_item_plug_base.dart';
 import 'package:bungie_api/models/destiny_item_socket_entry_definition.dart';
 import 'package:bungie_api/models/destiny_item_socket_state.dart';
 import 'package:bungie_api/models/destiny_socket_category_definition.dart';
-import 'package:bungie_api/models/destiny_item_plug_base.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
 import 'package:little_light/models/wish_list.dart';
-import 'package:little_light/services/littlelight/wishlists.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/wishlists_data.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 
-class ItemPerksWidget extends StatefulWidget {
+class ItemPerksWidget extends ConsumerStatefulWidget {
   final ManifestService manifest = ManifestService();
   final DestinyInventoryItemDefinition definition;
   final double iconSize;
@@ -38,7 +39,8 @@ class ItemPerksWidget extends StatefulWidget {
   }
 }
 
-class ItemPerksWidgetState extends State<ItemPerksWidget> {
+class ItemPerksWidgetState extends ConsumerState<ItemPerksWidget>
+    with WishlistsConsumerState {
   List<DestinyItemSocketState> _itemSockets;
   Map<String, List<DestinyItemPlugBase>> _reusablePlugs;
   List<DestinyItemSocketState> get itemSockets =>
@@ -113,7 +115,7 @@ class ItemPerksWidgetState extends State<ItemPerksWidget> {
     if (plugHash == null) {
       return Container();
     }
-    var tags = WishlistsService().getPerkTags(widget.definition.hash, plugHash);
+    var tags = wishlistsService.getPerkTags(widget.definition.hash, plugHash);
     return Container(
       margin: EdgeInsets.only(top: 1, left: 1),
       width: widget.iconSize,

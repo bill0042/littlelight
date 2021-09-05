@@ -31,7 +31,7 @@ class DetailsItemModsWidget extends BaseItemSocketsWidget {
             controller: controller);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return DetailsItemPerksWidgetState();
   }
 }

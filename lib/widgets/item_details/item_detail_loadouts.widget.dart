@@ -27,7 +27,7 @@ class ItemDetailLoadoutsWidget extends BaseDestinyStatefulItemWidget {
             key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return ItemDetailLoadoutsWidgetState();
   }
 }

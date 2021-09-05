@@ -20,7 +20,6 @@ import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
-
 import 'package:little_light/widgets/item_list/character_info.widget.dart';
 import 'package:little_light/widgets/option_sheets/loadout_select_sheet.widget.dart';
 
@@ -32,7 +31,7 @@ class VaultInfoWidget extends CharacterInfoWidget {
   VaultInfoWidget({Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return VaultInfoWidgetState();
   }
 }
@@ -115,7 +114,7 @@ class VaultOptionsSheet extends StatefulWidget {
   VaultOptionsSheet({Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return VaultOptionsSheetState();
   }
 }
@@ -143,7 +142,7 @@ class VaultOptionsSheetState extends State<VaultOptionsSheet> {
             mainAxisSize: MainAxisSize.min,
             children: [
               buildTransferLoadout(),
-              Container(height:4),
+              Container(height: 4),
               buildPullFromPostmaster()
             ]));
   }
@@ -160,12 +159,11 @@ class VaultOptionsSheetState extends State<VaultOptionsSheet> {
       onTap: () {
         Navigator.of(context).pop();
         showModalBottomSheet(
-                    context: context,
-                    builder: (context) => LoadoutSelectSheet(
-                        loadouts: loadouts,
-                        onSelect: (loadout) => InventoryService()
-                            .transferLoadout(
-                                loadout)));
+            context: context,
+            builder: (context) => LoadoutSelectSheet(
+                loadouts: loadouts,
+                onSelect: (loadout) =>
+                    InventoryService().transferLoadout(loadout)));
       },
     );
   }
@@ -214,9 +212,7 @@ class VaultOptionsSheetState extends State<VaultOptionsSheet> {
       var inPostmaster =
           all.where((i) => i.bucketHash == InventoryBucket.lostItems).toList();
       await inventory.transferMultiple(
-          inPostmaster
-              .map((i) => ItemWithOwner(i, char.characterId))
-              .toList(),
+          inPostmaster.map((i) => ItemWithOwner(i, char.characterId)).toList(),
           ItemDestination.Vault,
           char.characterId);
     }

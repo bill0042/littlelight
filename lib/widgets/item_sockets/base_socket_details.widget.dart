@@ -10,9 +10,10 @@ import 'package:bungie_api/models/destiny_sandbox_perk_definition.dart';
 import 'package:bungie_api/models/destiny_stat_definition.dart';
 import 'package:bungie_api/models/destiny_stat_group_definition.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/wishlists/wishlists.provider.dart';
 import 'package:little_light/models/wish_list.dart';
 import 'package:little_light/services/bungie_api/bungie_api.service.dart';
-import 'package:little_light/services/littlelight/wishlists.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateful_item.widget.dart';
@@ -40,7 +41,7 @@ class BaseSocketDetailsWidget extends BaseDestinyStatefulItemWidget {
   }) : super(key: key, item: item, definition: definition);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return BaseSocketDetailsWidgetState();
   }
 }
@@ -412,10 +413,10 @@ class BaseSocketDetailsWidgetState<T extends BaseSocketDetailsWidget>
     );
   }
 
-  Widget buildWishlistInfo(BuildContext context,
+  Widget buildWishlistInfo(BuildContext context, WidgetRef ref,
       [double iconSize = 16, double fontSize = 13]) {
-    var tags =
-        WishlistsService().getPerkTags(itemDefinition?.hash, definition.hash);
+    final wishlists = ref.read(wishlistProvider);
+    var tags = wishlists.getPerkTags(itemDefinition?.hash, definition.hash);
     if (tags == null) return Container();
     return buildWishlistTagsInfo((context),
         tags: tags, iconSize: iconSize, fontSize: fontSize);

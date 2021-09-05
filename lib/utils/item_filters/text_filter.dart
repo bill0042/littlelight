@@ -1,8 +1,8 @@
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
+import 'package:little_light/core/providers/wishlists/wishlists.provider.dart';
 import 'package:little_light/models/loadout.dart';
 import 'package:little_light/services/littlelight/item_notes.service.dart';
 import 'package:little_light/services/littlelight/loadouts.service.dart';
-import 'package:little_light/services/littlelight/wishlists.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/utils/remove_diacritics.dart';
@@ -23,19 +23,19 @@ class TextFilter extends BaseItemFilter<String> {
   bool filterItem(ItemWithOwner item,
       {Map<int, DestinyInventoryItemDefinition> definitions}) {
     if ((this.value?.length ?? 0) < 1) return true;
-    var _terms = value
+    final _terms = value
         .split(RegExp("[,.|]"))
         .map((s) => removeDiacritics(s.toLowerCase().trim()))
         .toList(growable: false);
-    var _def = definitions[item?.item?.itemHash];
-    var name = removeDiacritics(
+    final _def = definitions[item?.item?.itemHash];
+    final name = removeDiacritics(
         _def?.displayProperties?.name?.toLowerCase()?.trim() ?? "");
-    var itemType = removeDiacritics(
+    final itemType = removeDiacritics(
         _def?.itemTypeDisplayName?.toLowerCase()?.trim() ?? "");
-    var sockets = ProfileService().getItemSockets(item?.item?.itemInstanceId);
-    var reusablePlugs =
+    final sockets = ProfileService().getItemSockets(item?.item?.itemInstanceId);
+    final reusablePlugs =
         ProfileService().getItemReusablePlugs(item?.item?.itemInstanceId);
-    var plugHashes = Set<int>();
+    final plugHashes = Set<int>();
     plugHashes.addAll(sockets?.map((s) => s.plugHash)?.toSet() ?? Set());
     plugHashes.addAll(reusablePlugs?.values?.fold<List<int>>(
             [],
@@ -43,8 +43,8 @@ class TextFilter extends BaseItemFilter<String> {
                 l.followedBy(r.map((e) => e.plugItemHash)).toList())?.toSet() ??
         Set<int>());
     var wishlistBuildNotes =
-        WishlistsService().getWishlistBuildNotes(item.item);
-    var wishlistTags = WishlistsService().getWishlistBuildTags(
+        globalWishlistService.getWishlistBuildNotes(item.item);
+    var wishlistTags = globalWishlistService.getWishlistBuildTags(
         itemHash: item.item.itemHash,
         reusablePlugs: reusablePlugs,
         sockets: sockets);

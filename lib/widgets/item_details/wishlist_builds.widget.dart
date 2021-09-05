@@ -2,8 +2,9 @@ import 'dart:math';
 
 import 'package:bungie_api/models/destiny_item_plug_base.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
 import 'package:little_light/models/wish_list.dart';
-import 'package:little_light/services/littlelight/wishlists.service.dart';
 import 'package:little_light/utils/media_query_helper.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/item_details/section_header.widget.dart';
@@ -48,7 +49,7 @@ extension WishlistBuildSortingPriority on WishlistBuild {
   }
 }
 
-class WishlistBuildsWidget extends StatefulWidget {
+class WishlistBuildsWidget extends ConsumerStatefulWidget {
   final int itemHash;
   final Map<String, List<DestinyItemPlugBase>> reusablePlugs;
   WishlistBuildsWidget(
@@ -58,11 +59,11 @@ class WishlistBuildsWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => WishlistBuildsWidgetState();
+  createState() => WishlistBuildsWidgetState();
 }
 
-class WishlistBuildsWidgetState extends State<WishlistBuildsWidget>
-    with VisibleSectionMixin {
+class WishlistBuildsWidgetState extends ConsumerState<WishlistBuildsWidget>
+    with VisibleSectionMixin, WishlistsConsumerState {
   @override
   void initState() {
     super.initState();
@@ -73,7 +74,7 @@ class WishlistBuildsWidgetState extends State<WishlistBuildsWidget>
 
   @override
   Widget build(BuildContext context) {
-    final builds = WishlistsService().getWishlistBuilds(
+    final builds = wishlistsService.getWishlistBuilds(
         itemHash: widget.itemHash, reusablePlugs: widget.reusablePlugs);
     if ((builds?.length ?? 0) == 0) return Container();
     return Container(

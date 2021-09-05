@@ -9,10 +9,11 @@ import 'package:bungie_api/models/destiny_sandbox_perk_definition.dart';
 import 'package:bungie_api/models/destiny_vendor_item_definition.dart';
 import 'package:bungie_api/models/destiny_vendor_sale_item_component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/littlelight/wishlists.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/profile/vendors.service.dart';
@@ -28,7 +29,7 @@ import 'package:little_light/widgets/item_list/items/base/item_armor_tier.widget
 import 'package:little_light/widgets/item_list/items/base/item_mods.widget.dart';
 import 'package:little_light/widgets/item_list/items/base/item_perks.widget.dart';
 
-class PurchasableItemWidget extends StatefulWidget {
+class PurchasableItemWidget extends ConsumerStatefulWidget {
   final DestinyVendorItemDefinition item;
   final DestinyVendorSaleItemComponent sale;
   final String characterId;
@@ -37,12 +38,13 @@ class PurchasableItemWidget extends StatefulWidget {
   PurchasableItemWidget(
       {this.item, this.sale, this.characterId, this.vendorHash});
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return PurchasableItemWidgetState();
   }
 }
 
-class PurchasableItemWidgetState extends State<PurchasableItemWidget> {
+class PurchasableItemWidgetState extends ConsumerState<PurchasableItemWidget>
+    with WishlistsConsumerState {
   DestinyInventoryItemDefinition definition;
   List<DestinyItemSocketState> sockets;
   DestinyItemInstanceComponent instanceInfo;
@@ -426,7 +428,7 @@ class PurchasableItemWidgetState extends State<PurchasableItemWidget> {
   }
 
   Widget wishlistTags(BuildContext context) {
-    var wishlistTags = WishlistsService().getWishlistBuildTags(
+    var wishlistTags = wishlistsService.getWishlistBuildTags(
         itemHash: widget.item?.itemHash,
         reusablePlugs: reusablePlugs,
         sockets: sockets);

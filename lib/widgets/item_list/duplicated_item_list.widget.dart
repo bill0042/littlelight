@@ -191,7 +191,7 @@ class _DefinitionItemWrapper extends StatefulWidget {
   final List<ItemWithOwner> items;
   _DefinitionItemWrapper(this.hash, this.items);
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return _DefinitionItemWrapperState();
   }
 }
@@ -275,7 +275,7 @@ class _ItemInstanceWrapper extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return _ItemInstanceWrapperState();
   }
 }

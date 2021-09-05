@@ -25,7 +25,7 @@ class SmallObjectiveWidget extends ObjectiveWidget {
             parentCompleted: parentCompleted);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return SmallObjectiveWidgetState();
   }
 }

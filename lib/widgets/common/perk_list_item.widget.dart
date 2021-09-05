@@ -20,11 +20,10 @@ class PerkListItem extends StatefulWidget {
   final DestinyInventoryItemDefinition definition;
   final DestinyItemPlug plug;
 
-  PerkListItem({Key key, this.definition, this.plug})
-      : super(key: key);
+  PerkListItem({Key key, this.definition, this.plug}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return PerkListItemState();
   }
 }
@@ -67,7 +66,8 @@ class PerkListItemState extends State<PerkListItem>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Expanded(child:Row(
+              Expanded(
+                  child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(
@@ -81,7 +81,8 @@ class PerkListItemState extends State<PerkListItem>
                   Container(
                     width: 8,
                   ),
-                  Expanded(child:Text(
+                  Expanded(
+                      child: Text(
                     definition?.displayProperties?.name ?? "",
                     softWrap: true,
                     overflow: TextOverflow.fade,
@@ -89,13 +90,11 @@ class PerkListItemState extends State<PerkListItem>
                   )),
                 ],
               )),
-             
             ],
           ),
           AnimatedCrossFade(
-              crossFadeState: open 
-                  ? CrossFadeState.showSecond
-                  : CrossFadeState.showFirst,
+              crossFadeState:
+                  open ? CrossFadeState.showSecond : CrossFadeState.showFirst,
               alignment: Alignment.topCenter,
               duration: Duration(milliseconds: 300),
               firstChild: Container(),

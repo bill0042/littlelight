@@ -4,9 +4,10 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:little_light/core/providers/wishlists/wishlists.provider.dart';
 import 'package:little_light/services/littlelight/item_notes.service.dart';
-import 'package:little_light/services/littlelight/wishlists.service.dart';
 import 'package:little_light/widgets/common/wishlist_corner_badge.decoration.dart';
 import 'package:little_light/widgets/item_list/items/base/base_inventory_item.widget.dart';
 import 'package:little_light/widgets/item_list/items/base/minimal_info_label.mixin.dart';
@@ -25,21 +26,22 @@ class MinimalBaseInventoryItemWidget extends BaseInventoryItemWidget
             uniqueId: uniqueId, characterId: characterId, key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Stack(
       children: <Widget>[
         positionedIcon(context),
         primaryStatWidget(context),
         buildItemTags(context),
-        buildTagsBadges(context),
+        buildTagsBadges(context, ref),
       ].where((w) => w != null).toList(),
     );
   }
 
-  Widget buildTagsBadges(BuildContext context) {
+  Widget buildTagsBadges(BuildContext context, WidgetRef ref) {
     final reusable = profile.getItemReusablePlugs(item?.itemInstanceId);
     final sockets = profile.getItemSockets(item?.itemInstanceId);
-    final tags = WishlistsService().getWishlistBuildTags(
+    final wishlists = ref.read(wishlistProvider);
+    final tags = wishlists.getWishlistBuildTags(
         itemHash: item?.itemHash, reusablePlugs: reusable, sockets: sockets);
     if (tags == null) return Container();
     return Positioned.fill(

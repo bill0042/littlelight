@@ -38,7 +38,7 @@ class CharacterOptionsSheet extends StatefulWidget {
   CharacterOptionsSheet({Key key, this.character}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return CharacterOptionsSheetState();
   }
 }

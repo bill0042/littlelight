@@ -4,6 +4,7 @@ import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:bungie_api/models/destiny_item_quantity.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
 import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
@@ -29,7 +30,7 @@ class RewardsInfoWidget extends BaseDestinyStatelessItemWidget {
             characterId: characterId);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     var items =
         definition.value?.itemValue?.where((i) => i.itemHash != null)?.toList();
     if ((items?.length ?? 0) == 0) return Container();

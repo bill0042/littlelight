@@ -8,7 +8,6 @@ import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 
-
 class LoadoutBackgroundItemWidget extends StatefulWidget {
   final ManifestService manifest = new ManifestService();
   final ProfileService profile = new ProfileService();
@@ -17,7 +16,7 @@ class LoadoutBackgroundItemWidget extends StatefulWidget {
   LoadoutBackgroundItemWidget({Key key, this.hash}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return LoadoutBackgroundItemWidgetState();
   }
 }
@@ -40,21 +39,20 @@ class LoadoutBackgroundItemWidgetState
     setState(() {});
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      child:buildEmblemBackground(context),
-      decoration: BoxDecoration(border: Border.all(color: Colors.blueGrey.shade300, width: 1)),
+      child: buildEmblemBackground(context),
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.blueGrey.shade300, width: 1)),
     );
   }
 
-  buildPlaceholder(BuildContext context){
+  buildPlaceholder(BuildContext context) {
     return ShimmerHelper.getDefaultShimmer(context);
   }
 
-  buildEmblemBackground(BuildContext context){
+  buildEmblemBackground(BuildContext context) {
     if (definition == null) return buildPlaceholder(context);
     String url = BungieApiService.url(definition.secondarySpecial);
     if (url == null) return buildPlaceholder(context);
@@ -67,13 +65,14 @@ class LoadoutBackgroundItemWidgetState
         fit: BoxFit.cover,
         placeholder: buildPlaceholder(context),
       )),
-      Positioned.fill(child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-        onTap: () {
-          Navigator.pop(context, definition.hash);
-        },
-      )))
+      Positioned.fill(
+          child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () {
+                  Navigator.pop(context, definition.hash);
+                },
+              )))
     ]);
   }
 }

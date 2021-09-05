@@ -1,7 +1,7 @@
 import 'package:little_light/models/wish_list.dart';
-import 'package:little_light/services/littlelight/wishlists.service.dart';
+import 'package:little_light/services/littlelight/parsers/wishlist.parser.dart';
 
-class DimWishlistParser {
+class DimWishlistParser extends WishlistParser {
   Set<int> _itemHashes = Set();
 
   parse(String text) async {
@@ -117,7 +117,7 @@ class DimWishlistParser {
             ?.toList() ??
         [];
     var hash = int.parse(itemHashStr);
-    WishlistsService().addToWishList(
+    onAddToWishlist(
         name: "",
         hash: hash,
         perks: perks,

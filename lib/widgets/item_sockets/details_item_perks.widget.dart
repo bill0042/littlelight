@@ -5,8 +5,8 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_socket_category_definition.dart';
 import 'package:bungie_api/models/destiny_socket_category_definition.dart';
 import 'package:flutter/material.dart';
+import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
 import 'package:little_light/models/wish_list.dart';
-import 'package:little_light/services/littlelight/wishlists.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/utils/media_query_helper.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
@@ -34,7 +34,7 @@ class DetailsItemPerksWidget extends BaseItemSocketsWidget {
             controller: controller);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return DetailsItemPerksWidgetState();
   }
 }
@@ -42,7 +42,8 @@ class DetailsItemPerksWidget extends BaseItemSocketsWidget {
 const _sectionId = "item_perks";
 
 class DetailsItemPerksWidgetState<T extends DetailsItemPerksWidget>
-    extends BaseItemSocketsWidgetState<T> with PlugWishlistTagIconsMixin {
+    extends BaseItemSocketsWidgetState<T>
+    with PlugWishlistTagIconsMixin, WishlistsConsumerState {
   bool showDetails = false;
 
   @override
@@ -218,7 +219,7 @@ class DetailsItemPerksWidgetState<T extends DetailsItemPerksWidget>
       borderColor = Colors.grey.shade300;
     }
 
-    var tags = WishlistsService()
+    var tags = wishlistsService
         .getPerkTags(definition?.hash, plugItemHash)
         .where((element) => [
               WishlistTag.GodPVE,

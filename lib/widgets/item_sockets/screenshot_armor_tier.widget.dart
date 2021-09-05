@@ -26,7 +26,7 @@ class ScreenShotArmorTierWidget extends BaseItemSocketsWidget {
             controller: controller);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return ScreenShotItemPerksWidgetState();
   }
 }

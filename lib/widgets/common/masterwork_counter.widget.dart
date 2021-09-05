@@ -15,7 +15,7 @@ class MasterworkCounterWidget extends StatefulWidget {
   MasterworkCounterWidget(this.item, {Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return MasterworkCounterWidgetState();
   }
 }

@@ -30,7 +30,7 @@ class PresentationNodeListWidget extends StatefulWidget {
     this.depth = 0,
   }) : super(key: key);
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return PresentationNodeListWidgetState();
   }
 }

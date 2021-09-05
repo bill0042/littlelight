@@ -1,17 +1,18 @@
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/littlelight/wishlists.service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
-class WishlistNotesWidget extends StatelessWidget {
+class WishlistNotesWidget extends ConsumerWidget with WishlistsConsumerWidget {
   final DestinyItemComponent item;
 
   WishlistNotesWidget(this.item, {Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    var notes = WishlistsService().getWishlistBuildNotes(item);
+  Widget build(BuildContext context, WidgetRef ref) {
+    var notes = wishlistsService(ref).getWishlistBuildNotes(item);
     if ((notes?.length ?? 0) == 0) {
       return Container();
     }
@@ -37,10 +38,12 @@ class WishlistNotesWidget extends StatelessWidget {
   buildNotes(BuildContext context, Set<String> notes) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children:
-          notes?.where((n)=>(n?.length ?? 0) > 0)?.map((n) => Container(
-            padding: EdgeInsets.all(4),
-            child: Text("$n")))?.toList() ?? [],
+      children: notes
+              ?.where((n) => (n?.length ?? 0) > 0)
+              ?.map((n) =>
+                  Container(padding: EdgeInsets.all(4), child: Text("$n")))
+              ?.toList() ??
+          [],
     );
   }
 }

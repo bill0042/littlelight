@@ -31,7 +31,7 @@ class BaseTransferDestinationsWidget extends BaseDestinyStatefulItemWidget {
             characterId: characterId);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return BaseTransferDestinationState();
   }
 }
@@ -112,7 +112,8 @@ class BaseTransferDestinationState<T extends BaseTransferDestinationsWidget>
         ));
   }
 
-  Widget buildButtons(BuildContext context, List<TransferDestination> destinations,
+  Widget buildButtons(
+      BuildContext context, List<TransferDestination> destinations,
       [Alignment align = Alignment.centerRight]) {
     return Container(
         alignment: align,

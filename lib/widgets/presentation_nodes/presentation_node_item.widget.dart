@@ -28,7 +28,7 @@ class PresentationNodeItemWidget extends StatefulWidget {
       @required this.isCategorySet})
       : super(key: key);
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return PresentationNodeWidgetState();
   }
 }

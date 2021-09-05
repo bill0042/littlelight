@@ -7,10 +7,11 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:bungie_api/models/destiny_vendor_definition.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/littlelight/item_notes.service.dart';
-import 'package:little_light/services/littlelight/wishlists.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
@@ -29,7 +30,8 @@ typedef void OnItemHandler(
     DestinyItemInstanceComponent instanceInfo,
     String characterId);
 
-class BaseItemInstanceWidget extends BaseInventoryItemWidget {
+class BaseItemInstanceWidget extends BaseInventoryItemWidget
+    with WishlistsConsumerWidget {
   BaseItemInstanceWidget(
     DestinyItemComponent item,
     DestinyInventoryItemDefinition itemDefinition,
@@ -41,7 +43,7 @@ class BaseItemInstanceWidget extends BaseInventoryItemWidget {
             key: key, characterId: characterId, uniqueId: uniqueId);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Stack(children: <Widget>[
       Positioned.fill(
         child: buildEmblemBackground(context),
@@ -57,7 +59,7 @@ class BaseItemInstanceWidget extends BaseInventoryItemWidget {
         left: 4,
         bottom: 4,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          buildTags(context),
+          buildTags(context, ref),
           Container(height: 4),
           modsWidget(context)
         ]),
@@ -87,10 +89,10 @@ class BaseItemInstanceWidget extends BaseInventoryItemWidget {
     ]);
   }
 
-  Widget buildTags(BuildContext context) {
+  Widget buildTags(BuildContext context, WidgetRef ref) {
     final reusable = profile.getItemReusablePlugs(item?.itemInstanceId);
     final sockets = profile.getItemSockets(item?.itemInstanceId);
-    final wishlistTags = WishlistsService().getWishlistBuildTags(
+    final wishlistTags = wishlistsService(ref).getWishlistBuildTags(
         itemHash: item?.itemHash, reusablePlugs: reusable, sockets: sockets);
     List<Widget> upper = [];
     var notes = ItemNotesService()

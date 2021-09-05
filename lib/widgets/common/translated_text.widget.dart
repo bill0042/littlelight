@@ -7,7 +7,7 @@ class TranslatedTextWidget extends StatefulWidget {
   final TranslateService translate = new TranslateService();
   final String text;
   final String language;
-  final Map<String,String> replace;
+  final Map<String, String> replace;
   final bool uppercase;
   final int maxLines;
   final TextOverflow overflow;
@@ -30,12 +30,11 @@ class TranslatedTextWidget extends StatefulWidget {
       this.textAlign,
       this.textDirection,
       this.textScaleFactor,
-      
       this.uppercase = false})
       : super(key: key ?? Key(text));
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return TranslatedTextWidgetState();
   }
 }
@@ -49,10 +48,12 @@ class TranslatedTextWidgetState extends State<TranslatedTextWidget> {
   }
 
   Future<void> loadTranslation() async {
-    if(widget.language != null){
-      translatedText = await widget.translate.getTranslation(widget.text, replace:widget.replace, languageCode: widget.language);  
-    }else{
-      translatedText = await widget.translate.getTranslation(widget.text, replace:widget.replace);
+    if (widget.language != null) {
+      translatedText = await widget.translate.getTranslation(widget.text,
+          replace: widget.replace, languageCode: widget.language);
+    } else {
+      translatedText = await widget.translate
+          .getTranslation(widget.text, replace: widget.replace);
     }
     if (mounted) {
       setState(() {});
@@ -62,23 +63,21 @@ class TranslatedTextWidgetState extends State<TranslatedTextWidget> {
   @override
   Widget build(BuildContext context) {
     String text = "";
-    if(translatedText != null){
+    if (translatedText != null) {
       text = translatedText;
     }
     if (widget.uppercase) {
       text = text.toUpperCase();
     }
-    return Text(
-      text,
-      maxLines: widget.maxLines,
-      overflow: widget.overflow,
-      semanticsLabel: widget.semanticsLabel,
-      softWrap: widget.softWrap,
-      style: widget.style,
-      textAlign: widget.textAlign,
-      textDirection: widget.textDirection,
-      textScaleFactor: widget.textScaleFactor,
-      key:Key(text)
-    );
+    return Text(text,
+        maxLines: widget.maxLines,
+        overflow: widget.overflow,
+        semanticsLabel: widget.semanticsLabel,
+        softWrap: widget.softWrap,
+        style: widget.style,
+        textAlign: widget.textAlign,
+        textDirection: widget.textDirection,
+        textScaleFactor: widget.textScaleFactor,
+        key: Key(text));
   }
 }

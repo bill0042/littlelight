@@ -51,7 +51,7 @@ class InventoryItemWrapperWidget extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return InventoryItemWrapperWidgetState();
   }
 }

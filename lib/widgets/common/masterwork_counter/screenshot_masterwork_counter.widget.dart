@@ -13,7 +13,7 @@ class ScreenshotMasterworkCounterWidget extends BaseMasterworkCounterWidget {
       : super(item: item, key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return ScreenshotMasterworkCounterState();
   }
 }

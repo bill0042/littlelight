@@ -9,6 +9,7 @@ import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:bungie_api/models/destiny_power_cap_definition.dart';
 import 'package:bungie_api/models/destiny_stat_definition.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/services/littlelight/item_notes.service.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
@@ -53,7 +54,7 @@ class LandscapeItemCoverWidget extends BaseDestinyStatelessItemWidget {
             characterId: characterId);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     double width = MediaQuery.of(context).size.width;
     double paddingTop = MediaQuery.of(context).padding.top;
     double screenshotHeight =

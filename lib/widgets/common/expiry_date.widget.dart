@@ -11,7 +11,7 @@ class ExpiryDateWidget extends StatefulWidget {
   ExpiryDateWidget(this.date, {Key key, this.fontSize = 12}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return ExpiryDateWidgetState();
   }
 }

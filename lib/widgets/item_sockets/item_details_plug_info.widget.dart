@@ -4,6 +4,7 @@ import 'package:bungie_api/models/destiny_item_socket_category_definition.dart';
 import 'package:bungie_api/models/destiny_material_requirement_set_definition.dart';
 import 'package:bungie_api/models/destiny_sandbox_perk_definition.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateless_item.widget.dart';
@@ -23,7 +24,7 @@ class ItemDetailsPlugInfoWidget extends BaseDestinyStatelessItemWidget {
       : super(definition: definition, item: item);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (definition == null) return Container();
     return Container(
         padding: EdgeInsets.all(8),
@@ -88,7 +89,8 @@ class ItemDetailsPlugInfoWidget extends BaseDestinyStatelessItemWidget {
           constraints: BoxConstraints(maxWidth: 600),
           height: 40,
           padding: EdgeInsets.symmetric(horizontal: 8),
-          color: DestinyData.getEnergyTypeColor(cost.energyType).withOpacity(.6),
+          color:
+              DestinyData.getEnergyTypeColor(cost.energyType).withOpacity(.6),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
@@ -100,7 +102,9 @@ class ItemDetailsPlugInfoWidget extends BaseDestinyStatelessItemWidget {
               ),
               Text(
                 "${cost.energyCost}",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
                 ),
               ),
               Container(
@@ -210,7 +214,11 @@ class ItemDetailsPlugInfoWidget extends BaseDestinyStatelessItemWidget {
                         ),
                       ),
                       Text("${m.count}/$total",
-                          style: TextStyle(fontWeight: FontWeight.w300, color:isEnough ? Colors.grey.shade300 : DestinyData.negativeFeedback))
+                          style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              color: isEnough
+                                  ? Colors.grey.shade300
+                                  : DestinyData.negativeFeedback))
                     ],
                   );
                 }).toList(),

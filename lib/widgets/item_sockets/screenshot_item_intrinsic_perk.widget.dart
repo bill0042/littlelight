@@ -27,7 +27,7 @@ class ScreenShotItemIntrinsicPerkWidget extends BaseItemSocketsWidget {
             controller: controller);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return ScreenShotItemIntrinsicPerkWidgetState();
   }
 }

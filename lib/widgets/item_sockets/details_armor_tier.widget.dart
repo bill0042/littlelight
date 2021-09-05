@@ -24,7 +24,7 @@ class DetailsArmorTierWidget extends BaseItemSocketsWidget {
             controller: controller);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return DetailsArmorTierWidgetState();
   }
 }

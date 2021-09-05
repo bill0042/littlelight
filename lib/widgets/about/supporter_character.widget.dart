@@ -24,7 +24,7 @@ class SupporterCharacterWidget extends StatefulWidget {
       [this.link, this.badge]);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return SupporterCharacterWidgetState();
   }
 }

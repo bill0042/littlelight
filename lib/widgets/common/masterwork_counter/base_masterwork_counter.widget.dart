@@ -13,7 +13,7 @@ class BaseMasterworkCounterWidget extends BaseDestinyStatefulItemWidget {
       : super(item: item, key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return BaseMasterworkCounterWidgetState();
   }
 }

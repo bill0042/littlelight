@@ -13,12 +13,13 @@ class DefinitionProviderWidget<T> extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  createState() {
     return DefinitionProviderWidgetState<T>();
   }
 }
 
-class DefinitionProviderWidgetState<T> extends State<DefinitionProviderWidget<T>> {
+class DefinitionProviderWidgetState<T>
+    extends State<DefinitionProviderWidget<T>> {
   T definition;
   @override
   void initState() {
@@ -28,16 +29,17 @@ class DefinitionProviderWidgetState<T> extends State<DefinitionProviderWidget<T>
 
   void loadDefinition() async {
     definition = await widget._manifest.getDefinition<T>(widget.hash);
-    if(mounted == true){
+    if (mounted == true) {
       setState(() {});
     }
   }
+
   @override
   Widget build(BuildContext context) {
-    if(definition != null){
+    if (definition != null) {
       return widget.widgetBuilder(definition);
     }
-    if(widget.placeholder != null){
+    if (widget.placeholder != null) {
       return widget.placeholder;
     }
     return Container();

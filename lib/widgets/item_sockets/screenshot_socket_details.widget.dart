@@ -7,6 +7,7 @@ import 'package:bungie_api/models/destiny_material_requirement_set_definition.da
 import 'package:bungie_api/models/destiny_sandbox_perk_definition.dart';
 import 'package:bungie_api/models/destiny_stat_definition.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
@@ -77,7 +78,7 @@ class _ScreenshotPerkDetailsWidgetState
                   horizontal: 16 * widget.pixelSize,
                   vertical: 8 * widget.pixelSize),
               color: Colors.black.withOpacity(.7),
-              child: buildContent(context)),
+              child: buildContent(context, ref)),
           buildResourceCost(context)
         ]);
   }
@@ -333,10 +334,11 @@ class _ScreenshotPerkDetailsWidgetState
         ]));
   }
 
-  buildContent(BuildContext context) {
+  buildContent(BuildContext context, WidgetRef ref) {
     Iterable<Widget> items = [
       buildDescription(context),
-      buildWishlistInfo(context, 24 * widget.pixelSize, 20 * widget.pixelSize),
+      buildWishlistInfo(
+          context, ref, 24 * widget.pixelSize, 20 * widget.pixelSize),
       buildEnergyCost(context),
       buildSandBoxPerks(context),
       buildStats(context),
