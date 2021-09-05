@@ -13,7 +13,7 @@
 .env
 _env
 .sentryclirc
-translations
+/translations
 
 # IntelliJ related
 *.iml
