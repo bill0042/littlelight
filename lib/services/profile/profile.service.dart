@@ -25,7 +25,7 @@ import 'package:bungie_api/enums/destiny_scope.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
-import 'package:little_light/services/user_settings/character_sort_parameter.dart';
+import 'package:little_light/models/character_sort_parameter.dart';
 import 'package:little_light/services/user_settings/user_settings.service.dart';
 
 enum LastLoadedFrom { server, cache }

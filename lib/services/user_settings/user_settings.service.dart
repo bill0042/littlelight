@@ -1,7 +1,7 @@
 import 'package:little_light/models/bucket_display_options.dart';
 import 'package:little_light/models/item_notes_tag.dart';
 import 'package:little_light/services/storage/storage.service.dart';
-import 'package:little_light/services/user_settings/character_sort_parameter.dart';
+import 'package:little_light/models/character_sort_parameter.dart';
 import 'package:little_light/services/user_settings/item_sort_parameter.dart';
 import 'package:little_light/utils/remove_diacritics.dart';
 
