@@ -46,7 +46,7 @@ class InitialScreen extends ConsumerStatefulWidget {
 }
 
 class InitialScreenState extends FloatingContentState<InitialScreen>
-    with EnvConsumer, WishlistsConsumerState {
+    with EnvConsumerState, WishlistsConsumerState {
   @override
   void initState() {
     super.initState();
