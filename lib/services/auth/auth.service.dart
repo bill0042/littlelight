@@ -119,7 +119,7 @@ class AuthService {
     var browser = new BungieAuthBrowser();
     OAuth.openOAuth(
         browser, BungieApiService.clientId, currentLanguage, forceReauth);
-    Stream<String> _stream = getLinksStream();
+    Stream<String> _stream = linkStream;
     Completer<String> completer = Completer();
 
     linkStreamSub?.cancel();

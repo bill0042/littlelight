@@ -5,7 +5,6 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart' as dotEnv;
 import 'package:little_light/exceptions/exception_handler.dart';
 
 import 'core/app/littlelight.app.dart';
@@ -17,8 +16,6 @@ void main() async {
 
   await Firebase.initializeApp();
   FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-
-  await dotEnv.load(fileName: 'assets/_env');
 
   ExceptionHandler handler = ExceptionHandler(onRestart: () {
     restartCounter++;

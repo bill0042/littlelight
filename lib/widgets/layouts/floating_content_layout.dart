@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/exceptions/exception_handler.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:shimmer/shimmer.dart';
 
-class FloatingContentState<T extends StatefulWidget> extends State<T>
-    with TickerProviderStateMixin {
+class FloatingContentState<T extends ConsumerStatefulWidget>
+    extends ConsumerState<T> with TickerProviderStateMixin {
   bool loading = true;
   String language;
   Widget previousContent;

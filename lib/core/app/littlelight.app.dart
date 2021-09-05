@@ -4,6 +4,8 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/global_container/global.container.dart';
 import 'package:little_light/core/theme/littlelight.theme.dart';
 import 'package:little_light/screens/initial.screen.dart';
 import 'package:little_light/utils/platform_capabilities.dart';
@@ -25,39 +27,41 @@ class LittleLight extends StatelessWidget {
           FirebaseAnalyticsObserver(analytics: analytics);
       observers.add(observer);
     }
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      key: key,
-      title: 'Little Light',
-      navigatorObservers: observers,
-      theme: LittleLightTheme().theme,
-      builder: (context, child) {
-        return ScrollConfiguration(
-          behavior: LittleLightScrollBehaviour(),
-          child: child,
-        );
-      },
-      home: new InitialScreen(),
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: [
-        const Locale('en'), // English
-        const Locale('fr'), // French
-        const Locale('es'), // Spanish
-        const Locale('de'), // German
-        const Locale('it'), // Italian
-        const Locale('ja'), // Japan
-        const Locale('pt', 'BR'), // Brazillian Portuguese
-        const Locale('es', 'MX'), // Mexican Spanish
-        const Locale('ru'), // Russian
-        const Locale('pl'), // Polish
-        const Locale('ko'), // Korean
-        const Locale('zh', 'CHT'), // Chinese
-        const Locale('zh', 'CHS'), // Chinese
-      ],
-    );
+    return UncontrolledProviderScope(
+        container: globalContainer,
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          key: key,
+          title: 'Little Light',
+          navigatorObservers: observers,
+          theme: LittleLightTheme().theme,
+          builder: (context, child) {
+            return ScrollConfiguration(
+              behavior: LittleLightScrollBehaviour(),
+              child: child,
+            );
+          },
+          home: new InitialScreen(),
+          localizationsDelegates: [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: [
+            const Locale('en'), // English
+            const Locale('fr'), // French
+            const Locale('es'), // Spanish
+            const Locale('de'), // German
+            const Locale('it'), // Italian
+            const Locale('ja'), // Japan
+            const Locale('pt', 'BR'), // Brazillian Portuguese
+            const Locale('es', 'MX'), // Mexican Spanish
+            const Locale('ru'), // Russian
+            const Locale('pl'), // Polish
+            const Locale('ko'), // Korean
+            const Locale('zh', 'CHT'), // Chinese
+            const Locale('zh', 'CHS'), // Chinese
+          ],
+        ));
   }
 }
 

@@ -27,7 +27,8 @@ import 'package:bungie_api/responses/destiny_profile_response_response.dart';
 import 'package:bungie_api/responses/destiny_vendors_response_response.dart';
 import 'package:bungie_api/responses/int32_response.dart';
 import 'package:bungie_api/responses/user_membership_data_response.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:little_light/core/providers/env/env.provider.dart';
+import 'package:little_light/core/providers/global_container/global.container.dart';
 import 'package:little_light/services/auth/auth.service.dart';
 import 'package:little_light/services/bungie_api/bungie_api.exception.dart';
 
@@ -49,6 +50,8 @@ class BungieApiService {
     if (url.contains('://')) return url;
     return "$baseUrl$url";
   }
+
+  static Map<String, String> get env => globalContainer.read(envProvider).env;
 
   static String get clientSecret {
     return env['client_secret'];

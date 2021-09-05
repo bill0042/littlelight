@@ -6,6 +6,8 @@ import 'package:bungie_api/models/group_user_info_card.dart';
 import 'package:bungie_api/models/user_membership_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/env/env.provider.dart';
 import 'package:little_light/exceptions/exception_handler.dart';
 import 'package:little_light/screens/main.screen.dart';
 import 'package:little_light/services/auth/auth.service.dart';
@@ -30,7 +32,7 @@ import 'package:little_light/widgets/initial_page/select_language.widget.dart';
 import 'package:little_light/widgets/initial_page/select_platform.widget.dart';
 import 'package:little_light/widgets/layouts/floating_content_layout.dart';
 
-class InitialScreen extends StatefulWidget {
+class InitialScreen extends ConsumerStatefulWidget {
   final BungieApiService apiService = new BungieApiService();
   final AuthService auth = new AuthService();
   final ManifestService manifest = new ManifestService();
@@ -57,6 +59,8 @@ class InitialScreenState extends FloatingContentState<InitialScreen> {
   }
 
   initLoading() async {
+    final env = ref.read(envProvider);
+    await env.load(fileName: 'assets/_env');
     await StorageService.init();
     AuthService().reset();
     await LittleLightApiService().reset();
