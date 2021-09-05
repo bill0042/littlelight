@@ -9,7 +9,7 @@ import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enu
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
-import 'package:little_light/services/user_settings/bucket_display_options.dart';
+import 'package:little_light/models/bucket_display_options.dart';
 import 'package:little_light/services/user_settings/user_settings.service.dart';
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/utils/item_with_owner.dart';

@@ -1,24 +1,9 @@
+import 'package:little_light/models/bucket_display_options.dart';
 import 'package:little_light/models/item_notes_tag.dart';
-import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/storage/storage.service.dart';
-import 'package:little_light/services/user_settings/bucket_display_options.dart';
 import 'package:little_light/services/user_settings/character_sort_parameter.dart';
 import 'package:little_light/services/user_settings/item_sort_parameter.dart';
 import 'package:little_light/utils/remove_diacritics.dart';
-
-const _defaultBucketDisplayOptions = {
-  "${InventoryBucket.engrams}":
-      BucketDisplayOptions(type: BucketDisplayType.Small),
-  "${InventoryBucket.lostItems}":
-      BucketDisplayOptions(type: BucketDisplayType.Small),
-  "${InventoryBucket.consumables}":
-      BucketDisplayOptions(type: BucketDisplayType.Small),
-  "${InventoryBucket.shaders}":
-      BucketDisplayOptions(type: BucketDisplayType.Small),
-  "${InventoryBucket.modifications}":
-      BucketDisplayOptions(type: BucketDisplayType.Small),
-  "pursuits_53_null": BucketDisplayOptions(type: BucketDisplayType.Large),
-};
 
 class UserSettingsService {
   static UserSettingsService _singleton = UserSettingsService._internal();
@@ -130,8 +115,8 @@ class UserSettingsService {
     if (_bucketDisplayOptions?.containsKey(id) ?? false) {
       return _bucketDisplayOptions[id];
     }
-    if (_defaultBucketDisplayOptions?.containsKey(id) ?? false) {
-      return _defaultBucketDisplayOptions[id];
+    if (DefaultBucketDisplayOptions.containsKey(id) ?? false) {
+      return DefaultBucketDisplayOptions[id];
     }
     if (id?.startsWith("vault") ?? false) {
       return BucketDisplayOptions(type: BucketDisplayType.Small);
