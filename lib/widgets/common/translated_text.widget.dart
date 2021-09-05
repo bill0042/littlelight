@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:little_light/services/translate/translate.service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/translations/translations.consumer.dart';
 
 typedef String ExtractTextFromData(dynamic data);
 
-class TranslatedTextWidget extends StatefulWidget {
-  final TranslateService translate = new TranslateService();
+class TranslatedTextWidget extends ConsumerStatefulWidget {
   final String text;
   final String language;
   final Map<String, String> replace;
@@ -39,7 +39,8 @@ class TranslatedTextWidget extends StatefulWidget {
   }
 }
 
-class TranslatedTextWidgetState extends State<TranslatedTextWidget> {
+class TranslatedTextWidgetState extends ConsumerState<TranslatedTextWidget>
+    with TranslationsConsumerState {
   String translatedText;
   @override
   void initState() {
@@ -49,11 +50,11 @@ class TranslatedTextWidgetState extends State<TranslatedTextWidget> {
 
   Future<void> loadTranslation() async {
     if (widget.language != null) {
-      translatedText = await widget.translate.getTranslation(widget.text,
+      translatedText = await translations.getTranslation(widget.text,
           replace: widget.replace, languageCode: widget.language);
     } else {
-      translatedText = await widget.translate
-          .getTranslation(widget.text, replace: widget.replace);
+      translatedText = await translations.getTranslation(widget.text,
+          replace: widget.replace);
     }
     if (mounted) {
       setState(() {});

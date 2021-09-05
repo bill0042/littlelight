@@ -5,6 +5,8 @@ import 'package:bungie_api/enums/destiny_item_type.dart';
 import 'package:bungie_api/models/destiny_inventory_bucket_definition.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/translations/translations.consumer.dart';
 import 'package:little_light/models/loadout.dart';
 import 'package:little_light/services/littlelight/loadouts.service.dart';
 import 'package:little_light/utils/item_with_owner.dart';
@@ -15,13 +17,13 @@ import 'package:little_light/screens/select_loadout_item.screen.dart';
 import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
-import 'package:little_light/services/translate/translate.service.dart';
+
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
 import 'package:little_light/widgets/loadouts/loadout_slot.widget.dart';
 
-class EditLoadoutScreen extends StatefulWidget {
+class EditLoadoutScreen extends ConsumerStatefulWidget {
   final Loadout loadout;
   final bool forceCreate;
   EditLoadoutScreen({Key key, this.loadout, this.forceCreate = false})
@@ -33,7 +35,8 @@ class EditLoadoutScreen extends StatefulWidget {
   EditLoadoutScreenState createState() => new EditLoadoutScreenState();
 }
 
-class EditLoadoutScreenState extends State<EditLoadoutScreen> {
+class EditLoadoutScreenState extends ConsumerState<EditLoadoutScreen>
+    with TranslationsConsumerState {
   bool changed = false;
   LoadoutItemIndex _itemIndex;
   DestinyInventoryItemDefinition emblemDefinition;
@@ -65,8 +68,7 @@ class EditLoadoutScreenState extends State<EditLoadoutScreen> {
   }
 
   fetchTranslations() async {
-    TranslateService translate = new TranslateService();
-    _nameInputLabel = await translate.getTranslation("Loadout Name");
+    _nameInputLabel = await translations.getTranslation("Loadout Name");
     setState(() {});
   }
 

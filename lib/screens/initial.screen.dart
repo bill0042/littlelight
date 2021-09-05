@@ -22,7 +22,7 @@ import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/destiny_settings.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
-import 'package:little_light/services/translate/translate.service.dart';
+
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/exceptions/exception_dialog.dart';
 import 'package:little_light/widgets/initial_page/download_manifest.widget.dart';
@@ -36,7 +36,6 @@ class InitialScreen extends ConsumerStatefulWidget {
   final AuthService auth = new AuthService();
   final ManifestService manifest = new ManifestService();
   final ProfileService profile = new ProfileService();
-  final TranslateService translate = new TranslateService();
   final String authCode;
 
   InitialScreen({Key key, this.authCode}) : super(key: key);

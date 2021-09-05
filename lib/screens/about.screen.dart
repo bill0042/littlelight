@@ -2,27 +2,27 @@ import 'dart:io';
 
 import 'package:bungie_api/enums/bungie_membership_type.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:little_light/core/providers/translations/translations.consumer.dart';
 import 'package:little_light/models/collaborators.dart';
 import 'package:little_light/services/littlelight/littlelight_data.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
-import 'package:little_light/services/translate/translate.service.dart';
 import 'package:little_light/widgets/about/supporter_character.widget.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
-
 import 'package:little_light/widgets/common/translated_text.widget.dart';
-
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class AboutScreen extends StatefulWidget {
+class AboutScreen extends ConsumerStatefulWidget {
   @override
   _AboutScreenState createState() => _AboutScreenState();
 }
 
-class _AboutScreenState extends State<AboutScreen> {
+class _AboutScreenState extends ConsumerState<AboutScreen>
+    with TranslationsConsumerState {
   String packageVersion = "";
   String appName = "";
   CollaboratorsResponse collaborators;
@@ -218,8 +218,8 @@ class _AboutScreenState extends State<AboutScreen> {
 
   buildTranslationHeader(BuildContext context, List<String> languages) {
     List<Widget> flags = languages.map((l) => flagIcon(l)).toList();
-    Text languageNames = Text(
-        languages.map((l) => TranslateService().languageNames[l]).join("/"));
+    Text languageNames =
+        Text(languages.map((l) => translations.languageNames[l]).join("/"));
     return Container(
         color: Colors.blueGrey.shade600,
         padding: EdgeInsets.all(4),

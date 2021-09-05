@@ -1,19 +1,22 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/translations/translations.consumer.dart';
 import 'package:little_light/screens/initial.screen.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
-import 'package:little_light/services/translate/translate.service.dart';
+
 import 'package:little_light/widgets/common/loading_anim.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
-class LanguagesScreen extends StatefulWidget {
+class LanguagesScreen extends ConsumerStatefulWidget {
   @override
   _LanguagesScreenState createState() => _LanguagesScreenState();
 }
 
-class _LanguagesScreenState extends State<LanguagesScreen> {
+class _LanguagesScreenState extends ConsumerState<LanguagesScreen>
+    with TranslationsConsumerState {
   List<String> languages;
   Map<String, int> fileSizes;
   String currentLanguage;
@@ -126,8 +129,7 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
   }
 
   Widget buildLanguageInfo(BuildContext context, String languageCode) {
-    var service = TranslateService();
-    var languageName = service.languageNames[languageCode];
+    var languageName = translations.languageNames[languageCode];
     return Row(children: [
       Container(width: 8, height: 40),
       // child: Image.asset("assets/imgs/flags/$languageCode.png")),

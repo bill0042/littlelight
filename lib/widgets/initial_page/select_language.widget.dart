@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/translations/translations.consumer.dart';
 import 'package:little_light/services/storage/storage.service.dart';
-import 'package:little_light/services/translate/translate.service.dart';
+
 import 'package:little_light/utils/media_query_helper.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
@@ -8,12 +10,11 @@ import 'package:little_light/widgets/initial_page/language.button.dart';
 
 typedef void LanguageSelectCallback(String languageCode);
 
-class SelectLanguageWidget extends StatefulWidget {
+class SelectLanguageWidget extends ConsumerStatefulWidget {
   final String title = "Select Language";
   final List<String> availableLanguages;
   final LanguageSelectCallback onChange;
   final LanguageSelectCallback onSelect;
-  final TranslateService translate = new TranslateService();
 
   SelectLanguageWidget({this.availableLanguages, this.onChange, this.onSelect});
 
@@ -21,7 +22,8 @@ class SelectLanguageWidget extends StatefulWidget {
   SelectLanguageWidgetState createState() => new SelectLanguageWidgetState();
 }
 
-class SelectLanguageWidgetState extends State<SelectLanguageWidget> {
+class SelectLanguageWidgetState extends ConsumerState<SelectLanguageWidget>
+    with TranslationsConsumerState {
   String selectedLanguage;
 
   @override
@@ -41,7 +43,7 @@ class SelectLanguageWidgetState extends State<SelectLanguageWidget> {
           .firstWhere((language) => language == localeName, orElse: () => null);
     }
     if (selectedLanguage == null) {
-      selectedLanguage = widget.translate.fallbackLanguage;
+      selectedLanguage = translations.fallbackLanguage;
     }
     widget.onChange(selectedLanguage);
     setState(() {});
