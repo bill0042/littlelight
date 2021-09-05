@@ -9,7 +9,7 @@ import 'package:little_light/models/wish_list.dart';
 import 'package:little_light/screens/add_wishlist.screen.dart';
 import 'package:little_light/services/littlelight/item_notes.service.dart';
 import 'package:little_light/models/character_sort_parameter.dart';
-import 'package:little_light/services/user_settings/item_sort_parameter.dart';
+import 'package:little_light/models/item_sort_parameter.dart';
 import 'package:little_light/services/user_settings/user_settings.service.dart';
 import 'package:little_light/utils/platform_capabilities.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
