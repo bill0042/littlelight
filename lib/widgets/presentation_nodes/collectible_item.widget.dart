@@ -20,9 +20,9 @@ import 'package:little_light/widgets/item_list/items/mod/mod_inventory_item.widg
 import 'package:little_light/widgets/item_list/items/weapon/weapon_inventory_item.widget.dart';
 
 class CollectibleItemWidget extends StatefulWidget {
-  final ManifestService manifest = new ManifestService();
-  final ProfileService profile = new ProfileService();
-  final AuthService auth = new AuthService();
+  final ManifestService manifest = ManifestService();
+  final ProfileService profile = ProfileService();
+  final AuthService auth = AuthService();
   final Map<int, List<ItemWithOwner>> itemsByHash;
   final int hash;
   CollectibleItemWidget({Key key, this.hash, this.itemsByHash})

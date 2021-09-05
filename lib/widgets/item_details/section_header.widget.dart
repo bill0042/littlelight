@@ -36,7 +36,7 @@ class SectionHeaderWidget extends ConsumerStatefulWidget {
     Key key,
   }) : super(key: key);
   @override
-  SectionHeaderWidgetState createState() => new SectionHeaderWidgetState();
+  SectionHeaderWidgetState createState() => SectionHeaderWidgetState();
 }
 
 class SectionHeaderWidgetState<T extends SectionHeaderWidget>

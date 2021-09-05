@@ -9,7 +9,7 @@ class TriumphSearchScreen extends DefinitionSearchScreen {
   TriumphSearchScreen({Key key}) : super(key: key);
 
   @override
-  TriumphSearchScreenState createState() => new TriumphSearchScreenState();
+  TriumphSearchScreenState createState() => TriumphSearchScreenState();
 }
 
 class TriumphSearchScreenState extends DefinitionSearchScreenState<

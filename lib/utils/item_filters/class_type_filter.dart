@@ -5,7 +5,7 @@ import 'package:little_light/utils/item_with_owner.dart';
 import 'base_item_filter.dart';
 
 class ClassTypeFilter extends BaseItemFilter<Set<DestinyClass>> {
-  ClassTypeFilter({Set<DestinyClass> selected, enabled: false})
+  ClassTypeFilter({Set<DestinyClass> selected, enabled = false})
       : super(Set(), selected ?? Set(), enabled: enabled);
 
   clear() {

@@ -11,14 +11,14 @@ import 'package:archive/archive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 
-typedef void DownloadProgress(int downloaded, int total);
+typedef DownloadProgress = void Function(int downloaded, int total);
 
 class ManifestService {
   sqflite.Database _db;
   DestinyManifest _manifestInfo;
-  final BungieApiService _api = new BungieApiService();
+  final BungieApiService _api = BungieApiService();
   final Map<String, dynamic> _cached = Map();
-  static final ManifestService _singleton = new ManifestService._internal();
+  static final ManifestService _singleton = ManifestService._internal();
 
   factory ManifestService() {
     return _singleton;
@@ -79,10 +79,10 @@ class ManifestService {
     String path = info.mobileWorldContentPaths[language];
     String url = BungieApiService.url(path);
     String localPath = await _localPath;
-    HttpClient httpClient = new HttpClient();
+    HttpClient httpClient = HttpClient();
     HttpClientRequest req = await httpClient.getUrl(Uri.parse(url));
     HttpClientResponse res = await req.close();
-    File zipFile = new File("$localPath/manifest_temp.zip");
+    File zipFile = File("$localPath/manifest_temp.zip");
     IOSink sink = zipFile.openWrite();
     int totalSize = res.contentLength;
     int loaded = 0;
@@ -116,7 +116,7 @@ class ManifestService {
   static List<int> _extractFromZip(dynamic zipFile) {
     List<int> unzippedData;
     List<int> bytes = zipFile.readAsBytesSync();
-    ZipDecoder decoder = new ZipDecoder();
+    ZipDecoder decoder = ZipDecoder();
     Archive archive = decoder.decodeBytes(bytes);
     for (ArchiveFile file in archive) {
       if (file.isFile) {
@@ -139,7 +139,7 @@ class ManifestService {
     var path = await storage.getPath(StorageKeys.manifestFile, dbPath: true);
     var dbFile = File(path);
     var dbExists = await dbFile.exists();
-    if(!dbExists) return null;
+    if (!dbExists) return null;
     try {
       sqflite.Database database =
           await sqflite.openDatabase("$path", readOnly: true);
@@ -172,7 +172,7 @@ class ManifestService {
     if (identity == null) {
       identity = DefinitionTableNames.identities[T];
     }
-    Map<int, T> defs = new Map();
+    Map<int, T> defs = Map();
     sqflite.Database db = await _openDb();
     String where;
     if ((parameters?.length ?? 0) > 0) {
@@ -204,7 +204,7 @@ class ManifestService {
     if (identity == null) {
       identity = DefinitionTableNames.identities[T];
     }
-    Map<int, T> defs = new Map();
+    Map<int, T> defs = Map();
     hashesSet.removeWhere((hash) {
       if (_cached.keys.contains("${type}_$hash")) {
         defs[hash] = _cached["${type}_$hash"];

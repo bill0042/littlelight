@@ -7,7 +7,7 @@ import 'package:little_light/services/storage/storage.service.dart';
 
 class DestinySettingsService {
   static final DestinySettingsService _singleton =
-      new DestinySettingsService._internal();
+      DestinySettingsService._internal();
   DateTime lastUpdated;
   factory DestinySettingsService() {
     return _singleton;

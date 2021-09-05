@@ -30,15 +30,15 @@ class RuneInfo {
   final RuneColor color;
   final int itemHash;
   final ArmorIntrinsics armorPerk;
-  
+
   const RuneInfo({
     this.color,
     this.itemHash,
     this.armorPerk,
   });
 
-  DamageType get armorMasterworkDamageType{
-    switch(color){
+  DamageType get armorMasterworkDamageType {
+    switch (color) {
       case RuneColor.Purple:
         return DamageType.Arc;
       case RuneColor.Red:
@@ -51,8 +51,8 @@ class RuneInfo {
     return null;
   }
 
-  WeaponMasterwork get weaponMasterwork{
-    switch(color){
+  WeaponMasterwork get weaponMasterwork {
+    switch (color) {
       case RuneColor.Purple:
         return WeaponMasterwork.Handling;
       case RuneColor.Green:
@@ -66,7 +66,7 @@ class RuneInfo {
   }
 }
 
-const Map<Rune, RuneInfo> _runeSpecs = const {
+const Map<Rune, RuneInfo> _runeSpecs = {
   Rune.AnyPurple: RuneInfo(color: RuneColor.Purple),
   Rune.Joy: RuneInfo(
       color: RuneColor.Purple,
@@ -159,7 +159,7 @@ class ChaliceRecipe {
       Rune.Joy,
     ].contains(_top)) {
       var _spec = _runeSpecs[_left];
-      return _runesByColor[_spec.color].map((r)=>_runeSpecs[r]).toList();
+      return _runesByColor[_spec.color].map((r) => _runeSpecs[r]).toList();
     }
     return [_runeSpecs[_left]];
   }

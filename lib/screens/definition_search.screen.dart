@@ -15,7 +15,7 @@ abstract class DefinitionSearchScreen extends ConsumerStatefulWidget {
 
 abstract class DefinitionSearchScreenState<T extends DefinitionSearchScreen, DT>
     extends ConsumerState<T> with UserSettingsConsumerState {
-  TextEditingController _searchFieldController = new TextEditingController();
+  TextEditingController _searchFieldController = TextEditingController();
   List<DT> items;
 
   @override

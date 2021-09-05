@@ -12,7 +12,7 @@ import 'package:little_light/widgets/transfer_destinations/base_transfer_destina
 
 class ScreenshotTransferDestinationsWidget
     extends BaseTransferDestinationsWidget {
-  final InventoryService inventory = new InventoryService();
+  final InventoryService inventory = InventoryService();
   final double pixelSize;
   ScreenshotTransferDestinationsWidget(
       {DestinyItemComponent item,

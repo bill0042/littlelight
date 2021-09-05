@@ -91,10 +91,10 @@ class Loadout {
 
   Future<int> _removeBlockingExotic(
       DestinyInventoryItemDefinition _itemDef) async {
-    var isArmor =
-        InventoryBucket.exoticArmorBlockBuckets.contains(_itemDef.inventory?.bucketTypeHash);
-    var isWeapon =
-        InventoryBucket.exoticWeaponBlockBuckets.contains(_itemDef.inventory?.bucketTypeHash);
+    var isArmor = InventoryBucket.exoticArmorBlockBuckets
+        .contains(_itemDef.inventory?.bucketTypeHash);
+    var isWeapon = InventoryBucket.exoticWeaponBlockBuckets
+        .contains(_itemDef.inventory?.bucketTypeHash);
     if (!isArmor && !isWeapon) return null;
     var defs = await ManifestService()
         .getDefinitions<DestinyInventoryItemDefinition>(

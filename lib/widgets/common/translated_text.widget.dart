@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/translations/translations.consumer.dart';
 
-typedef String ExtractTextFromData(dynamic data);
+typedef ExtractTextFromData = String Function(dynamic data);
 
 class TranslatedTextWidget extends ConsumerStatefulWidget {
   final String text;

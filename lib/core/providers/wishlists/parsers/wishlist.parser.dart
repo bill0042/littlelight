@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:little_light/models/wish_list.dart';
 
-typedef OnAddToWishlist(
+typedef OnAddToWishlist = Function(
     {String name,
     int hash,
     List<List<int>> perks,

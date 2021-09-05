@@ -11,7 +11,7 @@ class NestedCollectibleItemWidget extends CollectibleItemWidget {
 
   @override
   CollectibleItemWidgetState createState() {
-    return new NestedCollectibleItemWidgetState();
+    return NestedCollectibleItemWidgetState();
   }
 }
 
@@ -26,9 +26,11 @@ class NestedCollectibleItemWidgetState extends CollectibleItemWidgetState {
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey.shade300, width: 1)),
                 child: Stack(children: [
-                  Positioned.fill(child:buildIcon(context)),
+                  Positioned.fill(child: buildIcon(context)),
                   Positioned(right: 4, bottom: 4, child: buildItemCount()),
-                  Positioned.fill(child: buildSelectedBorder(context),),
+                  Positioned.fill(
+                    child: buildSelectedBorder(context),
+                  ),
                   buildButton(context)
                 ]))));
   }
@@ -38,7 +40,6 @@ class NestedCollectibleItemWidgetState extends CollectibleItemWidgetState {
     return QueuedNetworkImage(
         imageUrl: BungieApiService.url(definition.displayProperties.icon));
   }
-
 
   bool get unlocked {
     if (!widget.auth.isLogged) return true;

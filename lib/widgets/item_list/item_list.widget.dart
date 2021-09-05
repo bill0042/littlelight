@@ -40,9 +40,9 @@ const _suppressEmptySpaces = [
 
 class ItemListWidget extends ConsumerStatefulWidget {
   final String characterId;
-  final ManifestService manifest = new ManifestService();
-  final ProfileService profile = new ProfileService();
-  final NotificationService broadcaster = new NotificationService();
+  final ManifestService manifest = ManifestService();
+  final ProfileService profile = ProfileService();
+  final NotificationService broadcaster = NotificationService();
   final EdgeInsets padding;
   final List<int> bucketHashes;
   final Map<int, double> scrollPositions;
@@ -67,7 +67,7 @@ class ItemListWidget extends ConsumerStatefulWidget {
       this.fixedSizedEquipmentBuckets = false})
       : super(key: key);
   @override
-  ItemListWidgetState createState() => new ItemListWidgetState();
+  ItemListWidgetState createState() => ItemListWidgetState();
 }
 
 class ItemListWidgetState extends ConsumerState<ItemListWidget>
@@ -200,7 +200,7 @@ class ItemListWidgetState extends ConsumerState<ItemListWidget>
   List<ListItem> getListIndex(BuildContext context) {
     List<ListItem> list = [];
     if (widget.includeInfoHeader) {
-      list.add(new ListItem(ListItem.infoHeader, null));
+      list.add(ListItem(ListItem.infoHeader, null));
     }
 
     buckets.forEach((b) {
@@ -212,33 +212,33 @@ class ItemListWidgetState extends ConsumerState<ItemListWidget>
         bucketSize = 3;
       }
       if (itemCount > 0) {
-        list.add(new ListItem(ListItem.bucketHeader, b.bucketHash,
+        list.add(ListItem(ListItem.bucketHeader, b.bucketHash,
             bucketHash: b.bucketHash, itemCount: itemCount));
       } else {
         return;
       }
 
       if (b.equipped != null) {
-        list.add(new ListItem(ListItem.equippedItem, b.equipped.itemHash,
+        list.add(ListItem(ListItem.equippedItem, b.equipped.itemHash,
             bucketHash: b.bucketHash, itemComponent: b.equipped));
       }
 
       b.unequipped?.forEach((i) {
-        list.add(new ListItem(ListItem.unequippedItem, i.itemHash,
+        list.add(ListItem(ListItem.unequippedItem, i.itemHash,
             bucketHash: b.bucketHash, itemComponent: i));
       });
 
       var emptyItems = bucketSize - itemCount;
       for (var i = 0; i < emptyItems; i++) {
-        list.add(new ListItem(ListItem.unequippedItem, null,
-            bucketHash: b.bucketHash));
+        list.add(
+            ListItem(ListItem.unequippedItem, null, bucketHash: b.bucketHash));
       }
 
-      list.add(new ListItem(ListItem.spacer, null, bucketHash: b.bucketHash));
+      list.add(ListItem(ListItem.spacer, null, bucketHash: b.bucketHash));
     });
     if (!widget.shrinkWrap) {
-      list.add(new ListItem(ListItem.spacer, null));
-      list.add(new ListItem(ListItem.spacer, null));
+      list.add(ListItem(ListItem.spacer, null));
+      list.add(ListItem(ListItem.spacer, null));
     }
 
     return list;

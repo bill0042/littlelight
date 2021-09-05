@@ -4,7 +4,7 @@ import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/refresh_button.widget.dart';
 
-typedef void OnSelect(categoryHash);
+typedef OnSelect = void Function(dynamic categoryHash);
 
 class ItemTypeMenuWidget extends StatelessWidget {
   final TabController controller;
@@ -26,10 +26,10 @@ class ItemTypeMenuWidget extends StatelessWidget {
         child: Container(
             padding: EdgeInsets.only(bottom: paddingBottom),
             color: Colors.black,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-              Expanded(child:TabBar(
+            child:
+                Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              Expanded(
+                  child: TabBar(
                 indicator: BoxDecoration(
                     border:
                         Border(top: BorderSide(width: 2, color: Colors.white))),
@@ -37,10 +37,7 @@ class ItemTypeMenuWidget extends StatelessWidget {
                 labelPadding: EdgeInsets.all(0),
                 tabs: getButtons(),
               )),
-              Container(
-                width:40,
-                child:RefreshButtonWidget()
-              )
+              Container(width: 40, child: RefreshButtonWidget())
             ])));
   }
 
@@ -52,7 +49,7 @@ class ItemTypeMenuWidget extends StatelessWidget {
 }
 
 class ItemTypeMenuButton extends StatelessWidget {
-  final ManifestService manifest = new ManifestService();
+  final ManifestService manifest = ManifestService();
   final int categoryHash;
 
   ItemTypeMenuButton(this.categoryHash);
@@ -60,7 +57,7 @@ class ItemTypeMenuButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ManifestText<DestinyItemCategoryDefinition>(categoryHash,
-    uppercase: true,
+        uppercase: true,
         style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13));
   }
 }

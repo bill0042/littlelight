@@ -17,7 +17,7 @@ import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
 class ManagementBlockWidget extends BaseDestinyStatelessItemWidget {
-  final InventoryService inventory = new InventoryService();
+  final InventoryService inventory = InventoryService();
   ManagementBlockWidget(
       DestinyItemComponent item,
       DestinyInventoryItemDefinition definition,

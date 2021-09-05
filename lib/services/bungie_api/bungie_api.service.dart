@@ -36,7 +36,7 @@ class BungieApiService {
   static const String baseUrl = 'https://www.bungie.net';
   static const String apiUrl = "$baseUrl/Platform";
 
-  static final BungieApiService _singleton = new BungieApiService._internal();
+  static final BungieApiService _singleton = BungieApiService._internal();
 
   factory BungieApiService() {
     return _singleton;
@@ -66,16 +66,16 @@ class BungieApiService {
   }
 
   Future<DestinyManifestResponse> getManifest() {
-    return Destiny2.getDestinyManifest(new Client());
+    return Destiny2.getDestinyManifest(Client());
   }
 
   Future<BungieNetToken> requestToken(String code) {
-    return OAuth.getToken(new Client(), clientId, clientSecret, code);
+    return OAuth.getToken(Client(), clientId, clientSecret, code);
   }
 
   Future<BungieNetToken> refreshToken(String refreshToken) {
-    return OAuth.refreshToken(new Client(autoRefreshToken: false), clientId,
-        clientSecret, refreshToken);
+    return OAuth.refreshToken(
+        Client(autoRefreshToken: false), clientId, clientSecret, refreshToken);
   }
 
   Future<DestinyProfileResponse> getCurrentProfile(
@@ -94,7 +94,7 @@ class BungieApiService {
       BungieMembershipType membershipType,
       [BungieNetToken token]) async {
     DestinyProfileResponseResponse response = await Destiny2.getProfile(
-        new Client(token: token), components, membershipId, membershipType);
+        Client(token: token), components, membershipId, membershipType);
     return response.response;
   }
 
@@ -104,7 +104,7 @@ class BungieApiService {
     GroupUserInfoCard membership = await auth.getMembership();
     if (membership == null) return null;
     DestinyVendorsResponseResponse response = await Destiny2.getVendors(
-        new Client(token: token),
+        Client(token: token),
         characterId,
         components,
         membership.membershipId,
@@ -116,7 +116,7 @@ class BungieApiService {
   Future<UserMembershipData> getMemberships() async {
     BungieNetToken token = await auth.getToken();
     UserMembershipDataResponse response =
-        await User.getMembershipDataForCurrentUser(new Client(token: token));
+        await User.getMembershipDataForCurrentUser(Client(token: token));
     return response.response;
   }
 
@@ -125,7 +125,7 @@ class BungieApiService {
     BungieNetToken token = await auth.getToken();
     GroupUserInfoCard membership = await auth.getMembership();
     Int32Response response = await Destiny2.transferItem(
-        new Client(token: token),
+        Client(token: token),
         DestinyItemTransferRequest()
           ..itemReferenceHash = itemHash
           ..stackSize = stackSize
@@ -141,7 +141,7 @@ class BungieApiService {
     BungieNetToken token = await auth.getToken();
     GroupUserInfoCard membership = await auth.getMembership();
     Int32Response response = await Destiny2.pullFromPostmaster(
-        new Client(token: token),
+        Client(token: token),
         DestinyPostmasterTransferRequest()
           ..itemReferenceHash = itemHash
           ..stackSize = stackSize
@@ -155,7 +155,7 @@ class BungieApiService {
     BungieNetToken token = await auth.getToken();
     GroupUserInfoCard membership = await auth.getMembership();
     Int32Response response = await Destiny2.equipItem(
-        new Client(token: token),
+        Client(token: token),
         DestinyItemActionRequest()
           ..itemId = itemId
           ..characterId = characterId
@@ -196,7 +196,7 @@ class BungieApiService {
     BungieNetToken token = await auth.getToken();
     GroupUserInfoCard membership = await auth.getMembership();
     var response = await Destiny2.equipItems(
-        new Client(token: token),
+        Client(token: token),
         DestinyItemSetActionRequest()
           ..itemIds = itemIds
           ..characterId = characterId
@@ -205,7 +205,7 @@ class BungieApiService {
   }
 
   Future<CoreSettingsConfiguration> getCommonSettings() async {
-    var response = await Settings.getCommonSettings(new Client());
+    var response = await Settings.getCommonSettings(Client());
     return response.response;
   }
 }

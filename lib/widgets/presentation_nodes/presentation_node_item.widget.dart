@@ -12,7 +12,7 @@ import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 
-typedef void PresentationNodePressedHandler(
+typedef PresentationNodePressedHandler = void Function(
     int hash, int depth, bool isCategorySet);
 
 class PresentationNodeItemWidget extends ConsumerStatefulWidget {

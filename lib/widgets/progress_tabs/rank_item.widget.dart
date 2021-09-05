@@ -40,7 +40,7 @@ class RankItemWidgetState<T extends RankItemWidget> extends State<T>
   @override
   void initState() {
     super.initState();
-    
+
     progression = widget.progression;
     loadDefinitions();
     subscription = widget.broadcaster.listen((event) {
@@ -126,13 +126,16 @@ class RankItemWidgetState<T extends RankItemWidget> extends State<T>
   }
 
   Widget buildLabels(BuildContext context) {
-    return Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, crossAxisAlignment: CrossAxisAlignment.stretch ,children: [
-      buildTopLabels(context),
-      FractionallySizedBox(
-          widthFactor: .60,
-          child: AspectRatio(aspectRatio: 1, child: Container())),
-      buildBottomLabels(context),
-    ]);
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          buildTopLabels(context),
+          FractionallySizedBox(
+              widthFactor: .60,
+              child: AspectRatio(aspectRatio: 1, child: Container())),
+          buildBottomLabels(context),
+        ]);
   }
 
   buildTopLabels(BuildContext context) {
@@ -189,12 +192,13 @@ class RankItemWidgetState<T extends RankItemWidget> extends State<T>
                   definition.color.red,
                   definition.color.green,
                   definition.color.blue)),
-              value: (progression?.progressToNextLevel ?? 0) / (progression?.nextLevelAt ?? 1)),
+              value: (progression?.progressToNextLevel ?? 0) /
+                  (progression?.nextLevelAt ?? 1)),
         ));
   }
 
-  DestinyProgressionStepDefinition get currentStep =>
-      definition.steps[widget.progression.level.clamp(0, definition.steps.length -1)];
+  DestinyProgressionStepDefinition get currentStep => definition
+      .steps[widget.progression.level.clamp(0, definition.steps.length - 1)];
 
   @override
   bool get wantKeepAlive => true;

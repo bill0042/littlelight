@@ -13,7 +13,7 @@ class QueuedNetworkImage extends StatelessWidget {
   QueuedNetworkImage(
       {this.imageUrl,
       this.placeholder,
-      this.fit: BoxFit.contain,
+      this.fit = BoxFit.contain,
       this.alignment = Alignment.center,
       this.fadeInDuration,
       Key key})

@@ -27,7 +27,7 @@ class VendorDetailsScreen extends StatefulWidget {
       : super(key: key);
 
   @override
-  VendorDetailsScreenState createState() => new VendorDetailsScreenState();
+  VendorDetailsScreenState createState() => VendorDetailsScreenState();
 }
 
 class VendorDetailsScreenState extends State<VendorDetailsScreen> {

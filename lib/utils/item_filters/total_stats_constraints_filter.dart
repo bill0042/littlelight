@@ -11,8 +11,7 @@ class TotalStatsConstraints {
   bool includeNonArmorItems;
   int max;
   int min;
-  TotalStatsConstraints(
-      [this.min, this.max, this.includeNonArmorItems = true]);
+  TotalStatsConstraints([this.min, this.max, this.includeNonArmorItems = true]);
 }
 
 class TotalStatsConstraintsFilter
@@ -27,18 +26,20 @@ class TotalStatsConstraintsFilter
     availableValues.includeNonArmorItems = false;
     availableValues.min = 9999;
     availableValues.max = -9999;
-    for(var item in items){
+    for (var item in items) {
       var def = definitions[item.item.itemHash];
-      if(def.itemType == DestinyItemType.Armor){
-        var stats = ProfileService().getPrecalculatedStats(item.item.itemInstanceId);
-        var totalStats = stats.values.fold<int>(0, (t, s) =>t + (s.value ?? 0));
+      if (def.itemType == DestinyItemType.Armor) {
+        var stats =
+            ProfileService().getPrecalculatedStats(item.item.itemInstanceId);
+        var totalStats =
+            stats.values.fold<int>(0, (t, s) => t + (s.value ?? 0));
         availableValues.min = min(availableValues.min, totalStats);
         availableValues.max = max(availableValues.max, totalStats);
-      }else{
+      } else {
         availableValues.includeNonArmorItems = true;
       }
     }
-    
+
     this.available = (this.availableValues?.min ?? 9999) <
         (this.availableValues?.max ?? -9999);
 
@@ -54,9 +55,11 @@ class TotalStatsConstraintsFilter
   bool filterItem(ItemWithOwner item,
       {Map<int, DestinyInventoryItemDefinition> definitions}) {
     var def = definitions[item.item.itemHash];
-    if (def.itemType != DestinyItemType.Armor) return value.includeNonArmorItems;
-    var stats = ProfileService().getPrecalculatedStats(item.item.itemInstanceId);
-    var totalStats = stats.values.fold<int>(0, (t, s) =>t + (s.value ?? 0));
+    if (def.itemType != DestinyItemType.Armor)
+      return value.includeNonArmorItems;
+    var stats =
+        ProfileService().getPrecalculatedStats(item.item.itemInstanceId);
+    var totalStats = stats.values.fold<int>(0, (t, s) => t + (s.value ?? 0));
     if (totalStats < value.min) return false;
     if (totalStats > value.max) return false;
     return true;

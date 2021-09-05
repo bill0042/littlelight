@@ -110,7 +110,7 @@ class ProfileInfoState extends State<ProfileInfoWidget>
   loadUser() async {
     UserMembershipData membershipData = await widget.auth.getMembershipData();
     GroupUserInfoCard currentMembership = await widget.auth.getMembership();
-    if(!mounted) return;
+    if (!mounted) return;
     setState(() {
       bungieNetUser = membershipData?.bungieNetUser;
       selectedMembership = currentMembership;
@@ -185,12 +185,13 @@ class ProfileInfoState extends State<ProfileInfoWidget>
   Widget buildActivityInfo(BuildContext context) {
     var lastCharacter =
         widget.profile.getCharacters(CharacterSortParameter())?.first;
-    if(lastCharacter == null){
+    if (lastCharacter == null) {
       return Container();
     }
     var lastPlayed = DateTime.parse(lastCharacter.dateLastPlayed);
     var currentSession = lastCharacter.minutesPlayedThisSession;
-    var time = timeago.format(lastPlayed, allowFromNow: true, locale: StorageService.getLanguage());
+    var time = timeago.format(lastPlayed,
+        allowFromNow: true, locale: StorageService.getLanguage());
     if (lastPlayed
         .add(Duration(minutes: int.parse(currentSession) + 10))
         .isBefore(DateTime.now().toUtc())) {
@@ -202,17 +203,23 @@ class ProfileInfoState extends State<ProfileInfoWidget>
     }
     var activities =
         widget.profile.getCharacterActivities(lastCharacter.characterId);
-    if(activities.currentActivityHash ==  82913930){
+    if (activities.currentActivityHash == 82913930) {
       return ManifestText<DestinyPlaceDefinition>(2961497387,
-        textExtractor: (def)=>def.displayProperties.description,
-          style: TextStyle(fontSize: 12, color: Colors.grey.shade100, fontWeight: FontWeight.bold));
+          textExtractor: (def) => def.displayProperties.description,
+          style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey.shade100,
+              fontWeight: FontWeight.bold));
     }
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       ManifestText<DestinyActivityModeDefinition>(
           activities.currentActivityModeHash,
           style: TextStyle(fontSize: 10, color: Colors.grey.shade100)),
       ManifestText<DestinyActivityDefinition>(activities.currentActivityHash,
-          style: TextStyle(fontSize: 12, color: Colors.grey.shade100, fontWeight: FontWeight.bold))
+          style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey.shade100,
+              fontWeight: FontWeight.bold))
     ]);
   }
 
@@ -257,7 +264,8 @@ class ProfileInfoState extends State<ProfileInfoWidget>
                     ));
               },
             )),
-            IconButton(enableFeedback: false,
+            IconButton(
+              enableFeedback: false,
               icon: Transform.rotate(
                   angle: -_heightFactor.value * 1.5,
                   child: Icon(Icons.settings)),
@@ -279,7 +287,8 @@ class ProfileInfoState extends State<ProfileInfoWidget>
                 padding: EdgeInsets.symmetric(horizontal: 8),
                 child: Icon(platform.iconData)),
             Expanded(child: Text(selectedMembership?.displayName ?? "")),
-            IconButton(enableFeedback: false,
+            IconButton(
+              enableFeedback: false,
               icon: Transform.rotate(
                   angle: -_heightFactor.value * 1.5,
                   child: Icon(Icons.settings)),

@@ -19,7 +19,7 @@ import 'package:little_light/widgets/common/objective.widget.dart';
 import 'package:bungie_api/enums/destiny_record_state.dart';
 
 class RecordItemWidget extends StatefulWidget {
-  final ManifestService manifest = new ManifestService();
+  final ManifestService manifest = ManifestService();
   final int hash;
   RecordItemWidget({Key key, this.hash}) : super(key: key);
 

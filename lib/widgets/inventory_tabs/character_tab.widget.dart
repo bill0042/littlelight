@@ -12,7 +12,7 @@ class CharacterTabWidget extends StatefulWidget {
       {this.scrollPositions, Key key})
       : super(key: key);
   @override
-  CharacterTabWidgetState createState() => new CharacterTabWidgetState();
+  CharacterTabWidgetState createState() => CharacterTabWidgetState();
 }
 
 class CharacterTabWidgetState extends State<CharacterTabWidget> {

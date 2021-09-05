@@ -9,7 +9,7 @@ import 'package:little_light/widgets/presentation_nodes/presentation_node_body.w
 import 'package:little_light/widgets/presentation_nodes/presentation_node_list.widget.dart';
 
 class PresentationNodeTabsWidget extends StatefulWidget {
-  final _manifest = new ManifestService();
+  final _manifest = ManifestService();
   final int presentationNodeHash;
   final List<int> presentationNodeHashes;
   final int depth;
@@ -29,7 +29,7 @@ class PresentationNodeTabsWidget extends StatefulWidget {
 
   @override
   PresentationNodeTabsWidgetState createState() =>
-      new PresentationNodeTabsWidgetState();
+      PresentationNodeTabsWidgetState();
 }
 
 class PresentationNodeTabsWidgetState

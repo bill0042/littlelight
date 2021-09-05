@@ -3,7 +3,7 @@ import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-typedef String ExtractTextFromData(dynamic data);
+typedef ExtractTextFromData = String Function(dynamic data);
 
 class ExpiryDateWidget extends StatefulWidget {
   final String date;

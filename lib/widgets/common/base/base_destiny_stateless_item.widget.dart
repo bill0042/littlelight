@@ -11,8 +11,8 @@ abstract class BaseDestinyStatelessItemWidget extends ConsumerWidget {
   final DestinyInventoryItemDefinition definition;
   final DestinyItemInstanceComponent instanceInfo;
   final String characterId;
-  final ProfileService profile = new ProfileService();
-  final ManifestService manifest = new ManifestService();
+  final ProfileService profile = ProfileService();
+  final ManifestService manifest = ManifestService();
 
   BaseDestinyStatelessItemWidget(
       {this.item,

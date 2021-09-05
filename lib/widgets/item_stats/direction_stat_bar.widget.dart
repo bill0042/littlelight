@@ -20,7 +20,9 @@ class DirectionStatBarWidget extends StatelessWidget {
     var equippedDirection = calculateDirection(equippedValue);
     return Container(
         child: Stack(children: [
-      Positioned.fill(child: CustomPaint(painter: _SemiCirclePainter(color: backgroundColor))),
+      Positioned.fill(
+          child:
+              CustomPaint(painter: _SemiCirclePainter(color: backgroundColor))),
       Positioned.fill(
           child: CustomPaint(
               painter: _SemiCirclePainter(

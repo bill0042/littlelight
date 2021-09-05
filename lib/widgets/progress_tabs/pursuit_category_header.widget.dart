@@ -9,7 +9,7 @@ import 'package:little_light/widgets/item_list/bucket_header.widget.dart';
 import 'package:little_light/widgets/progress_tabs/pursuits_display_options_selector.widget.dart';
 
 class PursuitCategoryHeaderWidget extends BucketHeaderWidget {
-  final ManifestService manifest = new ManifestService();
+  final ManifestService manifest = ManifestService();
   final Function onChanged;
   final String label;
   PursuitCategoryHeaderWidget(
@@ -17,7 +17,7 @@ class PursuitCategoryHeaderWidget extends BucketHeaderWidget {
       : super(key: key, hash: hash, itemCount: itemCount);
   @override
   PursuitCategoryHeaderWidgetState createState() =>
-      new PursuitCategoryHeaderWidgetState();
+      PursuitCategoryHeaderWidgetState();
 }
 
 class PursuitCategoryHeaderWidgetState

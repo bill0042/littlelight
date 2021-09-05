@@ -12,7 +12,8 @@ class BaseItemStatWidget extends StatelessWidget {
   final StatValues modValues;
   final DestinyStatDisplayDefinition scaled;
 
-  BaseItemStatWidget({this.statHash, this.modValues, this.scaled, Key key}):super(key:key);
+  BaseItemStatWidget({this.statHash, this.modValues, this.scaled, Key key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +51,9 @@ class BaseItemStatWidget extends StatelessWidget {
   Color get neutralColor => Colors.grey.shade300;
 
   int get maxBarSize {
-    if(scaled?.maximumValue != null){
-      return max(scaled?.maximumValue, baseBarSize + modBarSize + masterworkBarSize);
+    if (scaled?.maximumValue != null) {
+      return max(
+          scaled?.maximumValue, baseBarSize + modBarSize + masterworkBarSize);
     }
     return max(100, baseBarSize + modBarSize + masterworkBarSize);
   }
@@ -99,15 +101,15 @@ class BaseItemStatWidget extends StatelessWidget {
     return (masterwork).abs();
   }
 
-  Color get nameColor{
-    if(isHiddenStat){
+  Color get nameColor {
+    if (isHiddenStat) {
       return hiddenStatColor;
     }
     return neutralColor;
   }
 
-  Color get valueColor{
-    if(masterwork > 0){
+  Color get valueColor {
+    if (masterwork > 0) {
       return masterworkColor;
     }
     if (selected > equipped) {
@@ -116,7 +118,7 @@ class BaseItemStatWidget extends StatelessWidget {
     if (equipped > selected) {
       return negativeColor;
     }
-    if(isHiddenStat){
+    if (isHiddenStat) {
       return hiddenStatColor;
     }
     return neutralColor;
@@ -132,7 +134,6 @@ class BaseItemStatWidget extends StatelessWidget {
     return neutralColor;
   }
 
-
   bool get isHiddenStat {
     return DestinyData.hiddenStats.contains(statHash);
   }
@@ -141,7 +142,7 @@ class BaseItemStatWidget extends StatelessWidget {
     return scaled?.displayAsNumeric ?? false;
   }
 
-  bool get isDirection{
+  bool get isDirection {
     return statHash == 2715839340;
   }
 

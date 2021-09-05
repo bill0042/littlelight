@@ -62,7 +62,7 @@ class DetailsItemStatWidget extends BaseItemStatWidget {
   }
 
   Widget buildConstrainedBar(BuildContext context, BoxConstraints constraints) {
-    var width = constraints.maxWidth/2;
+    var width = constraints.maxWidth / 2;
     if (noBar) {
       return Container(width: width);
     }

@@ -13,7 +13,7 @@ class DuplicatedItemsScreen extends StatefulWidget {
   final SearchController searchController =
       SearchController.withDuplicatedItemsFilters();
   @override
-  DuplicatedItemsScreenState createState() => new DuplicatedItemsScreenState();
+  DuplicatedItemsScreenState createState() => DuplicatedItemsScreenState();
 }
 
 class DuplicatedItemsScreenState extends State<DuplicatedItemsScreen>

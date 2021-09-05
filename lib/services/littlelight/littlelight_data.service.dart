@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 class LittleLightDataService {
   static final LittleLightDataService _singleton =
-      new LittleLightDataService._internal();
+      LittleLightDataService._internal();
   StorageService storage = StorageService.global();
   factory LittleLightDataService() {
     return _singleton;

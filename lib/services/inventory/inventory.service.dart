@@ -401,7 +401,7 @@ class InventoryService {
       int result = await api.transferItem(item.itemHash, stackSize, true,
           item.itemInstanceId, sourceCharacterId);
       if (result != 0) {
-        throw new TransferError(TransferErrorCode.cantMoveToVault);
+        throw TransferError(TransferErrorCode.cantMoveToVault);
       }
       if (def.inventory.isInstanceItem) {
         item.bucketHash = InventoryBucket.general;
@@ -447,7 +447,7 @@ class InventoryService {
       int result = await api.transferItem(item.itemHash, stackSize, false,
           item.itemInstanceId, destinationCharacterId);
       if (result != 0) {
-        throw new TransferError(TransferErrorCode.cantMoveToCharacter);
+        throw TransferError(TransferErrorCode.cantMoveToCharacter);
       }
 
       if (def.inventory.isInstanceItem) {
@@ -494,7 +494,7 @@ class InventoryService {
         equipment.firstWhere((i) => i.bucketHash == item.bucketHash);
     int result = await api.equipItem(item.itemInstanceId, characterId);
     if (result != 0) {
-      throw new TransferError(TransferErrorCode.cantEquip);
+      throw TransferError(TransferErrorCode.cantEquip);
     }
     List<DestinyItemComponent> inventory =
         profile.getCharacterInventory(characterId);
@@ -560,7 +560,7 @@ class InventoryService {
           profile.getInstanceInfo(previouslyEquippedItem.itemInstanceId);
       if (![PlatformErrorCodes.Success, PlatformErrorCodes.None]
           .contains(result.equipStatus)) {
-        throw new TransferError(TransferErrorCode.cantEquip);
+        throw TransferError(TransferErrorCode.cantEquip);
       }
       previouslyEquippedInstance.isEquipped = false;
       charEquipment.removeWhere((item) =>
@@ -750,12 +750,12 @@ class InventoryService {
             i.itemInstanceId == item.item.itemInstanceId,
         orElse: () => null);
     profileItem.state = item?.item?.state;
-    _broadcaster.push(new NotificationEvent(NotificationType.itemStateUpdate,
-        item: item.item));
+    _broadcaster.push(
+        NotificationEvent(NotificationType.itemStateUpdate, item: item.item));
     await api.changeLockState(item?.item?.itemInstanceId, ownerId, locked);
   }
 
   fireLocalUpdate() {
-    _broadcaster.push(new NotificationEvent(NotificationType.localUpdate));
+    _broadcaster.push(NotificationEvent(NotificationType.localUpdate));
   }
 }

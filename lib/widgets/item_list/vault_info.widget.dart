@@ -24,8 +24,8 @@ import 'package:little_light/widgets/item_list/character_info.widget.dart';
 import 'package:little_light/widgets/option_sheets/loadout_select_sheet.widget.dart';
 
 class VaultInfoWidget extends CharacterInfoWidget {
-  final ManifestService manifest = new ManifestService();
-  final ProfileService profile = new ProfileService();
+  final ManifestService manifest = ManifestService();
+  final ProfileService profile = ProfileService();
   final NotificationService broadcaster = NotificationService();
 
   VaultInfoWidget({Key key}) : super(key: key);

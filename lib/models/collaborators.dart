@@ -34,10 +34,7 @@ class TranslationLanguage {
   List<String> languages;
   List<Collaborator> translators;
 
-  TranslationLanguage({
-    this.languages,
-    this.translators
-  });
+  TranslationLanguage({this.languages, this.translators});
 
   factory TranslationLanguage.fromJson(dynamic json) {
     return _$TranslationLanguageFromJson(json);

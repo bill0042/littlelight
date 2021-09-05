@@ -19,5 +19,4 @@ class StatSorter extends BaseItemSorter {
     int totalB = (statsB ?? const {})["$statHash"]?.value ?? 0;
     return direction * totalA.compareTo(totalB);
   }
-
 }

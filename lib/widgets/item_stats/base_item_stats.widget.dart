@@ -142,7 +142,7 @@ class BaseItemStatsState<T extends BaseItemStatsWidget>
   }
 
   Map<int, StatValues> getStatValues() {
-    Map<int, StatValues> map = new Map();
+    Map<int, StatValues> map = Map();
     if (plugDefinitions == null) {
       return map;
     }
@@ -150,8 +150,8 @@ class BaseItemStatsState<T extends BaseItemStatsWidget>
       var pre = precalculatedStats?.containsKey("${s.statTypeHash}") ?? false
           ? precalculatedStats["${s.statTypeHash}"].value
           : 0;
-      map[s.statTypeHash] = new StatValues(
-          equipped: s.value, selected: s.value, precalculated: pre);
+      map[s.statTypeHash] =
+          StatValues(equipped: s.value, selected: s.value, precalculated: pre);
     });
 
     List<int> plugHashes = List.generate(socketController.socketCount,
@@ -167,7 +167,7 @@ class BaseItemStatsState<T extends BaseItemStatsWidget>
       DestinyInventoryItemDefinition selectedDef =
           plugDefinitions[selectedPlugHash];
       def?.investmentStats?.forEach((stat) {
-        StatValues values = map[stat.statTypeHash] ?? new StatValues();
+        StatValues values = map[stat.statTypeHash] ?? StatValues();
         if (def.plug?.uiPlugLabel == 'masterwork') {
           if (selectedDef == null) {
             values.masterwork += stat.value;
@@ -183,7 +183,7 @@ class BaseItemStatsState<T extends BaseItemStatsWidget>
 
       if (selectedDef != null) {
         selectedDef?.investmentStats?.forEach((stat) {
-          StatValues values = map[stat.statTypeHash] ?? new StatValues();
+          StatValues values = map[stat.statTypeHash] ?? StatValues();
           if (selectedDef.plug?.uiPlugLabel == 'masterwork') {
             values.masterwork += stat.value;
           } else {
@@ -226,10 +226,14 @@ class BaseItemStatsState<T extends BaseItemStatsWidget>
     stats.sort((statA, statB) {
       int valA = noBarStats.contains(statA.statTypeHash)
           ? 2
-          : DestinyData.hiddenStats.contains(statA.statTypeHash) ? 1 : 0;
+          : DestinyData.hiddenStats.contains(statA.statTypeHash)
+              ? 1
+              : 0;
       int valB = noBarStats.contains(statB.statTypeHash)
           ? 2
-          : DestinyData.hiddenStats.contains(statB.statTypeHash) ? 1 : 0;
+          : DestinyData.hiddenStats.contains(statB.statTypeHash)
+              ? 1
+              : 0;
       var result = valA - valB;
       if (result != 0) return result;
       int posA = statGroupDefinition.scaledStats

@@ -85,7 +85,7 @@ class DestinyStatsWidgetState extends BaseDestinyItemState<ItemStatsWidget>
   }
 
   Map<int, StatValues> getModValues() {
-    Map<int, StatValues> map = new Map();
+    Map<int, StatValues> map = Map();
     if (widget.plugDefinitions == null) {
       return map;
     }
@@ -111,7 +111,7 @@ class DestinyStatsWidgetState extends BaseDestinyItemState<ItemStatsWidget>
       DestinyInventoryItemDefinition selectedDef =
           widget.plugDefinitions[widget.selectedPerks[index]];
       def?.investmentStats?.forEach((stat) {
-        StatValues values = map[stat.statTypeHash] ?? new StatValues();
+        StatValues values = map[stat.statTypeHash] ?? StatValues();
         if (def.plug?.uiPlugLabel == 'masterwork' &&
             (state?.reusablePlugHashes?.length ?? 0) == 0) {
           values.masterwork += stat.value;
@@ -126,7 +126,7 @@ class DestinyStatsWidgetState extends BaseDestinyItemState<ItemStatsWidget>
 
       if (selectedDef != null) {
         selectedDef.investmentStats.forEach((stat) {
-          StatValues values = map[stat.statTypeHash] ?? new StatValues();
+          StatValues values = map[stat.statTypeHash] ?? StatValues();
           if (selectedDef.plug?.uiPlugLabel != 'masterwork') {
             values.selected += stat.value;
           }
@@ -167,10 +167,14 @@ class DestinyStatsWidgetState extends BaseDestinyItemState<ItemStatsWidget>
     stats.sort((statA, statB) {
       int valA = noBarStats.contains(statA.statTypeHash)
           ? 2
-          : DestinyData.hiddenStats.contains(statA.statTypeHash) ? 1 : 0;
+          : DestinyData.hiddenStats.contains(statA.statTypeHash)
+              ? 1
+              : 0;
       int valB = noBarStats.contains(statB.statTypeHash)
           ? 2
-          : DestinyData.hiddenStats.contains(statB.statTypeHash) ? 1 : 0;
+          : DestinyData.hiddenStats.contains(statB.statTypeHash)
+              ? 1
+              : 0;
       return valA - valB;
     });
     return stats;

@@ -18,7 +18,7 @@ class LittleLight extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     QueuedNetworkImage.maxNrOfCacheObjects = 5000;
-    QueuedNetworkImage.inBetweenCleans = new Duration(days: 30);
+    QueuedNetworkImage.inBetweenCleans = Duration(days: 30);
 
     List<NavigatorObserver> observers = [];
     if (PlatformCapabilities.firebaseAnalyticsAvailable) {
@@ -41,7 +41,7 @@ class LittleLight extends StatelessWidget {
               child: child,
             );
           },
-          home: new InitialScreen(),
+          home: InitialScreen(),
           localizationsDelegates: [
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,

@@ -16,9 +16,9 @@ class PassiveTabBarView extends StatefulWidget {
     this.controller,
     this.physics,
     this.dragStartBehavior = DragStartBehavior.start,
-  }) : assert(children != null),
-       assert(dragStartBehavior != null),
-       super(key: key);
+  })  : assert(children != null),
+        assert(dragStartBehavior != null),
+        super(key: key);
 
   /// This widget's selection and animation state.
   ///
@@ -47,7 +47,8 @@ class PassiveTabBarView extends StatefulWidget {
   _TabBarViewState createState() => _TabBarViewState();
 }
 
-final PageScrollPhysics _kTabBarViewPhysics = const PageScrollPhysics().applyTo(const ClampingScrollPhysics());
+final PageScrollPhysics _kTabBarViewPhysics =
+    const PageScrollPhysics().applyTo(const ClampingScrollPhysics());
 
 class _TabBarViewState extends State<PassiveTabBarView> {
   TabController _controller;
@@ -57,16 +58,15 @@ class _TabBarViewState extends State<PassiveTabBarView> {
   int _warpUnderwayCount = 0;
 
   void _updateTabController() {
-    final TabController newController = widget.controller ?? DefaultTabController.of(context);
+    final TabController newController =
+        widget.controller ?? DefaultTabController.of(context);
     assert(() {
       if (newController == null) {
-        throw FlutterError(
-          'No TabController for ${widget.runtimeType}.\n'
-          'When creating a ${widget.runtimeType}, you must either provide an explicit '
-          'TabController using the "controller" property, or you must ensure that there '
-          'is a DefaultTabController above the ${widget.runtimeType}.\n'
-          'In this case, there was neither an explicit controller nor a default controller.'
-        );
+        throw FlutterError('No TabController for ${widget.runtimeType}.\n'
+            'When creating a ${widget.runtimeType}, you must either provide an explicit '
+            'TabController using the "controller" property, or you must ensure that there '
+            'is a DefaultTabController above the ${widget.runtimeType}.\n'
+            'In this case, there was neither an explicit controller nor a default controller.');
       }
       return true;
     }());
@@ -74,15 +74,13 @@ class _TabBarViewState extends State<PassiveTabBarView> {
     assert(() {
       if (newController.length != widget.children.length) {
         throw FlutterError(
-          'Controller\'s length property (${newController.length}) does not match the \n'
-          'number of elements (${widget.children.length}) present in TabBarView\'s children property.'
-        );
+            'Controller\'s length property (${newController.length}) does not match the \n'
+            'number of elements (${widget.children.length}) present in TabBarView\'s children property.');
       }
       return true;
     }());
 
-    if (newController == _controller)
-      return;
+    if (newController == _controller) return;
 
     if (_controller != null)
       _controller.animation.removeListener(_handleTabControllerAnimationTick);
@@ -108,8 +106,7 @@ class _TabBarViewState extends State<PassiveTabBarView> {
   @override
   void didUpdateWidget(PassiveTabBarView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.controller != oldWidget.controller)
-      _updateTabController();
+    if (widget.controller != oldWidget.controller) _updateTabController();
     if (widget.children != oldWidget.children && _warpUnderwayCount == 0)
       _children = widget.children;
   }
@@ -124,7 +121,8 @@ class _TabBarViewState extends State<PassiveTabBarView> {
 
   void _handleTabControllerAnimationTick() {
     var mq = MediaQuery.of(context);
-    _pageController.jumpTo((_controller.index + _controller.offset)*mq.size.width);
+    _pageController
+        .jumpTo((_controller.index + _controller.offset) * mq.size.width);
   }
 
   // Called when the PageView scrolls
@@ -139,7 +137,9 @@ class _TabBarViewState extends State<PassiveTabBarView> {
       child: PageView(
         dragStartBehavior: widget.dragStartBehavior,
         controller: _pageController,
-        physics: widget.physics == null ? _kTabBarViewPhysics : _kTabBarViewPhysics.applyTo(widget.physics),
+        physics: widget.physics == null
+            ? _kTabBarViewPhysics
+            : _kTabBarViewPhysics.applyTo(widget.physics),
         children: _children,
       ),
     );

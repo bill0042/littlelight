@@ -10,16 +10,20 @@ abstract class DestinyItemWidget extends StatelessWidget {
   final DestinyInventoryItemDefinition definition;
   final DestinyItemInstanceComponent instanceInfo;
   final String characterId;
-  final ProfileService profile = new ProfileService();
-  final ManifestService manifest = new ManifestService();
+  final ProfileService profile = ProfileService();
+  final ManifestService manifest = ManifestService();
 
   DestinyItemWidget(this.item, this.definition, this.instanceInfo,
       {Key key, this.characterId})
       : super(key: key);
-  
-  String get tag{
-    List<dynamic> params = [item?.itemInstanceId, item?.itemHash ?? definition?.hash, characterId];
-    params.removeWhere((p)=>p==null);
-    return params.map((p)=>"$p").join("_");
+
+  String get tag {
+    List<dynamic> params = [
+      item?.itemInstanceId,
+      item?.itemHash ?? definition?.hash,
+      characterId
+    ];
+    params.removeWhere((p) => p == null);
+    return params.map((p) => "$p").join("_");
   }
 }

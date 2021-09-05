@@ -42,7 +42,7 @@ class FactionRankItemWidgetState<T extends FactionRankItemWidget>
   @override
   void initState() {
     super.initState();
-    
+
     progression = widget.progression;
     loadDefinitions();
     subscription = widget.broadcaster.listen((event) {
@@ -143,27 +143,29 @@ class FactionRankItemWidgetState<T extends FactionRankItemWidget>
                   children: <Widget>[
                     Container(
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                        Text(
-                          vendorDefinition?.displayProperties?.name ?? "",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 15),
-                        ),
-                        TranslatedTextWidget(
-                          "Level {Level}",
-                          replace: {"Level":"${progression.level}"},
-                          key:Key("${progression.level}"),
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 15),
-                        )
-                      ]),
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              vendorDefinition?.displayProperties?.name ?? "",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 15),
+                            ),
+                            TranslatedTextWidget(
+                              "Level {Level}",
+                              replace: {"Level": "${progression.level}"},
+                              key: Key("${progression.level}"),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 15),
+                            )
+                          ]),
                     ),
                     Container(
                       height: 2,
                     ),
                     Text(
-                      factionDefinition?.displayProperties?.name ?? vendorDefinition?.displayProperties?.name ?? "",
+                      factionDefinition?.displayProperties?.name ??
+                          vendorDefinition?.displayProperties?.name ??
+                          "",
                       style:
                           TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
                     ),

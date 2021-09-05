@@ -10,7 +10,7 @@ final Map<String, ItemNotesTag> _defaultTags = {
 };
 
 class ItemNotesService {
-  static final ItemNotesService _singleton = new ItemNotesService._internal();
+  static final ItemNotesService _singleton = ItemNotesService._internal();
   factory ItemNotesService() {
     return _singleton;
   }
@@ -40,7 +40,7 @@ class ItemNotesService {
     return _defaultTags.values.toList() + (_tags?.values?.toList() ?? []);
   }
 
-  Future<Map<String, ItemNotes>> getNotes({forceFetch: false}) async {
+  Future<Map<String, ItemNotes>> getNotes({forceFetch = false}) async {
     if (_notes != null && !forceFetch) {
       return _notes;
     }

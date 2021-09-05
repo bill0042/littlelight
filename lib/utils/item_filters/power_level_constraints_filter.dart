@@ -45,7 +45,8 @@ class PowerLevelConstraintsFilter
 
     if (this.available) {
       this.value.max = min(this.availableValues.max, this.value.max ?? 9999);
-      this.value.min = min(this.value.max, max(this.availableValues.min, this.value.min ?? -9999));
+      this.value.min = min(this.value.max,
+          max(this.availableValues.min, this.value.min ?? -9999));
     }
 
     return super.filter(items, definitions: definitions);
@@ -56,10 +57,9 @@ class PowerLevelConstraintsFilter
     var instanceInfo =
         ProfileService().getInstanceInfo(item?.item?.itemInstanceId);
     var power = instanceInfo?.primaryStat?.value;
-    if(power == null) return value.includePowerlessItems;
-    if(power < value.min) return false;
-    if(power > value.max) return false;
+    if (power == null) return value.includePowerlessItems;
+    if (power < value.min) return false;
+    if (power > value.max) return false;
     return true;
   }
-  
 }

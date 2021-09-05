@@ -8,7 +8,7 @@ import 'package:little_light/widgets/search/search_filters/base_search_filter.wi
 class TextSearchFilterWidget extends BaseSearchFilterWidget<TextFilter> {
   final bool forceAutoFocus;
   TextSearchFilterWidget(SearchController controller,
-      {this.forceAutoFocus: false})
+      {this.forceAutoFocus = false})
       : super(controller);
 
   @override
@@ -17,7 +17,7 @@ class TextSearchFilterWidget extends BaseSearchFilterWidget<TextFilter> {
 
 class _TextSearchFilterWidgetState extends BaseSearchFilterWidgetState<
     TextSearchFilterWidget, TextFilter, String> with UserSettingsConsumerState {
-  TextEditingController _searchFieldController = new TextEditingController();
+  TextEditingController _searchFieldController = TextEditingController();
 
   @override
   void initState() {

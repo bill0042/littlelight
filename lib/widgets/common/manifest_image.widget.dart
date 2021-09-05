@@ -10,7 +10,7 @@ typedef ExtractUrlFromData<T> = String Function(T definition);
 class ManifestImageWidget<T> extends StatefulWidget {
   final int hash;
   final ExtractUrlFromData<T> urlExtractor;
-  final ManifestService _manifest = new ManifestService();
+  final ManifestService _manifest = ManifestService();
 
   final Widget placeholder;
 

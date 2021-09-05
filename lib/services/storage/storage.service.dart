@@ -151,7 +151,7 @@ class StorageService {
 
   Future<void> remove(StorageKeys key, [bool json = false]) async {
     if (json) {
-      File cached = new File(await getPath(key, json: true));
+      File cached = File(await getPath(key, json: true));
       bool exists = await cached.exists();
       if (exists) {
         cached.delete();
@@ -218,7 +218,7 @@ class StorageService {
   }
 
   Future<dynamic> getJson(StorageKeys key) async {
-    File cached = new File(await getPath(key, json: true));
+    File cached = File(await getPath(key, json: true));
     bool exists = await cached.exists();
     if (exists) {
       try {
@@ -234,25 +234,25 @@ class StorageService {
   }
 
   Future<void> setJson(StorageKeys key, dynamic object) async {
-    Directory dir = new Directory(await getPath(null));
+    Directory dir = Directory(await getPath(null));
     if (!await dir.exists()) {
       await dir.create(recursive: true);
     }
-    File cached = new File(await getPath(key, json: true));
+    File cached = File(await getPath(key, json: true));
     await cached.writeAsString(jsonEncode(object));
   }
 
   Future<void> saveDatabase(StorageKeys key, List<int> data) async {
-    Directory dir = new Directory(await getPath(null, dbPath: true));
+    Directory dir = Directory(await getPath(null, dbPath: true));
     if (!await dir.exists()) {
       await dir.create(recursive: true);
     }
-    File cached = new File(await getPath(key, dbPath: true));
+    File cached = File(await getPath(key, dbPath: true));
     cached = await cached.writeAsBytes(data);
   }
 
   Future<List<int>> getBytes(StorageKeys key) async {
-    File cached = new File(await getPath(key));
+    File cached = File(await getPath(key));
     bool exists = await cached.exists();
     if (exists) {
       try {

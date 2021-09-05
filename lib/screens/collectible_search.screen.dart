@@ -8,13 +8,11 @@ class CollectibleSearchScreen extends DefinitionSearchScreen {
   CollectibleSearchScreen({Key key}) : super(key: key);
 
   @override
-  CollectibleSearchScreenState createState() =>
-      new CollectibleSearchScreenState();
+  CollectibleSearchScreenState createState() => CollectibleSearchScreenState();
 }
 
-class CollectibleSearchScreenState
-    extends DefinitionSearchScreenState<DefinitionSearchScreen, DestinyCollectibleDefinition> {
-
+class CollectibleSearchScreenState extends DefinitionSearchScreenState<
+    DefinitionSearchScreen, DestinyCollectibleDefinition> {
   @override
   initState() {
     super.initState();

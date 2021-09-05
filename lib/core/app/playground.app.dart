@@ -9,7 +9,7 @@ class Playground extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Playground',
-        home: new PlaygroundMainScreen());
+        home: PlaygroundMainScreen());
   }
 }
 

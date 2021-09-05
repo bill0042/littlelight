@@ -17,7 +17,7 @@ class CollectionsScreen extends PresentationNodeScreen {
       : super(presentationNodeHash: presentationNodeHash, depth: depth);
 
   @override
-  PresentationNodeScreenState createState() => new CollectionsScreenState();
+  PresentationNodeScreenState createState() => CollectionsScreenState();
 }
 
 class CollectionsScreenState
@@ -71,7 +71,7 @@ class CollectionsScreenState
         appBar: buildAppBar(context), body: buildScaffoldBody(context));
   }
 
-  Widget itemBuilder(CollectionListItem item, int depth, bool isCategorySet) { 
+  Widget itemBuilder(CollectionListItem item, int depth, bool isCategorySet) {
     switch (item.type) {
       case CollectionListItemType.nestedCollectible:
         return NestedCollectibleItemWidget(
@@ -105,14 +105,16 @@ class CollectionsScreenState
   buildAppBar(BuildContext context) {
     if (widget.depth == 0) {
       return AppBar(
-          leading: IconButton(enableFeedback: false,
+          leading: IconButton(
+            enableFeedback: false,
             icon: Icon(Icons.menu),
             onPressed: () {
               Scaffold.of(context).openDrawer();
             },
           ),
           actions: <Widget>[
-            IconButton(enableFeedback: false,
+            IconButton(
+              enableFeedback: false,
               icon: Icon(Icons.search),
               onPressed: () {
                 Navigator.push(

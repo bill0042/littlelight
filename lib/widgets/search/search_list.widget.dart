@@ -13,10 +13,10 @@ class SearchListWidget extends StatefulWidget {
   final SearchController controller;
 
   SearchListWidget({Key key, this.controller}) : super(key: key);
-  final NotificationService broadcaster = new NotificationService();
+  final NotificationService broadcaster = NotificationService();
 
   @override
-  SearchListWidgetState createState() => new SearchListWidgetState();
+  SearchListWidgetState createState() => SearchListWidgetState();
 }
 
 class SearchListWidgetState<T extends SearchListWidget> extends State<T> {
@@ -46,7 +46,11 @@ class SearchListWidgetState<T extends SearchListWidget> extends State<T> {
     return StaggeredGridView.countBuilder(
       padding: EdgeInsets.all(4)
           .copyWith(bottom: MediaQuery.of(context).padding.bottom),
-      crossAxisCount: isDesktop ? 24 : isTablet ? 12 : 6,
+      crossAxisCount: isDesktop
+          ? 24
+          : isTablet
+              ? 12
+              : 6,
       itemCount: widget.controller.filtered.length,
       itemBuilder: getItem,
       staggeredTileBuilder: getTileBuilder,
@@ -65,8 +69,8 @@ class SearchListWidgetState<T extends SearchListWidget> extends State<T> {
 
   StaggeredTile getTileBuilder(int index) {
     var item = widget.controller.filtered[index];
-    if(InventoryBucket.pursuitBucketHashes.contains(item.item.bucketHash)){
-      return StaggeredTile.extent(6, 150);  
+    if (InventoryBucket.pursuitBucketHashes.contains(item.item.bucketHash)) {
+      return StaggeredTile.extent(6, 150);
     }
     return StaggeredTile.extent(6, 96);
   }

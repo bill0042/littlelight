@@ -7,13 +7,13 @@ import 'package:little_light/services/auth/auth.service.dart';
 import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
-typedef void LoginCallback(String code);
-typedef void SkipCallback();
+typedef LoginCallback = void Function(String code);
+typedef SkipCallback = void Function();
 
 class LoginWidget extends StatefulWidget {
   final String title = "Login";
-  final BungieApiService api = new BungieApiService();
-  final AuthService auth = new AuthService();
+  final BungieApiService api = BungieApiService();
+  final AuthService auth = AuthService();
   final LoginCallback onLogin;
   final SkipCallback onSkip;
   final bool forceReauth;
@@ -21,7 +21,7 @@ class LoginWidget extends StatefulWidget {
   LoginWidget({this.onLogin, this.onSkip, this.forceReauth = true});
 
   @override
-  LoginWidgetState createState() => new LoginWidgetState();
+  LoginWidgetState createState() => LoginWidgetState();
 }
 
 class LoginWidgetState extends State<LoginWidget> {

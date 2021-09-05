@@ -51,7 +51,7 @@ class InventoryUtils {
   static Future<List<ItemWithOwner>> sortDestinyItems(
       Iterable<ItemWithOwner> items,
       {List<ItemSortParameter> sortingParams,
-      bool sortTags: true}) async {
+      bool sortTags = true}) async {
     if (sortingParams == null) {
       sortingParams = userSettings.itemOrdering;
     }
@@ -161,7 +161,7 @@ class LoadoutItemIndex {
   }
 
   build() async {
-    ProfileService profile = new ProfileService();
+    ProfileService profile = ProfileService();
     List<String> equippedIds =
         loadout.equipped.map((item) => item.itemInstanceId).toList();
     List<String> itemIds = equippedIds;
@@ -266,7 +266,7 @@ class LoadoutItemIndex {
       DestinyItemComponent item, DestinyInventoryItemDefinition def,
       {bool modifyLoadout = true}) {
     if (unequipped == null) {
-      unequipped = new Map();
+      unequipped = Map();
     }
     if (unequipped[def.inventory.bucketTypeHash] == null) {
       unequipped[def.inventory.bucketTypeHash] = [];
@@ -283,7 +283,7 @@ class LoadoutItemIndex {
       DestinyItemComponent item, DestinyInventoryItemDefinition def,
       {bool modifyLoadout = true}) {
     if (unequipped == null) {
-      unequipped = new Map();
+      unequipped = Map();
     }
     if (unequipped[def.inventory.bucketTypeHash] == null) {
       unequipped[def.inventory.bucketTypeHash] = [];
@@ -299,7 +299,7 @@ class LoadoutItemIndex {
 
   _addGeneric(DestinyItemComponent item, DestinyInventoryItemDefinition def) {
     if (generic == null) {
-      generic = new Map();
+      generic = Map();
     }
     generic[def.inventory.bucketTypeHash] = item;
   }
@@ -308,10 +308,10 @@ class LoadoutItemIndex {
       DestinyItemComponent item, DestinyInventoryItemDefinition def) {
     if (def.classType == DestinyClass.Unknown) return;
     if (classSpecific == null) {
-      classSpecific = new Map();
+      classSpecific = Map();
     }
     if (classSpecific[def.inventory.bucketTypeHash] == null) {
-      classSpecific[def.inventory.bucketTypeHash] = new Map();
+      classSpecific[def.inventory.bucketTypeHash] = Map();
     }
     classSpecific[def.inventory.bucketTypeHash][def.classType] = item;
   }
@@ -319,7 +319,7 @@ class LoadoutItemIndex {
   _removeGeneric(
       DestinyItemComponent item, DestinyInventoryItemDefinition def) {
     if (generic == null) {
-      generic = new Map();
+      generic = Map();
     }
     generic[def.inventory.bucketTypeHash] = null;
   }
@@ -328,10 +328,10 @@ class LoadoutItemIndex {
       DestinyItemComponent item, DestinyInventoryItemDefinition def) {
     if (def.classType == DestinyClass.Unknown) return;
     if (classSpecific == null) {
-      classSpecific = new Map();
+      classSpecific = Map();
     }
     if (classSpecific[def.inventory.bucketTypeHash] == null) {
-      classSpecific[def.inventory.bucketTypeHash] = new Map();
+      classSpecific[def.inventory.bucketTypeHash] = Map();
     }
     classSpecific[def.inventory.bucketTypeHash][def.classType] = null;
   }

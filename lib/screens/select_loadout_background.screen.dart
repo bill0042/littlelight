@@ -16,7 +16,7 @@ class SelectLoadoutBackgroundScreen extends PresentationNodeScreen {
 
   @override
   PresentationNodeScreenState createState() =>
-      new SelectLoadoutBackgroundScreenState();
+      SelectLoadoutBackgroundScreenState();
 }
 
 class SelectLoadoutBackgroundScreenState extends PresentationNodeScreenState {
@@ -67,11 +67,13 @@ class SelectLoadoutBackgroundScreenState extends PresentationNodeScreenState {
     }
   }
 
-   @override
+  @override
   Widget buildBody(BuildContext context) {
-    if(definition == null) return Container();
+    if (definition == null) return Container();
     return PresentationNodeTabsWidget(
-      presentationNodeHashes: definition.children.presentationNodes.map((p)=>p.presentationNodeHash).toList(),
+      presentationNodeHashes: definition.children.presentationNodes
+          .map((p) => p.presentationNodeHash)
+          .toList(),
       depth: 0,
       itemBuilder: this.itemBuilder,
       tileBuilder: this.tileBuilder,

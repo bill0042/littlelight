@@ -45,11 +45,11 @@ class DuplicatedItemListWidget extends ConsumerStatefulWidget {
   final ProfileService profile = ProfileService();
   final SearchController searchController;
   DuplicatedItemListWidget({Key key, this.searchController}) : super(key: key);
-  final NotificationService broadcaster = new NotificationService();
+  final NotificationService broadcaster = NotificationService();
 
   @override
   DuplicatedItemListWidgetState createState() =>
-      new DuplicatedItemListWidgetState();
+      DuplicatedItemListWidgetState();
 }
 
 class DuplicatedItemListWidgetState

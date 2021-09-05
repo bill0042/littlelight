@@ -13,13 +13,13 @@ import 'package:shimmer/shimmer.dart';
 
 class TabHeaderWidget extends StatefulWidget {
   final DestinyCharacterComponent character;
-  final ManifestService manifest = new ManifestService();
-  final ProfileService profile = new ProfileService();
+  final ManifestService manifest = ManifestService();
+  final ProfileService profile = ProfileService();
   @override
   TabHeaderWidget(this.character, {Key key}) : super(key: key);
 
   @override
-  TabHeaderWidgetState createState() => new TabHeaderWidgetState();
+  TabHeaderWidgetState createState() => TabHeaderWidgetState();
 }
 
 class TabHeaderWidgetState extends State<TabHeaderWidget> {
@@ -108,13 +108,19 @@ class TabHeaderWidgetState extends State<TabHeaderWidget> {
 
   Widget powerBar(BuildContext context) {
     var settings = DestinySettingsService();
-    DestinyProgression levelProg = progression.progressions["${settings.seasonalRankProgressionHash}"];
-    DestinyProgression overLevelProg = progression.progressions["${settings.seasonalPrestigeRankProgressionHash}"];
+    DestinyProgression levelProg =
+        progression.progressions["${settings.seasonalRankProgressionHash}"];
+    DestinyProgression overLevelProg = progression
+        .progressions["${settings.seasonalPrestigeRankProgressionHash}"];
     Color fg = Colors.cyan.shade300;
     Color bg = Color.lerp(Colors.black, fg, .6);
     Color shine = Colors.cyan.shade100;
-    DestinyProgression currentProg = (levelProg?.level ?? 0) < (levelProg?.levelCap ?? 0) ? levelProg : overLevelProg;
-    double completed = (currentProg?.progressToNextLevel ?? 0) / (currentProg?.nextLevelAt ?? 1);
+    DestinyProgression currentProg =
+        (levelProg?.level ?? 0) < (levelProg?.levelCap ?? 0)
+            ? levelProg
+            : overLevelProg;
+    double completed = (currentProg?.progressToNextLevel ?? 0) /
+        (currentProg?.nextLevelAt ?? 1);
     return Container(
       height: 2,
       color: bg,

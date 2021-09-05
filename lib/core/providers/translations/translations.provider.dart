@@ -24,7 +24,7 @@ class Translations {
   String fallbackLanguage = "en";
   String get _currentLanguage =>
       StorageService.getLanguage() ?? fallbackLanguage;
-  Map<String, Map<String, String>> _translationMaps = new Map();
+  Map<String, Map<String, String>> _translationMaps = Map();
 
   Translations._(ProviderRef ref) {
     timeago.setLocaleMessages('de', DeMessages());

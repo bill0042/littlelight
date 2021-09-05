@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
-typedef void AsEquippedChanged(bool equipped);
+typedef AsEquippedChanged = void Function(bool equipped);
 
 class AsEquippedSwitchWidget extends StatefulWidget {
   final AsEquippedChanged onChanged;

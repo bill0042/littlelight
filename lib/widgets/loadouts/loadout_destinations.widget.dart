@@ -14,8 +14,8 @@ import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/option_sheets/free_slots_slider.widget.dart';
 
 class LoadoutDestinationsWidget extends ConsumerStatefulWidget {
-  final InventoryService inventory = new InventoryService();
-  final ProfileService profile = new ProfileService();
+  final InventoryService inventory = InventoryService();
+  final ProfileService profile = ProfileService();
   final Loadout loadout;
   LoadoutDestinationsWidget(this.loadout, {Key key}) : super(key: key);
 

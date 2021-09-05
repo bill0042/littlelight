@@ -26,16 +26,16 @@ import 'package:little_light/widgets/progress_tabs/character_ranks_list.widget.d
 import 'package:little_light/widgets/search/search.controller.dart';
 
 class ProgressScreen extends ConsumerStatefulWidget {
-  final profile = new ProfileService();
-  final manifest = new ManifestService();
+  final profile = ProfileService();
+  final manifest = ManifestService();
 
   @override
-  ProgressScreenState createState() => new ProgressScreenState();
+  ProgressScreenState createState() => ProgressScreenState();
 }
 
 class ProgressScreenState extends ConsumerState<ProgressScreen>
     with TickerProviderStateMixin, UserSettingsConsumerState {
-  Map<int, double> scrollPositions = new Map();
+  Map<int, double> scrollPositions = Map();
 
   TabController charTabController;
   TabController typeTabController;

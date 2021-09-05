@@ -11,7 +11,7 @@ import 'base_item_filter.dart';
 
 class TextFilter extends BaseItemFilter<String> {
   List<Loadout> loadouts;
-  TextFilter({initialText: "", enabled: true})
+  TextFilter({initialText = "", enabled = true})
       : super(null, initialText, enabled: enabled);
 
   Future<List<ItemWithOwner>> filter(List<ItemWithOwner> items,

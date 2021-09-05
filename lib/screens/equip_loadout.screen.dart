@@ -24,7 +24,7 @@ class EquipLoadoutScreen extends StatefulWidget {
   const EquipLoadoutScreen({Key key, this.loadout}) : super(key: key);
 
   @override
-  EquipLoadoutScreenState createState() => new EquipLoadoutScreenState();
+  EquipLoadoutScreenState createState() => EquipLoadoutScreenState();
 }
 
 class EquipLoadoutScreenState extends State<EquipLoadoutScreen> {
@@ -39,7 +39,7 @@ class EquipLoadoutScreenState extends State<EquipLoadoutScreen> {
   buildItemIndex() async {
     _itemIndex = await InventoryUtils.buildLoadoutItemIndex(widget.loadout);
 
-    ManifestService manifest = new ManifestService();
+    ManifestService manifest = ManifestService();
     if (widget?.loadout?.emblemHash != null) {
       emblemDefinition =
           await manifest.getDefinition<DestinyInventoryItemDefinition>(

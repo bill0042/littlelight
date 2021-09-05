@@ -9,14 +9,14 @@ import 'package:little_light/widgets/item_list/bucket_display_options_selector.w
 
 class PursuitsDisplayOptionsSelectorWidget
     extends BucketDisplayOptionsSelectorWidget {
-  final ManifestService manifest = new ManifestService();
+  final ManifestService manifest = ManifestService();
   final String typeIdentifier;
   PursuitsDisplayOptionsSelectorWidget(
       {this.typeIdentifier, Function onChanged})
       : super(onChanged: onChanged);
   @override
   PursuitsDisplayOptionsSelectorWidgetState createState() =>
-      new PursuitsDisplayOptionsSelectorWidgetState();
+      PursuitsDisplayOptionsSelectorWidgetState();
 }
 
 class PursuitsDisplayOptionsSelectorWidgetState

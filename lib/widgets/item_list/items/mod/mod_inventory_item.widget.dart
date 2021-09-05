@@ -64,24 +64,22 @@ class ModInventoryItemWidget extends BaseInventoryItemWidget {
     return Positioned(
         bottom: 4,
         right: 8,
-        child: 
-          Row(
-            children: <Widget>[
-              energyType != DestinyEnergyType.Any
-                  ? Icon(DestinyData.getEnergyTypeIcon(energyType),
-                      size: 22, color: color)
-                  : Container(),
-              Container(
-                width: energyType != DestinyEnergyType.Any ? 4 : 0,
-              ),
-              Text(
-                "$energyCost",
-                style: TextStyle(
-                    fontWeight: FontWeight.w700, fontSize: 22, color: color),
-              )
-            ],
-          )
-        );
+        child: Row(
+          children: <Widget>[
+            energyType != DestinyEnergyType.Any
+                ? Icon(DestinyData.getEnergyTypeIcon(energyType),
+                    size: 22, color: color)
+                : Container(),
+            Container(
+              width: energyType != DestinyEnergyType.Any ? 4 : 0,
+            ),
+            Text(
+              "$energyCost",
+              style: TextStyle(
+                  fontWeight: FontWeight.w700, fontSize: 22, color: color),
+            )
+          ],
+        ));
   }
 
   @override
@@ -102,8 +100,11 @@ class ModInventoryItemWidget extends BaseInventoryItemWidget {
                                 s.statTypeHash),
                             Text("${s.value}",
                                 style: TextStyle(
-                                    color:s.value > 0 ? Colors.grey.shade300 : DestinyData.negativeFeedback,
-                                    fontWeight: FontWeight.w500, fontSize: 16)),
+                                    color: s.value > 0
+                                        ? Colors.grey.shade300
+                                        : DestinyData.negativeFeedback,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16)),
                             Container(
                               width: 8,
                             )

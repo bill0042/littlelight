@@ -21,7 +21,6 @@ class NotificationEvent {
   final DestinyItemComponent item;
   final String characterId;
   NotificationEvent(this.type, {this.item, this.characterId});
-  
 }
 
 class TransferErrorEvent extends NotificationEvent {
@@ -34,10 +33,9 @@ class TransferErrorEvent extends NotificationEvent {
 class NotificationService {
   Stream<NotificationEvent> _eventsStream;
   final StreamController<NotificationEvent> _streamController =
-      new StreamController.broadcast();
+      StreamController.broadcast();
 
-  static final NotificationService _singleton =
-      new NotificationService._internal();
+  static final NotificationService _singleton = NotificationService._internal();
   factory NotificationService() {
     return _singleton;
   }

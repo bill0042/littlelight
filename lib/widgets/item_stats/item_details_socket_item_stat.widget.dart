@@ -10,7 +10,8 @@ class ItemDetailSocketItemStatWidget extends BaseItemStatWidget {
       StatValues modValues,
       int statHash,
       DestinyStatDisplayDefinition scaled})
-      : super(key:key, statHash: statHash, modValues: modValues, scaled: scaled);
+      : super(
+            key: key, statHash: statHash, modValues: modValues, scaled: scaled);
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +57,7 @@ class ItemDetailSocketItemStatWidget extends BaseItemStatWidget {
   }
 
   Widget buildBar(BuildContext context) {
-    var width = MediaQuery.of(context).size.width*.4;
+    var width = MediaQuery.of(context).size.width * .4;
     if (noBar) {
       return Container(width: width);
     }
@@ -65,11 +66,11 @@ class ItemDetailSocketItemStatWidget extends BaseItemStatWidget {
       height: 14,
       color: Colors.grey.shade700.withOpacity(.7),
       child: Row(
-        mainAxisAlignment: currentValue > 0 ? MainAxisAlignment.start : MainAxisAlignment.end,
+        mainAxisAlignment:
+            currentValue > 0 ? MainAxisAlignment.start : MainAxisAlignment.end,
         children: <Widget>[
           Container(
-              width: (modBarSize / maxBarSize) * width,
-              color: modBarColor),
+              width: (modBarSize / maxBarSize) * width, color: modBarColor),
         ],
       ),
     );
@@ -77,7 +78,8 @@ class ItemDetailSocketItemStatWidget extends BaseItemStatWidget {
 
   int get currentValue {
     if (scaled != null) {
-      return interpolate(selected, scaled.displayInterpolation) - interpolate(equipped, scaled.displayInterpolation);
+      return interpolate(selected, scaled.displayInterpolation) -
+          interpolate(equipped, scaled.displayInterpolation);
     }
     return selected - equipped;
   }

@@ -17,7 +17,7 @@ import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
 class BaseTransferDestinationsWidget extends BaseDestinyStatefulItemWidget {
-  final InventoryService inventory = new InventoryService();
+  final InventoryService inventory = InventoryService();
   BaseTransferDestinationsWidget(
       {DestinyItemComponent item,
       DestinyInventoryItemDefinition definition,

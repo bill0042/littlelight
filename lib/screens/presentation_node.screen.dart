@@ -18,8 +18,8 @@ import 'package:little_light/widgets/presentation_nodes/presentation_node_list.w
 import 'package:little_light/widgets/presentation_nodes/record_item.widget.dart';
 
 class PresentationNodeScreen extends StatefulWidget {
-  final ManifestService manifest = new ManifestService();
-  final ProfileService profile = new ProfileService();
+  final ManifestService manifest = ManifestService();
+  final ProfileService profile = ProfileService();
   final int presentationNodeHash;
   final int depth;
   final PresentationNodeItemBuilder itemBuilder;
@@ -33,8 +33,7 @@ class PresentationNodeScreen extends StatefulWidget {
       this.depth = 0});
 
   @override
-  PresentationNodeScreenState createState() =>
-      new PresentationNodeScreenState();
+  PresentationNodeScreenState createState() => PresentationNodeScreenState();
 }
 
 class PresentationNodeScreenState<T extends PresentationNodeScreen>

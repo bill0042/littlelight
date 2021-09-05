@@ -1,4 +1,3 @@
-
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:little_light/models/tracked_objective.dart';
@@ -7,7 +6,7 @@ import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 
 class ObjectivesService {
-  static final ObjectivesService _singleton = new ObjectivesService._internal();
+  static final ObjectivesService _singleton = ObjectivesService._internal();
   factory ObjectivesService() {
     return _singleton;
   }
@@ -98,7 +97,7 @@ class ObjectivesService {
         orElse: () => null);
     if (item == null) return null;
     var plugObjective = profile.getPlugObjectives(item?.itemInstanceId);
-    if(plugObjective?.containsKey("${objective.hash}") ?? false){
+    if (plugObjective?.containsKey("${objective.hash}") ?? false) {
       return item;
     }
     return null;

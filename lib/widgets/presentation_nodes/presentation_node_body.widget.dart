@@ -9,8 +9,8 @@ import 'package:little_light/widgets/presentation_nodes/presentation_node_list.w
 import 'package:little_light/widgets/presentation_nodes/presentation_node_tabs.widget.dart';
 
 class PresentationNodeBodyWidget extends StatefulWidget {
-  final ManifestService manifest = new ManifestService();
-  final ProfileService profile = new ProfileService();
+  final ManifestService manifest = ManifestService();
+  final ProfileService profile = ProfileService();
   final PresentationNodeItemBuilder itemBuilder;
   final PresentationNodeTileBuilder tileBuilder;
   final int presentationNodeHash;
@@ -25,7 +25,7 @@ class PresentationNodeBodyWidget extends StatefulWidget {
 
   @override
   PresentationNodeBodyWidgetState createState() =>
-      new PresentationNodeBodyWidgetState();
+      PresentationNodeBodyWidgetState();
 }
 
 class PresentationNodeBodyWidgetState<T extends PresentationNodeBodyWidget>

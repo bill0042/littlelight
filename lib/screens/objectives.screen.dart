@@ -20,7 +20,7 @@ class ObjectivesScreen extends StatefulWidget {
   final ProfileService profile = ProfileService();
   final ManifestService manifest = ManifestService();
   @override
-  ObjectivesScreenState createState() => new ObjectivesScreenState();
+  ObjectivesScreenState createState() => ObjectivesScreenState();
 }
 
 class ObjectivesScreenState extends State<ObjectivesScreen> {
@@ -51,7 +51,7 @@ class ObjectivesScreenState extends State<ObjectivesScreen> {
   void loadObjectives() async {
     ObjectivesService service = ObjectivesService();
     objectives = (await service.getTrackedObjectives()).reversed.toList();
-    items = new Map();
+    items = Map();
     var itemObjectives =
         objectives.where((o) => o.type == TrackedObjectiveType.Item);
     var plugObjectives =

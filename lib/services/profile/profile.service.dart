@@ -93,8 +93,8 @@ class ProfileComponentGroups {
 }
 
 class ProfileService {
-  final NotificationService _broadcaster = new NotificationService();
-  static final ProfileService _singleton = new ProfileService._internal();
+  final NotificationService _broadcaster = NotificationService();
+  static final ProfileService _singleton = ProfileService._internal();
 
   UserSettingsService userSettings = globalUserSettingsProvider;
 
@@ -104,7 +104,7 @@ class ProfileService {
   }
   ProfileService._internal();
 
-  static const List<int> profileBuckets = const [
+  static const List<int> profileBuckets = [
     InventoryBucket.modifications,
     InventoryBucket.shaders,
     InventoryBucket.consumables

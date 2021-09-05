@@ -29,9 +29,9 @@ import 'package:little_light/widgets/inventory_tabs/vault_tab_header.widget.dart
 import 'package:little_light/widgets/search/search.controller.dart';
 
 class EquipmentScreen extends ConsumerStatefulWidget {
-  final profile = new ProfileService();
-  final manifest = new ManifestService();
-  final NotificationService broadcaster = new NotificationService();
+  final profile = ProfileService();
+  final manifest = ManifestService();
+  final NotificationService broadcaster = NotificationService();
 
   final List<int> itemTypes = [
     DestinyItemCategory.Weapon,
@@ -40,7 +40,7 @@ class EquipmentScreen extends ConsumerStatefulWidget {
   ];
 
   @override
-  EquipmentScreenState createState() => new EquipmentScreenState();
+  EquipmentScreenState createState() => EquipmentScreenState();
 }
 
 class EquipmentScreenState extends ConsumerState<EquipmentScreen>
@@ -49,7 +49,7 @@ class EquipmentScreenState extends ConsumerState<EquipmentScreen>
         AutomaticKeepAliveClientMixin,
         UserSettingsConsumerState {
   int currentGroup = DestinyItemCategory.Weapon;
-  Map<int, double> scrollPositions = new Map();
+  Map<int, double> scrollPositions = Map();
 
   TabController charTabController;
   TabController typeTabController;

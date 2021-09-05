@@ -55,9 +55,11 @@ class GenericProgressBarWidget extends StatelessWidget {
     return Container(
         margin: EdgeInsets.only(left: 4),
         height: 22,
-        decoration: completed ? null : BoxDecoration(
-            border: Border.all(
-                width: 1, color: this.color ?? Colors.grey.shade300)),
+        decoration: completed
+            ? null
+            : BoxDecoration(
+                border: Border.all(
+                    width: 1, color: this.color ?? Colors.grey.shade300)),
         child: Stack(
           children: <Widget>[
             Positioned.fill(
@@ -78,8 +80,7 @@ class GenericProgressBarWidget extends StatelessWidget {
   }
 
   buildTitle(BuildContext context) {
-    return Container(
-        child: description);
+    return Container(child: description);
   }
 
   buildCount(BuildContext context) {
@@ -94,7 +95,7 @@ class GenericProgressBarWidget extends StatelessWidget {
 
   buildProgressBar(BuildContext context) {
     Color color = Color.lerp(barColor, Colors.black, .1);
-    if(completed) return Container();
+    if (completed) return Container();
     return Container(
         margin: EdgeInsets.all(2),
         color: Colors.blueGrey.shade800,
@@ -105,7 +106,7 @@ class GenericProgressBarWidget extends StatelessWidget {
         ));
   }
 
-  Color get barColor{
+  Color get barColor {
     return DestinyData.objectiveProgress;
   }
 }

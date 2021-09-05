@@ -55,12 +55,12 @@ class _AmmoTypeFilterWidgetState extends BaseSearchFilterWidgetState<
 
   @override
   Widget buildDisabledLabel(BuildContext context) {
-    try{
+    try {
       var value = options.single;
-      if(value == DestinyAmmunitionType.None){
+      if (value == DestinyAmmunitionType.None) {
         return Container();
       }
-    }catch(_){
+    } catch (_) {
       return Container();
     }
     return super.buildDisabledLabel(context);

@@ -24,7 +24,7 @@ import 'package:little_light/widgets/item_list/items/base/item_mods.widget.dart'
 import 'package:little_light/widgets/item_list/items/base/item_perks.widget.dart';
 import 'package:little_light/widgets/item_tags/item_tag.widget.dart';
 
-typedef void OnItemHandler(
+typedef OnItemHandler = void Function(
     DestinyItemComponent item,
     DestinyInventoryItemDefinition itemDefinition,
     DestinyItemInstanceComponent instanceInfo,

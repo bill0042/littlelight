@@ -10,7 +10,7 @@ class LargeScreenEquipmentListWidget extends StatefulWidget {
   LargeScreenEquipmentListWidget({Key key, this.character}) : super(key: key);
   @override
   LargeScreenEquipmentListWidgetState createState() =>
-      new LargeScreenEquipmentListWidgetState();
+      LargeScreenEquipmentListWidgetState();
 }
 
 class LargeScreenEquipmentListWidgetState

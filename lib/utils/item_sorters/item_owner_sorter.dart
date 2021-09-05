@@ -7,9 +7,10 @@ class ItemOwnerSorter extends BaseItemSorter {
 
   ItemOwnerSorter(int direction) : super(direction);
 
-  get characterOrder{
-    if(_characterOrder != null) return _characterOrder;
-    _characterOrder = ProfileService().getCharacters().map((c)=>c.characterId).toList();
+  get characterOrder {
+    if (_characterOrder != null) return _characterOrder;
+    _characterOrder =
+        ProfileService().getCharacters().map((c) => c.characterId).toList();
     return _characterOrder;
   }
 

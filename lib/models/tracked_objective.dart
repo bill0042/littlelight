@@ -3,11 +3,12 @@ part 'tracked_objective.g.dart';
 
 enum TrackedObjectiveType {
   @JsonValue('triumph')
-  Triumph, 
+  Triumph,
   @JsonValue('item')
-  Item, 
+  Item,
   @JsonValue('plug')
-  Plug }
+  Plug
+}
 
 @JsonSerializable()
 class TrackedObjective {
@@ -17,7 +18,12 @@ class TrackedObjective {
   String characterId;
   int parentHash;
 
-  TrackedObjective({this.type, this.hash, this.instanceId, this.characterId, this.parentHash});
+  TrackedObjective(
+      {this.type,
+      this.hash,
+      this.instanceId,
+      this.characterId,
+      this.parentHash});
 
   factory TrackedObjective.fromJson(dynamic json) {
     return _$TrackedObjectiveFromJson(json);

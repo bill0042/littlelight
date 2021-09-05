@@ -9,9 +9,9 @@ import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 
 class LoadoutBackgroundItemWidget extends StatefulWidget {
-  final ManifestService manifest = new ManifestService();
-  final ProfileService profile = new ProfileService();
-  final AuthService auth = new AuthService();
+  final ManifestService manifest = ManifestService();
+  final ProfileService profile = ProfileService();
+  final AuthService auth = AuthService();
   final int hash;
   LoadoutBackgroundItemWidget({Key key, this.hash}) : super(key: key);
 

@@ -15,8 +15,6 @@ class ClassTypeFilterWidget extends BaseSearchFilterWidget<ClassTypeFilter> {
 
 class _ClassTypeFilterWidgetState extends BaseSearchFilterWidgetState<
     ClassTypeFilterWidget, ClassTypeFilter, DestinyClass> {
-  
-
   @override
   Widget buildButtons(BuildContext context) {
     var textButtons = options
@@ -54,12 +52,12 @@ class _ClassTypeFilterWidgetState extends BaseSearchFilterWidgetState<
 
   @override
   Widget buildDisabledLabel(BuildContext context) {
-    try{
+    try {
       var value = options.single;
-      if(value == DestinyClass.Unknown){
+      if (value == DestinyClass.Unknown) {
         return Container();
       }
-    }catch(_){
+    } catch (_) {
       return Container();
     }
     return super.buildDisabledLabel(context);

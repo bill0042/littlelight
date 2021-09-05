@@ -85,7 +85,7 @@ class ItemDetailScreen extends BaseDestinyStatefulItemWidget {
 
 class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen> {
   int selectedPerk;
-  Map<int, int> selectedPerks = new Map();
+  Map<int, int> selectedPerks = Map();
   ItemSocketController socketController;
   DestinyStatGroupDefinition statGroupDefinition;
   List<ItemWithOwner> duplicates;

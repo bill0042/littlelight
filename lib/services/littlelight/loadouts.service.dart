@@ -3,7 +3,7 @@ import 'package:little_light/services/littlelight/littlelight_api.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 
 class LoadoutsService {
-  static final LoadoutsService _singleton = new LoadoutsService._internal();
+  static final LoadoutsService _singleton = LoadoutsService._internal();
   factory LoadoutsService() {
     return _singleton;
   }
@@ -15,7 +15,7 @@ class LoadoutsService {
     _loadouts = null;
   }
 
-  Future<List<Loadout>> getLoadouts({forceFetch: false}) async {
+  Future<List<Loadout>> getLoadouts({forceFetch = false}) async {
     if (_loadouts != null && !forceFetch) {
       await _sortLoadouts();
       return _loadouts;
@@ -87,7 +87,7 @@ class LoadoutsService {
     } else {
       _loadouts.add(loadout);
     }
-    
+
     await _saveLoadoutsToStorage();
     var api = LittleLightApiService();
     return await api.saveLoadout(loadout);

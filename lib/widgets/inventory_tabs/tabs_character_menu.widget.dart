@@ -70,14 +70,14 @@ class TabsCharacterMenuWidget extends StatelessWidget {
 
 class TabMenuButton extends StatefulWidget {
   final DestinyCharacterComponent character;
-  final ManifestService manifest = new ManifestService();
+  final ManifestService manifest = ManifestService();
   final bool lastPlayed;
 
   TabMenuButton({this.character, Key key, this.lastPlayed = true})
       : super(key: key);
 
   @override
-  createState() => new TabMenuButtonState();
+  createState() => TabMenuButtonState();
 }
 
 class TabMenuButtonState extends State<TabMenuButton> {
@@ -128,7 +128,7 @@ class TabMenuButtonState extends State<TabMenuButton> {
 
 class VaultTabMenuButton extends TabMenuButton {
   @override
-  createState() => new VaultTabMenuButtonState();
+  createState() => VaultTabMenuButtonState();
 }
 
 class VaultTabMenuButtonState extends TabMenuButtonState {

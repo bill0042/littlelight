@@ -8,7 +8,7 @@ import 'package:little_light/widgets/common/translated_text.widget.dart';
 
 import 'package:little_light/widgets/initial_page/language.button.dart';
 
-typedef void LanguageSelectCallback(String languageCode);
+typedef LanguageSelectCallback = void Function(String languageCode);
 
 class SelectLanguageWidget extends ConsumerStatefulWidget {
   final String title = "Select Language";
@@ -19,7 +19,7 @@ class SelectLanguageWidget extends ConsumerStatefulWidget {
   SelectLanguageWidget({this.availableLanguages, this.onChange, this.onSelect});
 
   @override
-  SelectLanguageWidgetState createState() => new SelectLanguageWidgetState();
+  SelectLanguageWidgetState createState() => SelectLanguageWidgetState();
 }
 
 class SelectLanguageWidgetState extends ConsumerState<SelectLanguageWidget>

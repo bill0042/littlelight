@@ -7,7 +7,7 @@ import 'package:little_light/widgets/item_list/items/search_item_wrapper.widget.
 class QuickTransferSearchItemWrapper extends SearchItemWrapperWidget {
   QuickTransferSearchItemWrapper(DestinyItemComponent item, int bucketHash,
       {String characterId, Key key})
-      : super(item, bucketHash, characterId: characterId, key:key);
+      : super(item, bucketHash, characterId: characterId, key: key);
 
   @override
   QuickTransferSearchItemWrapperWidgetWidgetState createState() {
@@ -18,7 +18,6 @@ class QuickTransferSearchItemWrapper extends SearchItemWrapperWidget {
 class QuickTransferSearchItemWrapperWidgetWidgetState
     extends SearchItemWrapperWidgetState<QuickTransferSearchItemWrapper> {
   @override
-  
   @override
   void onTap(context) {
     Navigator.of(context).pop(ItemWithOwner(widget.item, widget.characterId));
@@ -27,16 +26,16 @@ class QuickTransferSearchItemWrapperWidgetWidgetState
   @override
   void onLongPress(context) {
     Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ItemDetailScreen(
-              item:widget.item,
-              definition:definition,
-              instanceInfo:instanceInfo,
-              characterId: widget.characterId,
-              uniqueId: uniqueId,
-              hideItemManagement: true,
-            ),
-      ));
+        context,
+        MaterialPageRoute(
+          builder: (context) => ItemDetailScreen(
+            item: widget.item,
+            definition: definition,
+            instanceInfo: instanceInfo,
+            characterId: widget.characterId,
+            uniqueId: uniqueId,
+            hideItemManagement: true,
+          ),
+        ));
   }
 }

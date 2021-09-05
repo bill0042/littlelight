@@ -10,12 +10,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 
-typedef StaggeredTile PresentationNodeTileBuilder(CollectionListItem item);
-typedef Widget PresentationNodeItemBuilder(
+typedef PresentationNodeTileBuilder = StaggeredTile Function(
+    CollectionListItem item);
+typedef PresentationNodeItemBuilder = Widget Function(
     CollectionListItem item, int depth, bool isCategorySet);
 
 class PresentationNodeListWidget extends StatefulWidget {
-  final ManifestService manifest = new ManifestService();
+  final ManifestService manifest = ManifestService();
   final int presentationNodeHash;
   final PresentationNodeTileBuilder tileBuilder;
   final PresentationNodeItemBuilder itemBuilder;

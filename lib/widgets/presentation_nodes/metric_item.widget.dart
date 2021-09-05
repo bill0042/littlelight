@@ -17,7 +17,7 @@ import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 
 class MetricItemWidget extends StatefulWidget {
-  final ManifestService manifest = new ManifestService();
+  final ManifestService manifest = ManifestService();
   final int hash;
   MetricItemWidget({Key key, this.hash}) : super(key: key);
 

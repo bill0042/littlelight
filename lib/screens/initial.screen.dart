@@ -32,16 +32,16 @@ import 'package:little_light/widgets/initial_page/select_platform.widget.dart';
 import 'package:little_light/widgets/layouts/floating_content_layout.dart';
 
 class InitialScreen extends ConsumerStatefulWidget {
-  final BungieApiService apiService = new BungieApiService();
-  final AuthService auth = new AuthService();
-  final ManifestService manifest = new ManifestService();
-  final ProfileService profile = new ProfileService();
+  final BungieApiService apiService = BungieApiService();
+  final AuthService auth = AuthService();
+  final ManifestService manifest = ManifestService();
+  final ProfileService profile = ProfileService();
   final String authCode;
 
   InitialScreen({Key key, this.authCode}) : super(key: key);
 
   @override
-  InitialScreenState createState() => new InitialScreenState();
+  InitialScreenState createState() => InitialScreenState();
 }
 
 class InitialScreenState extends FloatingContentState<InitialScreen>
@@ -139,7 +139,7 @@ class InitialScreenState extends FloatingContentState<InitialScreen>
 
   showDownloadManifest() async {
     String language = StorageService.getLanguage();
-    DownloadManifestWidget screen = new DownloadManifestWidget(
+    DownloadManifestWidget screen = DownloadManifestWidget(
       selectedLanguage: language,
       onFinish: () {
         checkLogin();
@@ -187,7 +187,7 @@ class InitialScreenState extends FloatingContentState<InitialScreen>
   }
 
   showLogin([bool forceReauth = true]) {
-    LoginWidget loginWidget = new LoginWidget(
+    LoginWidget loginWidget = LoginWidget(
       onSkip: () {
         goForward();
       },

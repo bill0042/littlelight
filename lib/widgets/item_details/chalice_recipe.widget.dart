@@ -13,9 +13,7 @@ import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-enum TestEnum {
-  A,B,C,D
-}
+enum TestEnum { A, B, C, D }
 
 class ChaliceRecipeWidget extends StatelessWidget {
   final DestinyInventoryItemDefinition definition;
@@ -267,7 +265,7 @@ class ChaliceRecipeWidget extends StatelessWidget {
         return 3853494024;
       default:
         return null;
-    }    
+    }
   }
 
   int getWeaponMasterworkTextHash(WeaponMasterwork type) {

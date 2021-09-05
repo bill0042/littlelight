@@ -29,10 +29,10 @@ class EditLoadoutScreen extends ConsumerStatefulWidget {
   EditLoadoutScreen({Key key, this.loadout, this.forceCreate = false})
       : super(key: key);
 
-  final ManifestService manifest = new ManifestService();
+  final ManifestService manifest = ManifestService();
 
   @override
-  EditLoadoutScreenState createState() => new EditLoadoutScreenState();
+  EditLoadoutScreenState createState() => EditLoadoutScreenState();
 }
 
 class EditLoadoutScreenState extends ConsumerState<EditLoadoutScreen>
@@ -44,7 +44,7 @@ class EditLoadoutScreenState extends ConsumerState<EditLoadoutScreen>
   Loadout _loadout;
   String _nameInputLabel = "";
 
-  TextEditingController _nameFieldController = new TextEditingController();
+  TextEditingController _nameFieldController = TextEditingController();
 
   @override
   initState() {

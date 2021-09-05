@@ -21,7 +21,6 @@ import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 
-
 class VendorsListItemWidget extends StatefulWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
@@ -83,7 +82,8 @@ class VendorsListItemWidgetState<T extends VendorsListItemWidget>
     if (def.identifier.contains('multipurchase')) {
       return false; //eververse weird bright engrams
     }
-    if (def.identifier.contains('categories.featured') && !def.identifier.contains('bright_dust')) {
+    if (def.identifier.contains('categories.featured') &&
+        !def.identifier.contains('bright_dust')) {
       return false; //eververse weird menus
     }
     if (def.identifier.contains('categories.campaigns')) {
@@ -186,8 +186,8 @@ class VendorsListItemWidgetState<T extends VendorsListItemWidget>
           AspectRatio(
             aspectRatio: 1,
             child: QueuedNetworkImage(
-              imageUrl: BungieApiService.url(
-                  definition.displayProperties.mapIcon),
+              imageUrl:
+                  BungieApiService.url(definition.displayProperties.mapIcon),
             ),
           ),
           Container(
@@ -202,8 +202,7 @@ class VendorsListItemWidgetState<T extends VendorsListItemWidget>
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Container(height: 2),
-              ManifestText<DestinyFactionDefinition>(
-                  definition?.factionHash,
+              ManifestText<DestinyFactionDefinition>(definition?.factionHash,
                   style: TextStyle(fontWeight: FontWeight.w300)),
             ],
           )
@@ -246,8 +245,7 @@ class VendorsListItemWidgetState<T extends VendorsListItemWidget>
         runSpacing: 4,
         spacing: 4,
         alignment: WrapAlignment.start,
-        children: category.itemIndexes
-            .reversed
+        children: category.itemIndexes.reversed
             .map((index) =>
                 buildItem(context, definition.itemList[index], index))
             .toList());
@@ -265,9 +263,9 @@ class VendorsListItemWidgetState<T extends VendorsListItemWidget>
           children: <Widget>[
             ManifestImageWidget<DestinyInventoryItemDefinition>(item.itemHash,
                 key: Key("item_${item.itemHash}")),
-            sale.saleStatus != VendorItemStatus.Success 
+            sale.saleStatus != VendorItemStatus.Success
                 ? Positioned.fill(
-                    child: Container(color: Colors.black.withOpacity(.6))) 
+                    child: Container(color: Colors.black.withOpacity(.6)))
                 : Container()
           ],
         ));

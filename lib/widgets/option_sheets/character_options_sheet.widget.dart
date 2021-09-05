@@ -529,7 +529,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
   }
 
   Future<LoadoutItemIndex> createLoadout([includeUnequipped = false]) async {
-    var itemIndex = new LoadoutItemIndex();
+    var itemIndex = LoadoutItemIndex();
     itemIndex.loadout.emblemHash = widget.character.emblemHash;
     var slots = LoadoutItemIndex.classBucketHashes +
         LoadoutItemIndex.genericBucketHashes;
@@ -584,7 +584,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
   }
 
   randomizeLoadout(List<int> requiredSlots) async {
-    LoadoutItemIndex randomLoadout = new LoadoutItemIndex();
+    LoadoutItemIndex randomLoadout = LoadoutItemIndex();
     var allItems = widget.profile
         .getAllItems()
         .where((i) => i.itemInstanceId != null)

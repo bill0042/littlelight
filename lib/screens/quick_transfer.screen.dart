@@ -53,7 +53,7 @@ class QuickTransferScreen extends SearchScreen {
         ]));
 
   @override
-  QuickTransferScreenState createState() => new QuickTransferScreenState();
+  QuickTransferScreenState createState() => QuickTransferScreenState();
 }
 
 class QuickTransferScreenState extends SearchScreenState<QuickTransferScreen> {

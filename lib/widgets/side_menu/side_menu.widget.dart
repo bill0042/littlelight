@@ -29,10 +29,10 @@ import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/side_menu/profile_info.widget.dart';
 
-typedef void OnPageChange(Widget screen);
+typedef OnPageChange = void Function(Widget screen);
 
 class SideMenuWidget extends StatefulWidget {
-  final AuthService auth = new AuthService();
+  final AuthService auth = AuthService();
   final OnPageChange onPageChange;
 
   SideMenuWidget({Key key, this.onPageChange}) : super(key: key);
@@ -229,7 +229,7 @@ class SideMenuWidgetState extends State<SideMenuWidget> {
   }
 
   Widget menuItem(BuildContext context, Widget label,
-      {void onTap(), requireLogin: false}) {
+      {void onTap(), requireLogin = false}) {
     var needToLogin = requireLogin && !widget.auth.isLogged;
     return Material(
         color: Colors.transparent,

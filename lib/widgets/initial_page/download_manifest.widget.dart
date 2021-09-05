@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
-typedef void OnFinishCallback();
+typedef OnFinishCallback = void Function();
 
 class DownloadManifestWidget extends StatefulWidget {
   final String title = "Download Database";
-  final ManifestService manifest = new ManifestService();
+  final ManifestService manifest = ManifestService();
   final String selectedLanguage;
   final OnFinishCallback onFinish;
   DownloadManifestWidget({this.selectedLanguage, this.onFinish});
 
   @override
   DownloadManifestWidgetState createState() {
-    return new DownloadManifestWidgetState();
+    return DownloadManifestWidgetState();
   }
 }
 
@@ -61,8 +61,11 @@ class DownloadManifestWidgetState extends State<DownloadManifestWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             _downloadProgress < 0.99
-                ? TranslatedTextWidget("Downloading", key: Key("downloading"),)
-                : TranslatedTextWidget("Uncompressing", key:Key("unzipping")),
+                ? TranslatedTextWidget(
+                    "Downloading",
+                    key: Key("downloading"),
+                  )
+                : TranslatedTextWidget("Uncompressing", key: Key("unzipping")),
             Text("$_loaded/${_total}KB")
           ],
         )

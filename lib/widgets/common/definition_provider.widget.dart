@@ -4,7 +4,7 @@ import 'package:little_light/services/manifest/manifest.service.dart';
 typedef DefinitionWidgetBuilder<T> = Widget Function(T definition);
 
 class DefinitionProviderWidget<T> extends StatefulWidget {
-  final ManifestService _manifest = new ManifestService();
+  final ManifestService _manifest = ManifestService();
   final int hash;
   final DefinitionWidgetBuilder<T> widgetBuilder;
   final Widget placeholder;

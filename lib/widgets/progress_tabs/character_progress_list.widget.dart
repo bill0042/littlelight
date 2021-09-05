@@ -53,7 +53,8 @@ class _CharacterProgressListWidgetState
   Widget build(BuildContext context) {
     var screenPadding = MediaQuery.of(context).padding;
     return SingleChildScrollView(
-      padding: EdgeInsets.only(left:screenPadding.left, right:screenPadding.right),
+      padding:
+          EdgeInsets.only(left: screenPadding.left, right: screenPadding.right),
       child: Column(
         children: buildMilestones(context),
       ),

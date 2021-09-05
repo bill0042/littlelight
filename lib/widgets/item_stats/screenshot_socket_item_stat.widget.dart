@@ -9,11 +9,12 @@ class ScreenshotSocketItemStatWidget extends BaseItemStatWidget {
 
   ScreenshotSocketItemStatWidget(
       {Key key,
-        this.pixelSize = 1,
+      this.pixelSize = 1,
       StatValues modValues,
       int statHash,
       DestinyStatDisplayDefinition scaled})
-      : super(key:key, statHash: statHash, modValues: modValues, scaled: scaled);
+      : super(
+            key: key, statHash: statHash, modValues: modValues, scaled: scaled);
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +68,8 @@ class ScreenshotSocketItemStatWidget extends BaseItemStatWidget {
       height: pixelSize * 20,
       color: Colors.grey.shade700.withOpacity(.7),
       child: Row(
-        mainAxisAlignment: currentValue > 0 ? MainAxisAlignment.start : MainAxisAlignment.end,
+        mainAxisAlignment:
+            currentValue > 0 ? MainAxisAlignment.start : MainAxisAlignment.end,
         children: <Widget>[
           Container(
               width: (modBarSize / maxBarSize) * (pixelSize * 240),
@@ -79,7 +81,8 @@ class ScreenshotSocketItemStatWidget extends BaseItemStatWidget {
 
   int get currentValue {
     if (scaled != null) {
-      return interpolate(selected, scaled.displayInterpolation) - interpolate(equipped, scaled.displayInterpolation);
+      return interpolate(selected, scaled.displayInterpolation) -
+          interpolate(equipped, scaled.displayInterpolation);
     }
     return selected - equipped;
   }

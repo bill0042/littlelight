@@ -11,8 +11,8 @@ import 'package:little_light/widgets/inventory_tabs/tabs_character_menu.widget.d
 import 'package:shimmer/shimmer.dart';
 
 class InspectScreen extends ConsumerStatefulWidget {
-  final profile = new ProfileService();
-  final manifest = new ManifestService();
+  final profile = ProfileService();
+  final manifest = ManifestService();
 
   final String membershipId;
   final int membershipType;
@@ -21,7 +21,7 @@ class InspectScreen extends ConsumerStatefulWidget {
       : super(key: key);
 
   @override
-  InspectScreenState createState() => new InspectScreenState();
+  InspectScreenState createState() => InspectScreenState();
 }
 
 class InspectScreenState extends ConsumerState<InspectScreen>

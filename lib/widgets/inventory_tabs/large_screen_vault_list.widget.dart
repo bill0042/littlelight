@@ -8,7 +8,7 @@ class LargeScreenVaultListWidget extends StatefulWidget {
   LargeScreenVaultListWidget({Key key, this.character}) : super(key: key);
   @override
   LargeScreenVaultListWidgetState createState() =>
-      new LargeScreenVaultListWidgetState();
+      LargeScreenVaultListWidgetState();
 }
 
 class LargeScreenVaultListWidgetState
@@ -35,8 +35,10 @@ class LargeScreenVaultListWidgetState
     var screenPadding = MediaQuery.of(context).padding;
     return VaultItemListWidget(
       key: Key("vault_inventory"),
-      padding:
-          EdgeInsets.only(top: getListTopOffset(context), left: 2 + screenPadding.left, right: 2 + screenPadding.right),
+      padding: EdgeInsets.only(
+          top: getListTopOffset(context),
+          left: 2 + screenPadding.left,
+          right: 2 + screenPadding.right),
       bucketHashes: bucketHashes,
     );
   }

@@ -31,7 +31,7 @@ class _LanguagesScreenState extends ConsumerState<LanguagesScreen>
   void loadLanguages() async {
     currentLanguage = selectedLanguage = StorageService.getLanguage();
     languages = await ManifestService().getAvailableLanguages();
-    fileSizes = new Map();
+    fileSizes = Map();
     for (var l in languages) {
       var storage = StorageService.language(l);
       var path = await storage.getPath(StorageKeys.manifestFile, dbPath: true);

@@ -29,8 +29,8 @@ import 'package:shimmer/shimmer.dart';
 import 'package:speech_bubble/speech_bubble.dart';
 
 class CharacterInfoWidget extends ConsumerStatefulWidget {
-  final ManifestService manifest = new ManifestService();
-  final ProfileService profile = new ProfileService();
+  final ManifestService manifest = ManifestService();
+  final ProfileService profile = ProfileService();
   final String characterId;
   final NotificationService broadcaster = NotificationService();
 

@@ -26,16 +26,19 @@ class EnergyLevelConstraintsFilter
     availableValues.includeEnergylessItems = false;
     availableValues.min = 9999;
     availableValues.max = -9999;
-    for(var item in items){
-      var instanceInfo = ProfileService().getInstanceInfo(item.item.itemInstanceId);
-      if(instanceInfo?.energy?.energyCapacity != null){
-        availableValues.min = min(availableValues.min, instanceInfo.energy.energyCapacity);
-        availableValues.max = max(availableValues.max, instanceInfo.energy.energyCapacity);
-      }else{
+    for (var item in items) {
+      var instanceInfo =
+          ProfileService().getInstanceInfo(item.item.itemInstanceId);
+      if (instanceInfo?.energy?.energyCapacity != null) {
+        availableValues.min =
+            min(availableValues.min, instanceInfo.energy.energyCapacity);
+        availableValues.max =
+            max(availableValues.max, instanceInfo.energy.energyCapacity);
+      } else {
         availableValues.includeEnergylessItems = true;
       }
     }
-    
+
     this.available = (this.availableValues?.min ?? 9999) <
         (this.availableValues?.max ?? -9999);
 

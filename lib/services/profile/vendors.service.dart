@@ -23,7 +23,7 @@ const _vendorComponents = [
 ];
 
 class VendorsService {
-  static final VendorsService _singleton = new VendorsService._internal();
+  static final VendorsService _singleton = VendorsService._internal();
   DateTime lastUpdated;
   factory VendorsService() {
     return _singleton;

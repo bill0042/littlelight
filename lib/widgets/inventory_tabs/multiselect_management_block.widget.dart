@@ -14,7 +14,7 @@ import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
 class MultiselectManagementBlockWidget extends StatelessWidget {
-  final InventoryService inventory = new InventoryService();
+  final InventoryService inventory = InventoryService();
   final List<ItemWithOwner> items;
   MultiselectManagementBlockWidget({Key key, this.items})
       : super(

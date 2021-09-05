@@ -4,7 +4,7 @@ import 'package:little_light/widgets/common/translated_text.widget.dart';
 
 import 'package:little_light/widgets/initial_page/plaftorm.button.dart';
 
-typedef void PlatformSelectCallback(String membershipType);
+typedef PlatformSelectCallback = void Function(String membershipType);
 
 class SelectPlatformWidget extends StatefulWidget {
   final String title = "Select Platform";
@@ -14,7 +14,7 @@ class SelectPlatformWidget extends StatefulWidget {
   SelectPlatformWidget({this.membershipData, this.onSelect});
 
   @override
-  SelectPlatformWidgetState createState() => new SelectPlatformWidgetState();
+  SelectPlatformWidgetState createState() => SelectPlatformWidgetState();
 }
 
 class SelectPlatformWidgetState extends State<SelectPlatformWidget> {

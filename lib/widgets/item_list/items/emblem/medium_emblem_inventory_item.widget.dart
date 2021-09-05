@@ -8,11 +8,20 @@ import 'package:little_light/widgets/item_list/items/base/medium_base_inventory_
 
 class MediumEmblemInventoryItemWidget extends MediumBaseInventoryItemWidget {
   MediumEmblemInventoryItemWidget(
-      DestinyItemComponent item,
-      DestinyInventoryItemDefinition itemDefinition,
-      DestinyItemInstanceComponent instanceInfo,
-      {@required String characterId, Key key, @required String uniqueId,})
-      : super(item, itemDefinition, instanceInfo, characterId:characterId, key:key, uniqueId: uniqueId,);
+    DestinyItemComponent item,
+    DestinyInventoryItemDefinition itemDefinition,
+    DestinyItemInstanceComponent instanceInfo, {
+    @required String characterId,
+    Key key,
+    @required String uniqueId,
+  }) : super(
+          item,
+          itemDefinition,
+          instanceInfo,
+          characterId: characterId,
+          key: key,
+          uniqueId: uniqueId,
+        );
 
   @override
   background(BuildContext context) {
@@ -21,11 +30,11 @@ class MediumEmblemInventoryItemWidget extends MediumBaseInventoryItemWidget {
         left: 0,
         bottom: 0,
         right: 0,
-        child: Container(color: Colors.blueGrey.shade900,
-        child:QueuedNetworkImage(
-          alignment: Alignment.center,
-          fit:BoxFit.cover,
-          imageUrl:BungieApiService.url(definition.secondarySpecial)
-          )));
+        child: Container(
+            color: Colors.blueGrey.shade900,
+            child: QueuedNetworkImage(
+                alignment: Alignment.center,
+                fit: BoxFit.cover,
+                imageUrl: BungieApiService.url(definition.secondarySpecial))));
   }
 }

@@ -7,7 +7,7 @@ import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/item_list/bucket_display_options_selector.widget.dart';
 
 class BucketHeaderWidget extends StatefulWidget {
-  final ManifestService manifest = new ManifestService();
+  final ManifestService manifest = ManifestService();
   final int hash;
   final int itemCount;
   final bool isVault;
@@ -22,7 +22,7 @@ class BucketHeaderWidget extends StatefulWidget {
       Key key})
       : super(key: key);
   @override
-  BucketHeaderWidgetState createState() => new BucketHeaderWidgetState();
+  BucketHeaderWidgetState createState() => BucketHeaderWidgetState();
 }
 
 class BucketHeaderWidgetState<T extends BucketHeaderWidget> extends State<T> {

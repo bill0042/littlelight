@@ -15,16 +15,15 @@ class ItemSubTypeFilterWidget
 
 class _ItemSubTypeFilterWidgetState extends BaseSearchFilterWidgetState<
     ItemSubTypeFilterWidget, ItemSubtypeFilter, FilterSubType> {
-
   @override
   Widget buildButtonLabel(BuildContext context, FilterSubType value) {
-    if((value?.subTypeName?.length ?? 0) == 0){
+    if ((value?.subTypeName?.length ?? 0) == 0) {
       return TranslatedTextWidget(
-      "None",
-      key: Key("item_category_filter_filter_$value"),
-      textAlign: TextAlign.center,
-      uppercase: true,
-    );  
+        "None",
+        key: Key("item_category_filter_filter_$value"),
+        textAlign: TextAlign.center,
+        uppercase: true,
+      );
     }
     return Text(
       value?.subTypeName?.toUpperCase() ?? "",

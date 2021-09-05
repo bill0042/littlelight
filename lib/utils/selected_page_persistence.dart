@@ -20,7 +20,7 @@ class SelectedPagePersistence {
   static Future<String> getLatestScreen() async {
     StorageService _prefs = StorageService.global();
     String latest = _prefs.getString(StorageKeys.latestScreen);
-    AuthService auth = new AuthService();
+    AuthService auth = AuthService();
     if (auth.isLogged) {
       List<String> all = logged + public;
       if (all.contains(latest)) {

@@ -22,7 +22,7 @@ class AuthService {
 
   StreamSubscription<String> linkStreamSub;
 
-  static final AuthService _singleton = new AuthService._internal();
+  static final AuthService _singleton = AuthService._internal();
 
   factory AuthService() {
     return _singleton;
@@ -116,7 +116,7 @@ class AuthService {
 
   Future<String> authorize([bool forceReauth = true]) async {
     String currentLanguage = StorageService.getLanguage();
-    var browser = new BungieAuthBrowser();
+    var browser = BungieAuthBrowser();
     OAuth.openOAuth(
         browser, BungieApiService.clientId, currentLanguage, forceReauth);
     Stream<String> _stream = linkStream;

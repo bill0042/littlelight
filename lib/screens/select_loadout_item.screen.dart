@@ -36,8 +36,7 @@ class SelectLoadoutItemScreen extends SearchScreen {
         ]));
 
   @override
-  SelectLoadoutItemScreenState createState() =>
-      new SelectLoadoutItemScreenState();
+  SelectLoadoutItemScreenState createState() => SelectLoadoutItemScreenState();
 }
 
 class SelectLoadoutItemScreenState
@@ -55,7 +54,8 @@ class SelectLoadoutItemScreenState
       title: buildAppBarTitle(context),
       elevation: 2,
       actions: <Widget>[
-        IconButton(enableFeedback: false,
+        IconButton(
+          enableFeedback: false,
           icon: textFilter.enabled ? Icon(Icons.close) : Icon(Icons.search),
           onPressed: () {
             textFilter.enabled = !textFilter.enabled;
@@ -64,7 +64,8 @@ class SelectLoadoutItemScreenState
           },
         ),
         Builder(
-            builder: (context) => IconButton(enableFeedback: false,
+            builder: (context) => IconButton(
+                  enableFeedback: false,
                   icon: Icon(Icons.filter_list),
                   onPressed: () {
                     Scaffold.of(context).openEndDrawer();

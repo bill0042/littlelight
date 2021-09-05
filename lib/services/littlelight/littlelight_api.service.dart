@@ -25,7 +25,7 @@ class LittleLightApiService {
   String _secret;
 
   static final LittleLightApiService _singleton =
-      new LittleLightApiService._internal();
+      LittleLightApiService._internal();
   factory LittleLightApiService() {
     return _singleton;
   }

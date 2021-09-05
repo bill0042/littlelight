@@ -37,15 +37,15 @@ class FloatingContentState<T extends ConsumerStatefulWidget>
   @override
   Widget build(BuildContext context) {
     ExceptionHandler.context = context;
-    return new Scaffold(
-        body: new Container(
-            decoration: new BoxDecoration(
-              image: new DecorationImage(
-                image: new AssetImage("assets/imgs/background.jpg"),
+    return Scaffold(
+        body: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/imgs/background.jpg"),
                 fit: BoxFit.cover,
               ),
             ),
-            child: new Center(
+            child: Center(
               child: this.loading ? loaderAnim(context) : getContentContainer(),
             )));
   }
@@ -127,7 +127,7 @@ class AnimatedContentBox extends AnimatedWidget {
   }
 
   Widget buildEnteringAnim(BuildContext context) {
-    return new Card(
+    return Card(
         margin: EdgeInsets.all(0),
         color: Theme.of(context).backgroundColor,
         shape: Border.all(width: 0),
@@ -162,7 +162,7 @@ class AnimatedContentBox extends AnimatedWidget {
 
   Widget buildExitingAnim(BuildContext context) {
     Tween<double> sizeFactor = Tween<double>(begin: 1, end: 0);
-    return new Card(
+    return Card(
         margin: EdgeInsets.all(0),
         color: Theme.of(context).backgroundColor,
         shape: Border.all(width: 0),
@@ -195,7 +195,7 @@ class AnimatedContentBox extends AnimatedWidget {
   }
 
   Widget buildIntermediateAnim(BuildContext context) {
-    return new Card(
+    return Card(
       margin: EdgeInsets.all(0),
       color: Theme.of(context).backgroundColor,
       shape: Border.all(width: 0),

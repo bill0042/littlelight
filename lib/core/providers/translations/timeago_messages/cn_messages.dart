@@ -17,4 +17,4 @@ class ZhMessages implements LookupMessages {
   String aboutAYear(int year) => '约1年';
   String years(int years) => '约 $years 年';
   String wordSeparator() => ' ';
-} 
+}

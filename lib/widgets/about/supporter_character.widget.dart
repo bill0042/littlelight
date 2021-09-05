@@ -17,7 +17,7 @@ import 'package:url_launcher/url_launcher.dart';
 class SupporterCharacterWidget extends StatefulWidget {
   final String membershipId;
   final BungieMembershipType membershipType;
-  final BungieApiService bungie = new BungieApiService();
+  final BungieApiService bungie = BungieApiService();
   final String link;
   final Widget badge;
   SupporterCharacterWidget(this.membershipId, this.membershipType,

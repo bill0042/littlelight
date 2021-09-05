@@ -23,7 +23,7 @@ class VaultItemListWidget extends ItemListWidget {
             bucketHashes: bucketHashes,
             scrollPositions: scrollPositions);
   @override
-  VaultItemListWidgetState createState() => new VaultItemListWidgetState();
+  VaultItemListWidgetState createState() => VaultItemListWidgetState();
 }
 
 class VaultItemListWidgetState extends ItemListWidgetState {
