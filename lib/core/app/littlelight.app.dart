@@ -8,7 +8,6 @@ import 'package:little_light/core/theme/littlelight.theme.dart';
 import 'package:little_light/screens/initial.screen.dart';
 import 'package:little_light/utils/platform_capabilities.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
-import 'package:provider/provider.dart';
 
 class LittleLight extends StatelessWidget {
   final Key key;
@@ -26,41 +25,39 @@ class LittleLight extends StatelessWidget {
           FirebaseAnalyticsObserver(analytics: analytics);
       observers.add(observer);
     }
-    return MultiProvider(
-        providers: [],
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          key: key,
-          title: 'Little Light',
-          navigatorObservers: observers,
-          theme: LittleLightTheme().theme,
-          builder: (context, child) {
-            return ScrollConfiguration(
-              behavior: LittleLightScrollBehaviour(),
-              child: child,
-            );
-          },
-          home: new InitialScreen(),
-          localizationsDelegates: [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          supportedLocales: [
-            const Locale('en'), // English
-            const Locale('fr'), // French
-            const Locale('es'), // Spanish
-            const Locale('de'), // German
-            const Locale('it'), // Italian
-            const Locale('ja'), // Japan
-            const Locale('pt', 'BR'), // Brazillian Portuguese
-            const Locale('es', 'MX'), // Mexican Spanish
-            const Locale('ru'), // Russian
-            const Locale('pl'), // Polish
-            const Locale('ko'), // Korean
-            const Locale('zh', 'CHT'), // Chinese
-            const Locale('zh', 'CHS'), // Chinese
-          ],
-        ));
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      key: key,
+      title: 'Little Light',
+      navigatorObservers: observers,
+      theme: LittleLightTheme().theme,
+      builder: (context, child) {
+        return ScrollConfiguration(
+          behavior: LittleLightScrollBehaviour(),
+          child: child,
+        );
+      },
+      home: new InitialScreen(),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en'), // English
+        const Locale('fr'), // French
+        const Locale('es'), // Spanish
+        const Locale('de'), // German
+        const Locale('it'), // Italian
+        const Locale('ja'), // Japan
+        const Locale('pt', 'BR'), // Brazillian Portuguese
+        const Locale('es', 'MX'), // Mexican Spanish
+        const Locale('ru'), // Russian
+        const Locale('pl'), // Polish
+        const Locale('ko'), // Korean
+        const Locale('zh', 'CHT'), // Chinese
+        const Locale('zh', 'CHS'), // Chinese
+      ],
+    );
   }
 }
 
