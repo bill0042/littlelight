@@ -7,6 +7,8 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
 import 'package:little_light/screens/quick_transfer.screen.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
@@ -15,7 +17,7 @@ import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/selection/selection.service.dart';
-import 'package:little_light/services/user_settings/user_settings.service.dart';
+
 import 'package:little_light/utils/item_with_owner.dart';
 
 import 'package:little_light/widgets/item_list/items/armor/armor_inventory_item.widget.dart';
@@ -39,7 +41,7 @@ import 'package:uuid/uuid.dart';
 
 enum ContentDensity { MINIMAL, MEDIUM, FULL }
 
-class InventoryItemWrapperWidget extends StatefulWidget {
+class InventoryItemWrapperWidget extends ConsumerStatefulWidget {
   final ManifestService manifest = ManifestService();
   final ProfileService profile = ProfileService();
   final DestinyItemComponent item;
@@ -57,7 +59,7 @@ class InventoryItemWrapperWidget extends StatefulWidget {
 }
 
 class InventoryItemWrapperWidgetState<T extends InventoryItemWrapperWidget>
-    extends State<T> {
+    extends ConsumerState<T> with UserSettingsConsumerState {
   DestinyInventoryItemDefinition definition;
   String uniqueId;
   bool selected = false;
@@ -236,7 +238,7 @@ class InventoryItemWrapperWidgetState<T extends InventoryItemWrapperWidget>
       onLongPress(context);
       return;
     }
-    if (UserSettingsService().tapToSelect) {
+    if (userSettings.tapToSelect) {
       onTapSelect(context);
     } else {
       onTapDetails(context);
@@ -244,7 +246,7 @@ class InventoryItemWrapperWidgetState<T extends InventoryItemWrapperWidget>
   }
 
   void onDoubleTap(BuildContext context) {
-    if (UserSettingsService().tapToSelect) {
+    if (userSettings.tapToSelect) {
       onTapDetails(context);
     }
   }

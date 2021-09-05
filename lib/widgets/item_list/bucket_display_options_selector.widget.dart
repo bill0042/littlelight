@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/models/bucket_display_options.dart';
-import 'package:little_light/services/user_settings/user_settings.service.dart';
+
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/icon_fonts/littlelight_icons.dart';
 
-class BucketDisplayOptionsSelectorWidget extends StatefulWidget {
+class BucketDisplayOptionsSelectorWidget extends ConsumerStatefulWidget {
   final ManifestService manifest = new ManifestService();
   final int hash;
   final bool isEquippable;
@@ -20,14 +22,14 @@ class BucketDisplayOptionsSelectorWidget extends StatefulWidget {
 }
 
 class BucketDisplayOptionsSelectorWidgetState<
-    T extends BucketDisplayOptionsSelectorWidget> extends State<T> {
+        T extends BucketDisplayOptionsSelectorWidget> extends ConsumerState<T>
+    with UserSettingsConsumerState {
   BucketDisplayType currentType;
 
   @override
   void initState() {
     super.initState();
-    currentType =
-        UserSettingsService().getDisplayOptionsForBucket(bucketKey)?.type;
+    currentType = userSettings.getDisplayOptionsForBucket(bucketKey)?.type;
   }
 
   String get bucketKey {
@@ -81,8 +83,7 @@ class BucketDisplayOptionsSelectorWidgetState<
                           .toList(),
                       onChanged: (selected) {
                         this.currentType = selected;
-                        UserSettingsService().setDisplayOptionsForBucket(
-                            bucketKey,
+                        userSettings.setDisplayOptionsForBucket(bucketKey,
                             BucketDisplayOptions(type: this.currentType));
                         setState(() {});
                         if (widget.onChanged != null) {

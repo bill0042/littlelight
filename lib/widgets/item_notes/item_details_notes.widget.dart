@@ -2,6 +2,7 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:flutter/material.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/models/item_notes.dart';
 import 'package:little_light/services/littlelight/item_notes.service.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateful_item.widget.dart';
@@ -36,7 +37,7 @@ const _sectionId = "item_tag_notes";
 
 class ItemDetailsNotesWidgetState
     extends BaseDestinyItemState<ItemDetailsNotesWidget>
-    with VisibleSectionMixin {
+    with UserSettingsConsumerState, VisibleSectionMixin {
   ItemNotes notes;
 
   @override

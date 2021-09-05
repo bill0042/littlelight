@@ -3,6 +3,7 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_socket_category_definition.dart';
 import 'package:bungie_api/models/destiny_item_socket_state.dart';
 import 'package:flutter/material.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateful_item.widget.dart';
@@ -30,7 +31,8 @@ abstract class BaseItemSocketsWidget extends BaseDestinyStatefulItemWidget {
 }
 
 abstract class BaseItemSocketsWidgetState<T extends BaseItemSocketsWidget>
-    extends BaseDestinyItemState<T> with VisibleSectionMixin {
+    extends BaseDestinyItemState<T>
+    with UserSettingsConsumerState, VisibleSectionMixin {
   List<DestinyItemSocketState> _socketStates;
   List<DestinyItemSocketState> get socketStates => _socketStates;
   Map<int, DestinyInventoryItemDefinition> get plugDefinitions =>

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:little_light/services/user_settings/user_settings.service.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
+
 import 'package:little_light/widgets/common/header.wiget.dart';
 
-mixin VisibleSectionMixin<T extends StatefulWidget> on State<T> {
+mixin VisibleSectionMixin<T extends ConsumerStatefulWidget>
+    on ConsumerState<T>, UserSettingsConsumerState<T> {
   String get sectionId;
 
-  bool get visible =>
-      UserSettingsService().getVisibilityForDetailsSection(sectionId);
+  bool get visible => userSettings.getVisibilityForDetailsSection(sectionId);
 
   Widget getHeader(Widget label) {
     return SectionHeaderWidget(
@@ -21,7 +23,7 @@ mixin VisibleSectionMixin<T extends StatefulWidget> on State<T> {
   }
 }
 
-class SectionHeaderWidget extends StatefulWidget {
+class SectionHeaderWidget extends ConsumerStatefulWidget {
   final int hash;
   final Function onChanged;
   final Widget label;
@@ -37,15 +39,15 @@ class SectionHeaderWidget extends StatefulWidget {
   SectionHeaderWidgetState createState() => new SectionHeaderWidgetState();
 }
 
-class SectionHeaderWidgetState<T extends SectionHeaderWidget> extends State<T> {
+class SectionHeaderWidgetState<T extends SectionHeaderWidget>
+    extends ConsumerState<T> with UserSettingsConsumerState {
   bool visible = true;
 
   @override
   void initState() {
     super.initState();
-    visible = UserSettingsService()
-            .getVisibilityForDetailsSection(widget.sectionId) ??
-        true;
+    visible =
+        userSettings.getVisibilityForDetailsSection(widget.sectionId) ?? true;
   }
 
   @override
@@ -61,8 +63,8 @@ class SectionHeaderWidgetState<T extends SectionHeaderWidget> extends State<T> {
     return InkWell(
         onTap: () {
           visible = !visible;
-          UserSettingsService()
-              .setVisibilityForDetailsSection(widget.sectionId, visible);
+          userSettings.setVisibilityForDetailsSection(
+              widget.sectionId, visible);
           setState(() {});
           widget.onChanged?.call();
         },

@@ -12,12 +12,14 @@ import 'package:bungie_api/models/destiny_race_definition.dart';
 import 'package:bungie_api/models/destiny_sandbox_perk_definition.dart';
 import 'package:bungie_api/models/destiny_stat_definition.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/destiny_settings.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
-import 'package:little_light/services/user_settings/user_settings.service.dart';
+
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
@@ -26,7 +28,7 @@ import 'package:little_light/widgets/option_sheets/character_options_sheet.widge
 import 'package:shimmer/shimmer.dart';
 import 'package:speech_bubble/speech_bubble.dart';
 
-class CharacterInfoWidget extends StatefulWidget {
+class CharacterInfoWidget extends ConsumerStatefulWidget {
   final ManifestService manifest = new ManifestService();
   final ProfileService profile = new ProfileService();
   final String characterId;
@@ -40,7 +42,8 @@ class CharacterInfoWidget extends StatefulWidget {
   }
 }
 
-class CharacterInfoWidgetState<T extends CharacterInfoWidget> extends State<T> {
+class CharacterInfoWidgetState<T extends CharacterInfoWidget>
+    extends ConsumerState<T> with UserSettingsConsumerState {
   DestinyClassDefinition classDef;
   DestinyRaceDefinition raceDef;
   DestinyCharacterComponent character;
@@ -95,7 +98,7 @@ class CharacterInfoWidgetState<T extends CharacterInfoWidget> extends State<T> {
               child: InkWell(
                   child: Container(),
                   onTap: () {
-                    UserSettingsService().hasTappedGhost = true;
+                    userSettings.hasTappedGhost = true;
                     setState(() {});
                     showOptionsSheet(context);
                   })))
@@ -158,7 +161,7 @@ class CharacterInfoWidgetState<T extends CharacterInfoWidget> extends State<T> {
             period: Duration(seconds: 5),
             child: Icon(LittleLightIcons.ghost,
                 size: 50, color: Colors.grey.shade300)));
-    if (UserSettingsService().hasTappedGhost) {
+    if (userSettings.hasTappedGhost) {
       return ghost;
     }
     return Stack(children: [

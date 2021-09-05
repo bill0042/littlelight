@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
 import 'package:little_light/models/item_notes_tag.dart';
 import 'package:little_light/models/wish_list.dart';
@@ -10,7 +11,7 @@ import 'package:little_light/screens/add_wishlist.screen.dart';
 import 'package:little_light/services/littlelight/item_notes.service.dart';
 import 'package:little_light/models/character_sort_parameter.dart';
 import 'package:little_light/models/item_sort_parameter.dart';
-import 'package:little_light/services/user_settings/user_settings.service.dart';
+
 import 'package:little_light/utils/platform_capabilities.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/littlelight_custom.dialog.dart';
@@ -23,13 +24,12 @@ import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
-  final UserSettingsService settings = new UserSettingsService();
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen>
-    with WishlistsConsumerState {
+    with WishlistsConsumerState, UserSettingsConsumerState {
   List<ItemSortParameter> itemOrdering;
   List<ItemSortParameter> pursuitOrdering;
   Set<String> priorityTags;
@@ -38,9 +38,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   @override
   void initState() {
     super.initState();
-    itemOrdering = widget.settings.itemOrdering;
-    pursuitOrdering = widget.settings.pursuitOrdering;
-    priorityTags = widget.settings.priorityTags;
+    itemOrdering = userSettings.itemOrdering;
+    pursuitOrdering = userSettings.pursuitOrdering;
+    priorityTags = userSettings.priorityTags;
     wishlists = wishlistsService.getWishlists();
   }
 
@@ -121,9 +121,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
         subtitle:
             TranslatedTextWidget("Keep device awake while the app is open"),
         trailing: Switch(
-          value: widget.settings.keepAwake,
+          value: userSettings.keepAwake,
           onChanged: (val) {
-            widget.settings.keepAwake = val;
+            userSettings.keepAwake = val;
             setState(() {});
             Screen.keepOn(val);
           },
@@ -142,9 +142,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
           TranslatedTextWidget("Double tap for details"),
         ]),
         trailing: Switch(
-          value: widget.settings.tapToSelect,
+          value: userSettings.tapToSelect,
           onChanged: (val) {
-            widget.settings.tapToSelect = val;
+            userSettings.tapToSelect = val;
             setState(() {});
           },
         ));
@@ -158,9 +158,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
         subtitle:
             TranslatedTextWidget("Open keyboard automatically in quick search"),
         trailing: Switch(
-          value: widget.settings.autoOpenKeyboard,
+          value: userSettings.autoOpenKeyboard,
           onChanged: (val) {
-            widget.settings.autoOpenKeyboard = val;
+            userSettings.autoOpenKeyboard = val;
             setState(() {});
           },
         ));
@@ -300,9 +300,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   buildDefaultFreeSlots(BuildContext context) {
     return FreeSlotsSliderWidget(
         suppressLabel: true,
-        initialValue: widget.settings.defaultFreeSlots,
+        initialValue: userSettings.defaultFreeSlots,
         onChanged: (value) {
-          widget.settings.defaultFreeSlots = value;
+          userSettings.defaultFreeSlots = value;
         });
   }
 
@@ -346,7 +346,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
 
   buildCharacterOrderItem(
       BuildContext context, Widget label, CharacterSortParameterType type) {
-    var selected = type == widget.settings.characterOrdering.type;
+    var selected = type == userSettings.characterOrdering.type;
     return Expanded(
       child: Material(
         color: selected ? Colors.lightBlue : Colors.blueGrey,
@@ -357,9 +357,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
             alignment: Alignment.center,
           ),
           onTap: () {
-            widget.settings.characterOrdering.type = type;
-            widget.settings.characterOrdering =
-                widget.settings.characterOrdering;
+            userSettings.characterOrdering.type = type;
+            userSettings.characterOrdering = userSettings.characterOrdering;
             setState(() {});
           },
         ),
@@ -377,11 +376,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
           onItemReorder: (oldIndex, newIndex) {
             var removed = itemOrdering.removeAt(oldIndex);
             itemOrdering.insert(newIndex, removed);
-            widget.settings.itemOrdering = itemOrdering;
+            userSettings.itemOrdering = itemOrdering;
           },
           itemBuilder: (context, parameter, handle) =>
               buildSortItem(context, parameter.value, handle, onSave: () {
-            widget.settings.itemOrdering = itemOrdering;
+            userSettings.itemOrdering = itemOrdering;
           }),
         ));
   }
@@ -406,11 +405,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
           onItemReorder: (oldIndex, newIndex) {
             var removed = pursuitOrdering.removeAt(oldIndex);
             pursuitOrdering.insert(newIndex, removed);
-            widget.settings.pursuitOrdering = pursuitOrdering;
+            userSettings.pursuitOrdering = pursuitOrdering;
           },
           itemBuilder: (context, parameter, handle) =>
               buildSortItem(context, parameter.value, handle, onSave: () {
-            widget.settings.pursuitOrdering = pursuitOrdering;
+            userSettings.pursuitOrdering = pursuitOrdering;
           }),
         ));
   }
@@ -441,7 +440,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                             color: Colors.red)),
                     onClick: () {
                       priorityTags.remove(t.tagId);
-                      UserSettingsService().priorityTags = priorityTags;
+                      userSettings.priorityTags = priorityTags;
                       setState(() {});
                     },
                   ))
@@ -516,7 +515,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
 
     if (result != null) {
       priorityTags.add(result);
-      widget.settings.priorityTags = priorityTags;
+      userSettings.priorityTags = priorityTags;
       setState(() {});
     }
   }

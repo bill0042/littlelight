@@ -4,13 +4,15 @@ import 'dart:math';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/models/bucket_display_options.dart';
-import 'package:little_light/services/user_settings/user_settings.service.dart';
+
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/utils/media_query_helper.dart';
@@ -20,7 +22,7 @@ import 'package:little_light/widgets/progress_tabs/pursuit_item/large_pursuit_it
 import 'package:little_light/widgets/progress_tabs/pursuit_item/pursuit_item.widget.dart';
 import 'package:little_light/widgets/progress_tabs/pursuit_item/small_pursuit_item.widget.dart';
 
-class CharacterPursuitsListWidget extends StatefulWidget {
+class CharacterPursuitsListWidget extends ConsumerStatefulWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
   final ManifestService manifest = ManifestService();
@@ -51,8 +53,8 @@ class _PursuitListItem {
 }
 
 class _CharacterPursuitsListWidgetState
-    extends State<CharacterPursuitsListWidget>
-    with AutomaticKeepAliveClientMixin {
+    extends ConsumerState<CharacterPursuitsListWidget>
+    with AutomaticKeepAliveClientMixin, UserSettingsConsumerState {
   List<_PursuitListItem> items;
   StreamSubscription<NotificationEvent> subscription;
   bool fullyLoaded = false;
@@ -85,7 +87,7 @@ class _CharacterPursuitsListWidgetState
         .getDefinitions<DestinyInventoryItemDefinition>(pursuitHashes);
     pursuits = (await InventoryUtils.sortDestinyItems(
             pursuits.map((p) => ItemWithOwner(p, null)),
-            sortingParams: UserSettingsService().pursuitOrdering))
+            sortingParams: userSettings.pursuitOrdering))
         .map((i) => i.item)
         .toList();
 
@@ -176,7 +178,7 @@ class _CharacterPursuitsListWidgetState
         return StaggeredTile.extent(30, 40);
         break;
       case _PursuitListItemType.Pursuit:
-        var options = UserSettingsService()
+        var options = userSettings
             .getDisplayOptionsForBucket(item.categoryId ?? "pursuits");
         switch (options.type) {
           case BucketDisplayType.Hidden:
@@ -233,7 +235,7 @@ class _CharacterPursuitsListWidgetState
         );
         break;
       case _PursuitListItemType.Pursuit:
-        var options = UserSettingsService()
+        var options = userSettings
             .getDisplayOptionsForBucket(item.categoryId ?? "pursuits");
         if (options.type == BucketDisplayType.Hidden) {
           return Container();

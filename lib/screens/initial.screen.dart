@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/env/env.consumer.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
 import 'package:little_light/exceptions/exception_handler.dart';
 import 'package:little_light/screens/main.screen.dart';
@@ -22,7 +23,6 @@ import 'package:little_light/services/profile/destiny_settings.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/services/translate/translate.service.dart';
-import 'package:little_light/services/user_settings/user_settings.service.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/exceptions/exception_dialog.dart';
 import 'package:little_light/widgets/initial_page/download_manifest.widget.dart';
@@ -46,7 +46,7 @@ class InitialScreen extends ConsumerStatefulWidget {
 }
 
 class InitialScreenState extends FloatingContentState<InitialScreen>
-    with EnvConsumerState, WishlistsConsumerState {
+    with EnvConsumerState, WishlistsConsumerState, UserSettingsConsumerState {
   @override
   void initState() {
     super.initState();
@@ -265,7 +265,7 @@ class InitialScreenState extends FloatingContentState<InitialScreen>
   }
 
   goForward() async {
-    await UserSettingsService().init();
+    await userSettings.init();
     try {
       await DestinySettingsService().init();
     } catch (e) {}

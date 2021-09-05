@@ -2,6 +2,7 @@ import 'package:bungie_api/enums/destiny_item_type.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:flutter/material.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateful_item.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/item_details/section_header.widget.dart';
@@ -33,7 +34,7 @@ const _sectionId = "item_stats";
 
 class ScreenShotItemStatsState
     extends BaseItemStatsState<DetailsItemStatsWidget>
-    with VisibleSectionMixin {
+    with UserSettingsConsumerState, VisibleSectionMixin {
   @override
   String get sectionId => _sectionId;
 

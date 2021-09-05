@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:little_light/screens/search.screen.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/profile/profile.service.dart';
-import 'package:little_light/services/user_settings/user_settings.service.dart';
+
 import 'package:little_light/utils/item_filters/class_type_filter.dart';
 import 'package:little_light/utils/item_filters/item_bucket_filter.dart';
 import 'package:little_light/utils/item_filters/item_owner_filter.dart';
@@ -31,7 +31,6 @@ Set<String> _characterIdsExcept(
 }
 
 class QuickTransferScreen extends SearchScreen {
-  final UserSettingsService settings = UserSettingsService();
   final DestinyInventoryBucketDefinition bucketDefinition;
   final String characterId;
   final DestinyClass classType;
@@ -47,7 +46,7 @@ class QuickTransferScreen extends SearchScreen {
                         .contains(bucketDefinition.hash)
                     ? classType
                     : null
-              ].where((i)=>i!=null).toSet(),
+              ].where((i) => i != null).toSet(),
               enabled: true),
           ItemOwnerFilter(_characterIdsExcept(characterId, bucketDefinition),
               enabled: true)

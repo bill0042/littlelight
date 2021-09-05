@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:bungie_api/models/destiny_item_plug_base.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
 import 'package:little_light/models/wish_list.dart';
 import 'package:little_light/utils/media_query_helper.dart';
@@ -63,7 +64,10 @@ class WishlistBuildsWidget extends ConsumerStatefulWidget {
 }
 
 class WishlistBuildsWidgetState extends ConsumerState<WishlistBuildsWidget>
-    with VisibleSectionMixin, WishlistsConsumerState {
+    with
+        UserSettingsConsumerState,
+        VisibleSectionMixin,
+        WishlistsConsumerState {
   @override
   void initState() {
     super.initState();

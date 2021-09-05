@@ -5,18 +5,21 @@ import 'package:bungie_api/models/destiny_inventory_bucket_definition.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/interpolation_point.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.provider.dart';
 import 'package:little_light/models/loadout.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/models/item_sort_parameter.dart';
-import 'package:little_light/services/user_settings/user_settings.service.dart';
+
 import 'package:little_light/utils/item_sorters/base_item_sorter.dart';
 import 'package:little_light/utils/item_sorters/power_level_sorter.dart';
 import 'package:little_light/utils/item_sorters/priority_tags_sorter.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 
 class InventoryUtils {
+  static UserSettingsService get userSettings => globalUserSettingsProvider;
+
   static int interpolateStat(
       int investmentValue, List<InterpolationPoint> displayInterpolation) {
     var interpolation = displayInterpolation.toList();
@@ -50,7 +53,7 @@ class InventoryUtils {
       {List<ItemSortParameter> sortingParams,
       bool sortTags: true}) async {
     if (sortingParams == null) {
-      sortingParams = UserSettingsService().itemOrdering;
+      sortingParams = userSettings.itemOrdering;
     }
     await ManifestService().getDefinitions<DestinyInventoryItemDefinition>(
         items.map((i) => i?.item?.itemHash));

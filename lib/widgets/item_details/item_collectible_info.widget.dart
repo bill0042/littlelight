@@ -1,10 +1,12 @@
 import 'package:bungie_api/models/destiny_collectible_definition.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/item_details/section_header.widget.dart';
 
-class ItemCollectibleInfoWidget extends StatefulWidget {
+class ItemCollectibleInfoWidget extends ConsumerStatefulWidget {
   final int hash;
 
   ItemCollectibleInfoWidget(this.hash, {Key key}) : super(key: key);
@@ -17,8 +19,9 @@ class ItemCollectibleInfoWidget extends StatefulWidget {
 
 const _sectionId = "item_collectible_info";
 
-class ItemCollectibleInfoWidgetState extends State<ItemCollectibleInfoWidget>
-    with VisibleSectionMixin {
+class ItemCollectibleInfoWidgetState
+    extends ConsumerState<ItemCollectibleInfoWidget>
+    with UserSettingsConsumerState, VisibleSectionMixin {
   @override
   String get sectionId => _sectionId;
 

@@ -10,8 +10,8 @@ import 'package:little_light/core/providers/wishlists/parsers/littlelight_wishli
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 
-final wishlistProvider =
-    Provider<WishlistsProviderService>((ref) => WishlistsProviderService(ref));
+final wishlistProvider = Provider<WishlistsProviderService>(
+    (ref) => WishlistsProviderService._(ref));
 
 get globalWishlistService => globalContainer.read(wishlistProvider);
 
@@ -19,7 +19,7 @@ class WishlistsProviderService {
   StorageService storage = StorageService.global();
   ProviderRef ref;
 
-  WishlistsProviderService(this.ref);
+  WishlistsProviderService._(this.ref);
 
   Map<int, WishlistItem> _items = Map();
 

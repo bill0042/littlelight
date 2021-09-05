@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/models/bucket_display_options.dart';
-import 'package:little_light/services/user_settings/user_settings.service.dart';
+
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/icon_fonts/littlelight_icons.dart';
 import 'package:little_light/widgets/item_list/bucket_display_options_selector.widget.dart';
@@ -27,8 +27,7 @@ class PursuitsDisplayOptionsSelectorWidgetState
   @override
   void initState() {
     super.initState();
-    currentType =
-        UserSettingsService().getDisplayOptionsForBucket(bucketKey)?.type;
+    currentType = userSettings.getDisplayOptionsForBucket(bucketKey)?.type;
   }
 
   String get bucketKey {

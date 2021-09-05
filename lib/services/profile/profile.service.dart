@@ -19,6 +19,7 @@ import 'package:bungie_api/models/destiny_presentation_node_component.dart';
 import 'package:bungie_api/models/destiny_profile_response.dart';
 import 'package:bungie_api/models/destiny_record_component.dart';
 import 'package:bungie_api/models/destiny_stat.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.provider.dart';
 import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:bungie_api/enums/destiny_component_type.dart';
 import 'package:bungie_api/enums/destiny_scope.dart';
@@ -26,7 +27,6 @@ import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enu
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/models/character_sort_parameter.dart';
-import 'package:little_light/services/user_settings/user_settings.service.dart';
 
 enum LastLoadedFrom { server, cache }
 
@@ -95,6 +95,8 @@ class ProfileComponentGroups {
 class ProfileService {
   final NotificationService _broadcaster = new NotificationService();
   static final ProfileService _singleton = new ProfileService._internal();
+
+  UserSettingsService userSettings = globalUserSettingsProvider;
 
   DateTime lastUpdated;
   factory ProfileService() {
@@ -398,7 +400,7 @@ class ProfileService {
       return null;
     }
     if (order == null) {
-      order = UserSettingsService().characterOrdering;
+      order = userSettings.characterOrdering;
     }
 
     List<DestinyCharacterComponent> list =

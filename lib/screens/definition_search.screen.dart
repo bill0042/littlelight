@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 
 import 'package:little_light/services/manifest/manifest.service.dart';
 
-import 'package:little_light/services/user_settings/user_settings.service.dart';
-
 import 'package:little_light/widgets/inventory_tabs/inventory_notification.widget.dart';
 
-abstract class DefinitionSearchScreen extends StatefulWidget {
+abstract class DefinitionSearchScreen extends ConsumerStatefulWidget {
   DefinitionSearchScreen({Key key}) : super(key: key);
 
   @override
@@ -14,7 +14,7 @@ abstract class DefinitionSearchScreen extends StatefulWidget {
 }
 
 abstract class DefinitionSearchScreenState<T extends DefinitionSearchScreen, DT>
-    extends State<T> {
+    extends ConsumerState<T> with UserSettingsConsumerState {
   TextEditingController _searchFieldController = new TextEditingController();
   List<DT> items;
 
@@ -69,7 +69,7 @@ abstract class DefinitionSearchScreenState<T extends DefinitionSearchScreen, DT>
 
   buildAppBarTitle(BuildContext context) {
     return TextField(
-      autofocus: UserSettingsService().autoOpenKeyboard,
+      autofocus: userSettings.autoOpenKeyboard,
       controller: _searchFieldController,
     );
   }

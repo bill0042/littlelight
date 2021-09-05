@@ -2,13 +2,14 @@ import 'dart:async';
 
 import 'package:bungie_api/models/destiny_character_component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/screens/search.screen.dart';
 import 'package:little_light/services/bungie_api/enums/destiny_item_category.enum.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
-import 'package:little_light/services/user_settings/user_settings.service.dart';
 import 'package:little_light/utils/item_filters/pseudo_item_type_filter.dart';
 import 'package:little_light/utils/media_query_helper.dart';
 import 'package:little_light/utils/selected_page_persistence.dart';
@@ -27,7 +28,7 @@ import 'package:little_light/widgets/inventory_tabs/vault_tab.widget.dart';
 import 'package:little_light/widgets/inventory_tabs/vault_tab_header.widget.dart';
 import 'package:little_light/widgets/search/search.controller.dart';
 
-class EquipmentScreen extends StatefulWidget {
+class EquipmentScreen extends ConsumerStatefulWidget {
   final profile = new ProfileService();
   final manifest = new ManifestService();
   final NotificationService broadcaster = new NotificationService();
@@ -42,8 +43,11 @@ class EquipmentScreen extends StatefulWidget {
   EquipmentScreenState createState() => new EquipmentScreenState();
 }
 
-class EquipmentScreenState extends State<EquipmentScreen>
-    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+class EquipmentScreenState extends ConsumerState<EquipmentScreen>
+    with
+        TickerProviderStateMixin,
+        AutomaticKeepAliveClientMixin,
+        UserSettingsConsumerState {
   int currentGroup = DestinyItemCategory.Weapon;
   Map<int, double> scrollPositions = new Map();
 
@@ -290,8 +294,7 @@ class EquipmentScreenState extends State<EquipmentScreen>
   }
 
   List<DestinyCharacterComponent> get characters {
-    return widget.profile
-        .getCharacters(UserSettingsService().characterOrdering);
+    return widget.profile.getCharacters(userSettings.characterOrdering);
   }
 
   buildCharacterMenu(BuildContext context) {

@@ -1,12 +1,14 @@
 import 'package:bungie_api/models/destiny_character_component.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/screens/search.screen.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/models/item_sort_parameter.dart';
-import 'package:little_light/services/user_settings/user_settings.service.dart';
+
 import 'package:little_light/utils/item_filters/item_owner_filter.dart';
 import 'package:little_light/utils/item_filters/pseudo_item_type_filter.dart';
 import 'package:little_light/utils/selected_page_persistence.dart';
@@ -23,7 +25,7 @@ import 'package:little_light/widgets/progress_tabs/character_pursuits_list.widge
 import 'package:little_light/widgets/progress_tabs/character_ranks_list.widget.dart';
 import 'package:little_light/widgets/search/search.controller.dart';
 
-class ProgressScreen extends StatefulWidget {
+class ProgressScreen extends ConsumerStatefulWidget {
   final profile = new ProfileService();
   final manifest = new ManifestService();
 
@@ -31,8 +33,8 @@ class ProgressScreen extends StatefulWidget {
   ProgressScreenState createState() => new ProgressScreenState();
 }
 
-class ProgressScreenState extends State<ProgressScreen>
-    with TickerProviderStateMixin {
+class ProgressScreenState extends ConsumerState<ProgressScreen>
+    with TickerProviderStateMixin, UserSettingsConsumerState {
   Map<int, double> scrollPositions = new Map();
 
   TabController charTabController;
@@ -226,7 +228,7 @@ class ProgressScreenState extends State<ProgressScreen>
                           ItemOwnerFilter([char.characterId].toSet()),
                           PseudoItemTypeFilter(types, types),
                         ],
-                        defaultSorting: UserSettingsService().pursuitOrdering,
+                        defaultSorting: userSettings.pursuitOrdering,
                         availableSorters:
                             ItemSortParameter.availablePursuitSorters),
                   ),
@@ -241,7 +243,6 @@ class ProgressScreenState extends State<ProgressScreen>
   }
 
   List<DestinyCharacterComponent> get characters {
-    return widget.profile
-        .getCharacters(UserSettingsService().characterOrdering);
+    return widget.profile.getCharacters(userSettings.characterOrdering);
   }
 }

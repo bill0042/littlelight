@@ -5,13 +5,15 @@ import 'package:bungie_api/enums/bucket_scope.dart';
 import 'package:bungie_api/models/destiny_inventory_bucket_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/models/bucket_display_options.dart';
-import 'package:little_light/services/user_settings/user_settings.service.dart';
+
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/utils/media_query_helper.dart';
@@ -36,7 +38,7 @@ const _suppressEmptySpaces = [
   InventoryBucket.lostItems
 ];
 
-class ItemListWidget extends StatefulWidget {
+class ItemListWidget extends ConsumerStatefulWidget {
   final String characterId;
   final ManifestService manifest = new ManifestService();
   final ProfileService profile = new ProfileService();
@@ -68,8 +70,8 @@ class ItemListWidget extends StatefulWidget {
   ItemListWidgetState createState() => new ItemListWidgetState();
 }
 
-class ItemListWidgetState extends State<ItemListWidget>
-    with AutomaticKeepAliveClientMixin {
+class ItemListWidgetState extends ConsumerState<ItemListWidget>
+    with AutomaticKeepAliveClientMixin, UserSettingsConsumerState {
   Map<int, DestinyInventoryBucketDefinition> bucketDefs;
   List<ListBucket> buckets;
   StreamSubscription<NotificationEvent> subscription;
@@ -377,7 +379,7 @@ class ItemListWidgetState extends State<ItemListWidget>
 
   BucketDisplayOptions getBucketOptions(ListItem item) {
     var options =
-        UserSettingsService().getDisplayOptionsForBucket("${item?.bucketHash}");
+        userSettings.getDisplayOptionsForBucket("${item?.bucketHash}");
     return options;
   }
 

@@ -5,10 +5,11 @@ import 'package:bungie_api/models/destiny_item_instance_component.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.provider.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/inventory/inventory.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
-import 'package:little_light/services/user_settings/user_settings.service.dart';
+
 import 'package:little_light/widgets/common/base/base_destiny_stateless_item.widget.dart';
 import 'package:little_light/widgets/common/equip_on_character.button.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
@@ -42,11 +43,11 @@ class ManagementBlockWidget extends BaseDestinyStatelessItemWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            transferDestinations.length > 0
+            transferDestinations(ref).length > 0
                 ? Expanded(
                     flex: 3,
                     child: buildEquippingBlock(context, "Transfer",
-                        transferDestinations, Alignment.centerLeft))
+                        transferDestinations(ref), Alignment.centerLeft))
                 : null,
             pullDestinations.length > 0
                 ? buildEquippingBlock(context, "Pull", pullDestinations)
@@ -60,12 +61,12 @@ class ManagementBlockWidget extends BaseDestinyStatelessItemWidget {
                 ? buildEquippingBlock(context, "Unequip", unequipDestinations,
                     Alignment.centerLeft)
                 : null,
-            equipDestinations.length > 0
+            equipDestinations(ref).length > 0
                 ? Expanded(
                     child: buildEquippingBlock(
                         context,
                         "Equip",
-                        equipDestinations,
+                        equipDestinations(ref),
                         unequipDestinations.length > 0
                             ? Alignment.centerRight
                             : Alignment.centerLeft))
@@ -152,13 +153,13 @@ class ManagementBlockWidget extends BaseDestinyStatelessItemWidget {
     }
   }
 
-  List<TransferDestination> get equipDestinations {
+  List<TransferDestination> equipDestinations(WidgetRef ref) {
     if (!definition.equippable) {
       return [];
     }
     return this
         .profile
-        .getCharacters(UserSettingsService().characterOrdering)
+        .getCharacters(ref.read(userSettingsProvider).characterOrdering)
         .where((char) =>
             !((instanceInfo?.isEquipped ?? false) &&
                 char.characterId == characterId) &&
@@ -170,7 +171,7 @@ class ManagementBlockWidget extends BaseDestinyStatelessItemWidget {
         .toList();
   }
 
-  List<TransferDestination> get transferDestinations {
+  List<TransferDestination> transferDestinations(WidgetRef ref) {
     if (definition.nonTransferrable) {
       return [];
     }
@@ -185,7 +186,7 @@ class ManagementBlockWidget extends BaseDestinyStatelessItemWidget {
 
     List<TransferDestination> list = this
         .profile
-        .getCharacters(UserSettingsService().characterOrdering)
+        .getCharacters(ref.read(userSettingsProvider).characterOrdering)
         .where((char) => !(char.characterId == characterId))
         .map((char) => TransferDestination(ItemDestination.Character,
             characterId: char.characterId))

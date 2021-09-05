@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/utils/item_filters/base_item_filter.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
 import 'package:little_light/widgets/search/search.controller.dart';
 
-class BaseSearchFilterWidget<T extends BaseItemFilter> extends StatefulWidget {
+class BaseSearchFilterWidget<T extends BaseItemFilter>
+    extends ConsumerStatefulWidget {
   final SearchController controller;
   BaseSearchFilterWidget(this.controller);
 
@@ -19,7 +21,7 @@ class BaseSearchFilterWidget<T extends BaseItemFilter> extends StatefulWidget {
 }
 
 class BaseSearchFilterWidgetState<T extends BaseSearchFilterWidget,
-    F extends BaseItemFilter, A> extends State<T> {
+    F extends BaseItemFilter, A> extends ConsumerState<T> {
   F get filter => widget.filter;
 
   SearchController get controller => widget.controller;

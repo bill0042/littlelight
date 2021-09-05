@@ -1,15 +1,18 @@
+import 'package:little_light/core/providers/user_settings/user_settings.provider.dart';
 import 'package:little_light/services/littlelight/item_notes.service.dart';
-import 'package:little_light/services/user_settings/user_settings.service.dart';
+
 import 'package:little_light/utils/item_sorters/base_item_sorter.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 
 class PriorityTagsSorter extends BaseItemSorter {
+  get userSettings => globalUserSettingsProvider;
+
   PriorityTagsSorter() : super(0);
   List<String> _priorityTags;
 
   List<String> get priorityTags {
     if (_priorityTags == null) {
-      _priorityTags = List.from(UserSettingsService().priorityTags);
+      _priorityTags = List.from(userSettings.priorityTags);
     }
     return _priorityTags;
   }
