@@ -1,10 +1,13 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:little_light/models/littlelight_wishlist.dart';
 import 'package:little_light/models/wish_list.dart';
 import 'package:little_light/services/littlelight/parsers/wishlist.parser.dart';
 
 class LittleLightWishlistParser extends WishlistParser {
+  LittleLightWishlistParser({@required OnAddToWishlist onAddToWishlist})
+      : super(onAddToWishlist: onAddToWishlist);
   Future<LittleLightWishlist> parse(String text) async {
     var json = jsonDecode(text);
     var wishlist = LittleLightWishlist.fromJson(json);

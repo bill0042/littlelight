@@ -123,13 +123,13 @@ class WishlistsProviderService {
 
   Future<void> _parseWishlist(Wishlist wishlist, String contents) async {
     try {
-      var parser = LittleLightWishlistParser();
+      var parser = LittleLightWishlistParser(onAddToWishlist: addToWishList);
       var w = await parser.parse(contents);
       wishlist.name = w.name ?? wishlist.name ?? "";
       wishlist.description = w.description ?? wishlist.description ?? "";
       return;
     } catch (_) {}
-    var parser = DimWishlistParser();
+    var parser = DimWishlistParser(onAddToWishlist: addToWishList);
     parser.parse(contents);
   }
 

@@ -12,6 +12,7 @@ typedef OnAddToWishlist(
 abstract class WishlistParser {
   OnAddToWishlist onAddToWishlist;
 
+  @mustCallSuper
   WishlistParser({@required this.onAddToWishlist});
 
   Future<void> parse(String text);

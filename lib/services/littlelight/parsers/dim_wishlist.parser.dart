@@ -1,7 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:little_light/models/wish_list.dart';
 import 'package:little_light/services/littlelight/parsers/wishlist.parser.dart';
 
 class DimWishlistParser extends WishlistParser {
+  DimWishlistParser({@required OnAddToWishlist onAddToWishlist})
+      : super(onAddToWishlist: onAddToWishlist);
+
   Set<int> _itemHashes = Set();
 
   parse(String text) async {
