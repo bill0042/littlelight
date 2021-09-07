@@ -13,7 +13,8 @@ import 'package:little_light/services/storage/storage.service.dart';
 final wishlistProvider = Provider<WishlistsProviderService>(
     (ref) => WishlistsProviderService._(ref));
 
-get globalWishlistService => globalContainer.read(wishlistProvider);
+WishlistsProviderService get globalWishlistService =>
+    globalContainer.read(wishlistProvider);
 
 class WishlistsProviderService {
   StorageService storage = StorageService.global();
