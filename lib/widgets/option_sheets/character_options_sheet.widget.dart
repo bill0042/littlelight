@@ -17,7 +17,7 @@ import 'package:little_light/screens/edit_loadout.screen.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/inventory/inventory.service.dart';
 import 'package:little_light/services/littlelight/littlelight_data.service.dart';
-import 'package:little_light/services/littlelight/loadouts.service.dart';
+import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 
@@ -46,7 +46,7 @@ class CharacterOptionsSheet extends ConsumerStatefulWidget {
 }
 
 class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
-    with UserSettingsConsumerState {
+    with UserSettingsConsumerState, LoadoutsConsumerState {
   Map<int, DestinyItemComponent> maxLightLoadout;
   Map<int, DestinyItemComponent> underAverageSlots;
   double maxLight;
@@ -78,8 +78,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
   }
 
   void getLoadouts() async {
-    var littlelight = LoadoutsService();
-    this.loadouts = await littlelight.getLoadouts();
+    this.loadouts = await loadoutsService.getLoadouts();
     if (mounted) {
       setState(() {});
     }

@@ -2,11 +2,12 @@ import 'package:bungie_api/enums/destiny_class.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
 import 'package:little_light/models/loadout.dart';
 import 'package:little_light/screens/edit_loadout.screen.dart';
 import 'package:little_light/screens/equip_loadout.screen.dart';
 import 'package:little_light/services/bungie_api/bungie_api.service.dart';
-import 'package:little_light/services/littlelight/loadouts.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/utils/inventory_utils.dart';
@@ -17,7 +18,7 @@ import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
-class LoadoutListItemWidget extends StatefulWidget {
+class LoadoutListItemWidget extends ConsumerStatefulWidget {
   final Map<String, LoadoutItemIndex> itemIndexes;
   final Loadout loadout;
   final Function onChange;
@@ -31,7 +32,8 @@ class LoadoutListItemWidget extends StatefulWidget {
   }
 }
 
-class LoadoutListItemWidgetState extends State<LoadoutListItemWidget> {
+class LoadoutListItemWidgetState extends ConsumerState<LoadoutListItemWidget>
+    with LoadoutsConsumerState {
   LoadoutItemIndex _itemIndex;
   Loadout _loadout;
   @override
@@ -197,8 +199,7 @@ class LoadoutListItemWidgetState extends State<LoadoutListItemWidget> {
                     )),
                 title: Text(_loadout?.name?.toUpperCase() ?? ""),
                 maxWidth: 400, yesPressed: () async {
-              LoadoutsService service = LoadoutsService();
-              await service.deleteLoadout(_loadout);
+              await loadoutsService.deleteLoadout(_loadout);
               Navigator.of(context).pop();
               if (widget.onChange != null) {
                 widget.onChange();

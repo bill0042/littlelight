@@ -14,7 +14,7 @@ import 'package:little_light/services/auth/auth.service.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/inventory/inventory.service.dart';
 import 'package:little_light/services/littlelight/item_notes.service.dart';
-import 'package:little_light/services/littlelight/loadouts.service.dart';
+import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
 import 'package:little_light/services/profile/vendors.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/utils/inventory_utils.dart';
@@ -83,7 +83,8 @@ class ItemDetailScreen extends BaseDestinyStatefulItemWidget {
   }
 }
 
-class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen> {
+class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen>
+    with LoadoutsConsumerState {
   int selectedPerk;
   Map<int, int> selectedPerks = Map();
   ItemSocketController socketController;
@@ -125,7 +126,7 @@ class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen> {
   }
 
   findLoadouts() async {
-    var allLoadouts = await LoadoutsService().getLoadouts();
+    var allLoadouts = await loadoutsService.getLoadouts();
     loadouts = allLoadouts.where((loadout) {
       var equip = loadout.equipped
           .where((element) => element.itemInstanceId == item?.itemInstanceId);
@@ -409,7 +410,7 @@ class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen> {
                 softWrap: false,
               ),
               onPressed: () async {
-                var loadouts = await LoadoutsService().getLoadouts();
+                var loadouts = await loadoutsService.getLoadouts();
                 var equipped = false;
                 showModalBottomSheet(
                     context: context,
@@ -423,7 +424,7 @@ class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen> {
                         onSelect: (loadout) async {
                           loadout.addItem(widget.item.itemHash,
                               widget.item.itemInstanceId, equipped);
-                          await LoadoutsService().saveLoadout(loadout);
+                          await loadoutsService.saveLoadout(loadout);
                         }));
               })));
     }

@@ -1,25 +1,22 @@
 import 'package:bungie_api/models/destiny_character_component.dart';
 import 'package:bungie_api/models/destiny_inventory_bucket_definition.dart';
-
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_vendor_definition.dart';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
 import 'package:little_light/models/loadout.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/inventory/inventory.service.dart';
-import 'package:little_light/services/littlelight/loadouts.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
-
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
-
 import 'package:little_light/widgets/item_list/character_info.widget.dart';
 import 'package:little_light/widgets/option_sheets/loadout_select_sheet.widget.dart';
 
@@ -36,7 +33,8 @@ class VaultInfoWidget extends CharacterInfoWidget {
   }
 }
 
-class VaultInfoWidgetState extends CharacterInfoWidgetState<VaultInfoWidget> {
+class VaultInfoWidgetState extends CharacterInfoWidgetState<VaultInfoWidget>
+    with LoadoutsConsumerState {
   @override
   void initState() {
     super.initState();
@@ -107,7 +105,7 @@ class VaultInfoWidgetState extends CharacterInfoWidgetState<VaultInfoWidget> {
   }
 }
 
-class VaultOptionsSheet extends StatefulWidget {
+class VaultOptionsSheet extends ConsumerStatefulWidget {
   final ProfileService profile = ProfileService();
   final ManifestService manifest = ManifestService();
 
@@ -119,7 +117,8 @@ class VaultOptionsSheet extends StatefulWidget {
   }
 }
 
-class VaultOptionsSheetState extends State<VaultOptionsSheet> {
+class VaultOptionsSheetState extends ConsumerState<VaultOptionsSheet>
+    with LoadoutsConsumerState {
   final TextStyle buttonStyle =
       TextStyle(fontWeight: FontWeight.bold, fontSize: 12);
 
@@ -273,8 +272,7 @@ class VaultOptionsSheetState extends State<VaultOptionsSheet> {
   }
 
   void getLoadouts() async {
-    var littlelight = LoadoutsService();
-    this.loadouts = await littlelight.getLoadouts();
+    this.loadouts = await loadoutsService.getLoadouts();
     if (mounted) {
       setState(() {});
     }

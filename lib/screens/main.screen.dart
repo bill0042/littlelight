@@ -8,7 +8,7 @@ import 'package:little_light/screens/progress.screen.dart';
 import 'package:little_light/screens/old_triumphs.screen.dart';
 import 'package:little_light/services/auth/auth.service.dart';
 import 'package:little_light/services/littlelight/item_notes.service.dart';
-import 'package:little_light/services/littlelight/loadouts.service.dart';
+import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 
 import 'package:little_light/utils/platform_capabilities.dart';
@@ -24,7 +24,10 @@ class MainScreen extends ConsumerStatefulWidget {
 }
 
 class MainScreenState extends ConsumerState<MainScreen>
-    with WidgetsBindingObserver, UserSettingsConsumerState {
+    with
+        WidgetsBindingObserver,
+        UserSettingsConsumerState,
+        LoadoutsConsumerState {
   Widget currentScreen;
 
   @override
@@ -39,7 +42,7 @@ class MainScreenState extends ConsumerState<MainScreen>
     ProfileService profile = ProfileService();
     if (auth.isLogged) {
       auth.getMembershipData();
-      LoadoutsService().getLoadouts(forceFetch: true);
+      loadoutsService.getLoadouts(forceFetch: true);
       ItemNotesService().getNotes(forceFetch: true);
       profile.startAutomaticUpdater();
       WidgetsBinding.instance.addObserver(this);

@@ -3,11 +3,12 @@ import 'dart:math';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:drag_list/drag_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:little_light/models/loadout.dart';
 import 'package:little_light/screens/edit_loadout.screen.dart';
-import 'package:little_light/services/littlelight/loadouts.service.dart';
+import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/utils/media_query_helper.dart';
@@ -16,12 +17,13 @@ import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/inventory_tabs/inventory_notification.widget.dart';
 import 'package:little_light/widgets/loadouts/loadout_list_item.widget.dart';
 
-class LoadoutsScreen extends StatefulWidget {
+class LoadoutsScreen extends ConsumerStatefulWidget {
   @override
   LoadoutScreenState createState() => LoadoutScreenState();
 }
 
-class LoadoutScreenState extends State<LoadoutsScreen> {
+class LoadoutScreenState extends ConsumerState<LoadoutsScreen>
+    with LoadoutsConsumerState {
   final Map<String, LoadoutItemIndex> itemIndexes = Map();
   bool reordering = false;
   bool searchOpen = false;
@@ -51,8 +53,7 @@ class LoadoutScreenState extends State<LoadoutsScreen> {
   }
 
   void loadLoadouts() async {
-    LoadoutsService service = LoadoutsService();
-    loadouts = await service.getLoadouts();
+    loadouts = await loadoutsService.getLoadouts();
     filteredLoadouts = loadouts;
     setState(() {});
   }
@@ -83,7 +84,7 @@ class LoadoutScreenState extends State<LoadoutsScreen> {
           IconButton(
             icon: Icon(Icons.refresh),
             onPressed: () async {
-              loadouts = await LoadoutsService().getLoadouts(forceFetch: true);
+              loadouts = await loadoutsService.getLoadouts(forceFetch: true);
               setState(() {});
             },
           )
@@ -180,7 +181,7 @@ class LoadoutScreenState extends State<LoadoutsScreen> {
         onItemReorder: (oldIndex, newIndex) {
           var removed = loadouts.removeAt(oldIndex);
           loadouts.insert(newIndex, removed);
-          LoadoutsService().saveLoadoutsOrder(loadouts);
+          loadoutsService.saveLoadoutsOrder(loadouts);
         },
         itemBuilder: (context, parameter, handle) =>
             buildSortItem(context, parameter.value, handle));

@@ -1,13 +1,16 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/global_container/global.container.dart';
 import 'package:little_light/models/loadout.dart';
 import 'package:little_light/services/littlelight/littlelight_api.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 
+final loadoutsProvider =
+    Provider<LoadoutsService>((ref) => LoadoutsService._(ref));
+
+get globalLoadoutsProvider => globalContainer.read(loadoutsProvider);
+
 class LoadoutsService {
-  static final LoadoutsService _singleton = LoadoutsService._internal();
-  factory LoadoutsService() {
-    return _singleton;
-  }
-  LoadoutsService._internal();
+  LoadoutsService._(ProviderRef<LoadoutsService> ref);
 
   List<Loadout> _loadouts;
 

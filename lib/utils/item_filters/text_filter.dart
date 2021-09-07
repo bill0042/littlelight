@@ -1,8 +1,8 @@
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
+import 'package:little_light/core/providers/loadouts/loadouts.provider.dart';
 import 'package:little_light/core/providers/wishlists/wishlists.provider.dart';
 import 'package:little_light/models/loadout.dart';
 import 'package:little_light/services/littlelight/item_notes.service.dart';
-import 'package:little_light/services/littlelight/loadouts.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/utils/remove_diacritics.dart';
@@ -16,7 +16,7 @@ class TextFilter extends BaseItemFilter<String> {
 
   Future<List<ItemWithOwner>> filter(List<ItemWithOwner> items,
       {Map<int, DestinyInventoryItemDefinition> definitions}) async {
-    loadouts = await LoadoutsService().getLoadouts();
+    loadouts = await globalLoadoutsProvider.getLoadouts();
     return super.filter(items, definitions: definitions);
   }
 
