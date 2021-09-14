@@ -10,7 +10,7 @@ import 'package:bungie_api/models/destiny_power_cap_definition.dart';
 import 'package:bungie_api/models/destiny_stat_definition.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:little_light/services/littlelight/item_notes.service.dart';
+import 'package:little_light/core/providers/item_notes/item_notes.provider.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 
@@ -175,7 +175,7 @@ class LandscapeItemCoverDelegate extends SliverPersistentHeaderDelegate {
 
   Widget buildNameAndType(BuildContext context, double expandRatio) {
     double paddingTop = MediaQuery.of(context).padding.top;
-    var customName = ItemNotesService()
+    var customName = globalItemNotesProvider
         .getNotesForItem(item?.itemHash, item?.itemInstanceId)
         ?.customName
         ?.toUpperCase();

@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:little_light/core/providers/item_notes/item_notes.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
+import 'package:little_light/models/character_sort_parameter.dart';
 import 'package:little_light/models/item_notes_tag.dart';
+import 'package:little_light/models/item_sort_parameter.dart';
 import 'package:little_light/models/wish_list.dart';
 import 'package:little_light/screens/add_wishlist.screen.dart';
-import 'package:little_light/services/littlelight/item_notes.service.dart';
-import 'package:little_light/models/character_sort_parameter.dart';
-import 'package:little_light/models/item_sort_parameter.dart';
-
 import 'package:little_light/utils/platform_capabilities.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/littlelight_custom.dialog.dart';
@@ -29,7 +28,10 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen>
-    with WishlistsConsumerState, UserSettingsConsumerState {
+    with
+        WishlistsConsumerState,
+        UserSettingsConsumerState,
+        ItemNotesConsumerState {
   List<ItemSortParameter> itemOrdering;
   List<ItemSortParameter> pursuitOrdering;
   Set<String> priorityTags;
@@ -415,7 +417,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   }
 
   Widget buildPriorityTags(BuildContext context) {
-    var tags = ItemNotesService().tagsByIds(priorityTags);
+    var tags = itemNotesService.tagsByIds(priorityTags);
     return Container(
         padding: EdgeInsets.all(8),
         child: Wrap(
@@ -458,7 +460,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   }
 
   openAddTagDialog(BuildContext context) async {
-    var tags = ItemNotesService().getAvailableTags();
+    var tags = itemNotesService.getAvailableTags();
     var result = await showDialog<String>(
         context: context,
         builder: (BuildContext context) {

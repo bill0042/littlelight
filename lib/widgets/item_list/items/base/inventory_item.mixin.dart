@@ -4,10 +4,10 @@ import 'package:bungie_api/enums/item_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:little_light/core/providers/item_notes/item_notes.provider.dart';
 import 'package:little_light/core/providers/wishlists/wishlists.provider.dart';
 import 'package:little_light/models/wish_list.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/littlelight/item_notes.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateless_item.widget.dart';
 import 'package:little_light/widgets/common/item_icon/item_icon.widget.dart';
@@ -212,9 +212,10 @@ mixin InventoryItemMixin implements BaseDestinyStatelessItemWidget {
     final wishlist = ref.read(wishlistProvider);
     final wishlistTags = wishlist.getWishlistBuildTags(
         itemHash: item?.itemHash, reusablePlugs: reusable, sockets: sockets);
-    var notes = ItemNotesService()
+    var notes = ref
+        .read(itemNotesProvider)
         .getNotesForItem(item?.itemHash, item?.itemInstanceId);
-    var tags = ItemNotesService().tagsByIds(notes?.tags);
+    var tags = ref.read(itemNotesProvider).tagsByIds(notes?.tags);
     var locked = item?.state?.contains(ItemState.Locked) ?? false;
     if (locked) {
       items.add(Container(

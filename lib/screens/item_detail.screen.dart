@@ -9,12 +9,12 @@ import 'package:bungie_api/models/destiny_vendor_item_definition.dart';
 import 'package:bungie_api/models/destiny_vendor_sale_item_component.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:little_light/core/providers/item_notes/item_notes.consumer.dart';
+import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
 import 'package:little_light/models/loadout.dart';
 import 'package:little_light/services/auth/auth.service.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/inventory/inventory.service.dart';
-import 'package:little_light/services/littlelight/item_notes.service.dart';
-import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
 import 'package:little_light/services/profile/vendors.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/utils/inventory_utils.dart';
@@ -84,7 +84,7 @@ class ItemDetailScreen extends BaseDestinyStatefulItemWidget {
 }
 
 class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen>
-    with LoadoutsConsumerState {
+    with LoadoutsConsumerState, ItemNotesConsumerState {
   int selectedPerk;
   Map<int, int> selectedPerks = Map();
   ItemSocketController socketController;
@@ -190,7 +190,7 @@ class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen>
   }
 
   Widget buildPortrait(BuildContext context) {
-    var customName = ItemNotesService()
+    var customName = itemNotesService
         .getNotesForItem(item?.itemHash, item?.itemInstanceId)
         ?.customName;
     return Scaffold(
@@ -247,7 +247,7 @@ class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen>
   }
 
   Widget buildLandscape(BuildContext context) {
-    var customName = ItemNotesService()
+    var customName = itemNotesService
         .getNotesForItem(item?.itemHash, item?.itemInstanceId)
         ?.customName;
     return Scaffold(

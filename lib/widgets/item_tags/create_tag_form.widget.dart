@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/translations/translations.consumer.dart';
 import 'package:little_light/models/item_notes_tag.dart';
-import 'package:little_light/services/littlelight/item_notes.service.dart';
 import 'package:little_light/utils/color_utils.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/item_tags/item_tag.widget.dart';
 
 class CreateTagFormWidget extends ConsumerStatefulWidget {
-  final ItemNotesService service = ItemNotesService();
   final ItemNotesTag tag;
   CreateTagFormWidget(this.tag) : super();
   @override

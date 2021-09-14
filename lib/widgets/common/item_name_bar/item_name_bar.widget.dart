@@ -5,7 +5,7 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:little_light/services/littlelight/item_notes.service.dart';
+import 'package:little_light/core/providers/item_notes/item_notes.provider.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateless_item.widget.dart';
 
@@ -40,8 +40,7 @@ class ItemNameBarWidget extends BaseDestinyStatelessItemWidget {
       height: fontSize + padding.top * 2,
       alignment: Alignment.centerLeft,
       decoration: nameBarBoxDecoration(),
-      child:
-          Material(color: Colors.transparent, child: nameBarContent(context)),
+      child: Material(color: Colors.transparent, child: nameBarContent(ref)),
     );
   }
 
@@ -66,21 +65,22 @@ class ItemNameBarWidget extends BaseDestinyStatelessItemWidget {
     return ExactAssetImage("assets/imgs/masterwork-top.png");
   }
 
-  Widget nameBarContent(BuildContext context) {
+  Widget nameBarContent(WidgetRef ref) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Expanded(
-          child: nameBarTextField(context),
+          child: nameBarTextField(ref),
         ),
         trailing ?? Container()
       ],
     );
   }
 
-  Widget nameBarTextField(BuildContext context) {
-    var customName = ItemNotesService()
+  Widget nameBarTextField(WidgetRef ref) {
+    var customName = ref
+        .read(itemNotesProvider)
         .getNotesForItem(item?.itemHash, item?.itemInstanceId)
         ?.customName
         ?.toUpperCase();

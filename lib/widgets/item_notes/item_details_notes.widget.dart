@@ -2,9 +2,9 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:flutter/material.dart';
+import 'package:little_light/core/providers/item_notes/item_notes.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/models/item_notes.dart';
-import 'package:little_light/services/littlelight/item_notes.service.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateful_item.widget.dart';
 import 'package:little_light/widgets/common/littlelight_custom.dialog.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
@@ -37,7 +37,10 @@ const _sectionId = "item_tag_notes";
 
 class ItemDetailsNotesWidgetState
     extends BaseDestinyItemState<ItemDetailsNotesWidget>
-    with UserSettingsConsumerState, VisibleSectionMixin {
+    with
+        UserSettingsConsumerState,
+        VisibleSectionMixin,
+        ItemNotesConsumerState {
   ItemNotes notes;
 
   @override
@@ -46,8 +49,8 @@ class ItemDetailsNotesWidgetState
   @override
   void initState() {
     super.initState();
-    notes = ItemNotesService()
-        .getNotesForItem(item.itemHash, item.itemInstanceId, true);
+    notes = itemNotesService.getNotesForItem(
+        item.itemHash, item.itemInstanceId, true);
     setState(() {});
   }
 
@@ -66,7 +69,7 @@ class ItemDetailsNotesWidgetState
   }
 
   save() async {
-    await ItemNotesService().saveNotes(notes);
+    await itemNotesService.saveNotes(notes);
     if (mounted) setState(() {});
     if (widget.onUpdate != null) widget.onUpdate();
   }

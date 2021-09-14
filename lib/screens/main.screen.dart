@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/item_notes/item_notes.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/screens/collections.screen.dart';
 import 'package:little_light/screens/equipment.screen.dart';
@@ -7,7 +8,6 @@ import 'package:little_light/screens/loadouts.screen.dart';
 import 'package:little_light/screens/progress.screen.dart';
 import 'package:little_light/screens/old_triumphs.screen.dart';
 import 'package:little_light/services/auth/auth.service.dart';
-import 'package:little_light/services/littlelight/item_notes.service.dart';
 import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 
@@ -27,7 +27,8 @@ class MainScreenState extends ConsumerState<MainScreen>
     with
         WidgetsBindingObserver,
         UserSettingsConsumerState,
-        LoadoutsConsumerState {
+        LoadoutsConsumerState,
+        ItemNotesConsumerState {
   Widget currentScreen;
 
   @override
@@ -43,7 +44,7 @@ class MainScreenState extends ConsumerState<MainScreen>
     if (auth.isLogged) {
       auth.getMembershipData();
       loadoutsService.getLoadouts(forceFetch: true);
-      ItemNotesService().getNotes(forceFetch: true);
+      itemNotesService.getNotes(forceFetch: true);
       profile.startAutomaticUpdater();
       WidgetsBinding.instance.addObserver(this);
     }

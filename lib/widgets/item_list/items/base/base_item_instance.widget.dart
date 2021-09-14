@@ -9,9 +9,9 @@ import 'package:bungie_api/models/destiny_vendor_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:little_light/core/providers/item_notes/item_notes.consumer.dart';
 import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/littlelight/item_notes.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
@@ -31,7 +31,7 @@ typedef OnItemHandler = void Function(
     String characterId);
 
 class BaseItemInstanceWidget extends BaseInventoryItemWidget
-    with WishlistsConsumerWidget {
+    with WishlistsConsumerWidget, ItemNotesConsumerWidget {
   BaseItemInstanceWidget(
     DestinyItemComponent item,
     DestinyInventoryItemDefinition itemDefinition,
@@ -95,9 +95,9 @@ class BaseItemInstanceWidget extends BaseInventoryItemWidget
     final wishlistTags = wishlistsService(ref).getWishlistBuildTags(
         itemHash: item?.itemHash, reusablePlugs: reusable, sockets: sockets);
     List<Widget> upper = [];
-    var notes = ItemNotesService()
+    var notes = itemNotesService(ref)
         .getNotesForItem(item?.itemHash, item?.itemInstanceId);
-    var tags = ItemNotesService().tagsByIds(notes?.tags);
+    var tags = itemNotesService(ref).tagsByIds(notes?.tags);
     var locked = item?.state?.contains(ItemState.Locked) ?? false;
     if (tags != null) {
       upper.addAll(tags.map((t) => ItemTagWidget(

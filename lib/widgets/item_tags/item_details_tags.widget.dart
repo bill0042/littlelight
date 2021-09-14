@@ -3,10 +3,10 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:little_light/core/providers/item_notes/item_notes.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/models/item_notes.dart';
 import 'package:little_light/models/item_notes_tag.dart';
-import 'package:little_light/services/littlelight/item_notes.service.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateful_item.widget.dart';
 import 'package:little_light/widgets/common/littlelight_custom.dialog.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
@@ -41,7 +41,10 @@ const _sectionId = "item_tags";
 
 class ItemDetailsTagsWidgetState
     extends BaseDestinyItemState<ItemDetailsTagsWidget>
-    with UserSettingsConsumerState, VisibleSectionMixin {
+    with
+        UserSettingsConsumerState,
+        VisibleSectionMixin,
+        ItemNotesConsumerState {
   ItemNotes notes;
   List<ItemNotesTag> tags;
 
@@ -51,15 +54,15 @@ class ItemDetailsTagsWidgetState
   @override
   void initState() {
     super.initState();
-    notes = ItemNotesService()
-        .getNotesForItem(item?.itemHash, item?.itemInstanceId, true);
-    tags = ItemNotesService().tagsByIds(notes?.tags);
+    notes = itemNotesService.getNotesForItem(
+        item?.itemHash, item?.itemInstanceId, true);
+    tags = itemNotesService.tagsByIds(notes?.tags);
     setState(() {});
   }
 
   save() async {
-    tags = ItemNotesService().tagsByIds(notes?.tags);
-    ItemNotesService().saveNotes(notes);
+    tags = itemNotesService.tagsByIds(notes?.tags);
+    itemNotesService.saveNotes(notes);
     if (widget.onUpdate != null) widget.onUpdate();
     if (mounted) setState(() {});
   }
@@ -120,7 +123,7 @@ class ItemDetailsTagsWidgetState
   }
 
   openAddTagDialog(BuildContext context) async {
-    var tags = ItemNotesService().getAvailableTags();
+    var tags = itemNotesService.getAvailableTags();
     var result = await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
@@ -223,7 +226,7 @@ class ItemDetailsTagsWidgetState
               uppercase: true,
             ),
             onSave: () async {
-              ItemNotesService().saveTag(tag);
+              itemNotesService.saveTag(tag);
               Navigator.of(context).pop(tag.tagId);
               openAddTagDialog(context);
             },
@@ -246,7 +249,7 @@ class ItemDetailsTagsWidgetState
               uppercase: true,
             ),
             onSave: () async {
-              ItemNotesService().saveTag(tag);
+              itemNotesService.saveTag(tag);
               Navigator.of(context).pop(tag.tagId);
               save();
               openAddTagDialog(context);
@@ -287,7 +290,7 @@ class ItemDetailsTagsWidgetState
                 uppercase: true,
               ),
               yesPressed: () {
-                ItemNotesService().deleteTag(tag);
+                itemNotesService.deleteTag(tag);
                 Navigator.of(context).pop();
                 openAddTagDialog(context);
                 save();

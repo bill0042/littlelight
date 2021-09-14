@@ -8,9 +8,9 @@ import 'package:bungie_api/models/destiny_objective_progress.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:little_light/core/providers/item_notes/item_notes.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
-import 'package:little_light/services/littlelight/item_notes.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
@@ -57,7 +57,8 @@ class PursuitItemWidget extends ConsumerStatefulWidget {
 }
 
 class PursuitItemWidgetState<T extends PursuitItemWidget>
-    extends ConsumerState<T> with UserSettingsConsumerState {
+    extends ConsumerState<T>
+    with UserSettingsConsumerState, ItemNotesConsumerState {
   DestinyInventoryItemDefinition definition;
   Map<int, DestinyObjectiveDefinition> objectiveDefinitions;
   List<DestinyObjectiveProgress> itemObjectives;
@@ -222,9 +223,9 @@ class PursuitItemWidgetState<T extends PursuitItemWidget>
   Widget namebarTrailingWidget(BuildContext context) {
     List<Widget> items = [];
 
-    var notes = ItemNotesService()
-        .getNotesForItem(item?.itemHash, item?.itemInstanceId);
-    var tags = ItemNotesService().tagsByIds(notes?.tags);
+    var notes =
+        itemNotesService.getNotesForItem(item?.itemHash, item?.itemInstanceId);
+    var tags = itemNotesService.tagsByIds(notes?.tags);
     if (tags != null) {
       items.addAll(tags.map((t) => ItemTagWidget(
             t,

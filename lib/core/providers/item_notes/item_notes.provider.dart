@@ -1,3 +1,5 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/global_container/global.container.dart';
 import 'package:little_light/models/item_notes.dart';
 import 'package:little_light/models/item_notes_tag.dart';
 import 'package:little_light/services/littlelight/littlelight_api.service.dart';
@@ -9,12 +11,13 @@ final Map<String, ItemNotesTag> _defaultTags = {
   "infuse": ItemNotesTag.infuse(),
 };
 
+final itemNotesProvider =
+    Provider<ItemNotesService>((ref) => ItemNotesService._(ref));
+
+get globalItemNotesProvider => globalContainer.read(itemNotesProvider);
+
 class ItemNotesService {
-  static final ItemNotesService _singleton = ItemNotesService._internal();
-  factory ItemNotesService() {
-    return _singleton;
-  }
-  ItemNotesService._internal();
+  ItemNotesService._(ProviderRef ref);
 
   Map<String, ItemNotes> _notes;
   Map<String, ItemNotesTag> _tags;
