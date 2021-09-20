@@ -6,8 +6,8 @@ import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:bungie_api/models/destiny_objective_definition.dart';
 import 'package:bungie_api/models/destiny_objective_progress.dart';
 import 'package:flutter/material.dart';
+import 'package:little_light/core/providers/objective_tracking/objective_tracking.consumer.dart';
 import 'package:little_light/models/tracked_objective.dart';
-import 'package:little_light/services/littlelight/objectives.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
@@ -38,7 +38,8 @@ class ItemObjectivesWidget extends BaseDestinyStatefulItemWidget {
 }
 
 class ItemObjectivesWidgetState
-    extends BaseDestinyItemState<ItemObjectivesWidget> {
+    extends BaseDestinyItemState<ItemObjectivesWidget>
+    with ObjectiveTrackingConsumerState {
   Map<int, DestinyObjectiveDefinition> objectiveDefinitions;
   List<DestinyObjectiveProgress> itemObjectives;
   StreamSubscription<NotificationEvent> subscription;
@@ -133,7 +134,7 @@ class ItemObjectivesWidgetState
   }
 
   updateTrackStatus() async {
-    var objectives = await ObjectivesService().getTrackedObjectives();
+    var objectives = await objectiveTracking.getTrackedObjectives();
     var tracked = objectives.firstWhere(
         (o) =>
             o.hash == widget.definition.hash &&
@@ -159,14 +160,13 @@ class ItemObjectivesWidgetState
             : TranslatedTextWidget("Track Objectives",
                 key: Key("track_objectives")),
         onPressed: () {
-          var service = ObjectivesService();
           if (isTracking) {
-            service.removeTrackedObjective(
+            objectiveTracking.removeTrackedObjective(
                 TrackedObjectiveType.Item, definition.hash,
                 instanceId: widget.item?.itemInstanceId,
                 characterId: widget.characterId);
           } else {
-            service.addTrackedObjective(
+            objectiveTracking.addTrackedObjective(
                 TrackedObjectiveType.Item, definition.hash,
                 instanceId: widget.item?.itemInstanceId,
                 characterId: widget.characterId);

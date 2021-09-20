@@ -1,17 +1,19 @@
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/global_container/global.container.dart';
 import 'package:little_light/models/tracked_objective.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 
-class ObjectivesService {
-  static final ObjectivesService _singleton = ObjectivesService._internal();
-  factory ObjectivesService() {
-    return _singleton;
-  }
-  ObjectivesService._internal();
+final objectiveTrackingProvider =
+    Provider<ObjectiveTracking>((ref) => ObjectiveTracking._(ref));
 
+get globalObjectiveTrackingProvider => globalContainer.read(objectiveTrackingProvider);
+
+class ObjectiveTracking {
+  ObjectiveTracking._(ProviderRef ref);
   List<TrackedObjective> _trackedObjectives;
 
   reset() {

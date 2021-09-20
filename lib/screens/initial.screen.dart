@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/env/env.consumer.dart';
 import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
+import 'package:little_light/core/providers/objective_tracking/objective_tracking.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
 import 'package:little_light/exceptions/exception_handler.dart';
@@ -17,7 +18,6 @@ import 'package:little_light/services/auth/auth.service.dart';
 import 'package:little_light/services/bungie_api/bungie_api.exception.dart';
 import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:little_light/services/littlelight/littlelight_api.service.dart';
-import 'package:little_light/services/littlelight/objectives.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/destiny_settings.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
@@ -48,7 +48,8 @@ class InitialScreenState extends FloatingContentState<InitialScreen>
         EnvConsumerState,
         WishlistsConsumerState,
         UserSettingsConsumerState,
-        LoadoutsConsumerState {
+        LoadoutsConsumerState,
+        ObjectiveTrackingConsumerState {
   @override
   void initState() {
     super.initState();
@@ -66,7 +67,7 @@ class InitialScreenState extends FloatingContentState<InitialScreen>
     AuthService().reset();
     await LittleLightApiService().reset();
     await loadoutsService.reset();
-    await ObjectivesService().reset();
+    await objectiveTracking.reset();
     await ManifestService().reset();
     if (widget.authCode != null) {
       authCode(widget.authCode);

@@ -4,10 +4,11 @@ import 'package:bungie_api/models/destiny_item_plug.dart';
 import 'package:bungie_api/models/destiny_objective_definition.dart';
 import 'package:bungie_api/models/destiny_objective_progress.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:little_light/core/providers/objective_tracking/objective_tracking.consumer.dart';
 import 'package:little_light/models/tracked_objective.dart';
 import 'package:little_light/services/bungie_api/bungie_api.service.dart';
-import 'package:little_light/services/littlelight/objectives.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/widgets/common/objective.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
@@ -15,7 +16,7 @@ import 'package:little_light/widgets/common/translated_text.widget.dart';
 
 import 'package:little_light/widgets/item_details/item_stats.widget.dart';
 
-class PerkListItem extends StatefulWidget {
+class PerkListItem extends ConsumerStatefulWidget {
   final ManifestService manifest = ManifestService();
   final DestinyInventoryItemDefinition definition;
   final DestinyItemPlug plug;
@@ -28,8 +29,8 @@ class PerkListItem extends StatefulWidget {
   }
 }
 
-class PerkListItemState extends State<PerkListItem>
-    with TickerProviderStateMixin {
+class PerkListItemState extends ConsumerState<PerkListItem>
+    with TickerProviderStateMixin, ObjectiveTrackingConsumerState {
   bool isTracking = false;
 
   DestinyInventoryItemDefinition get definition => widget.definition;
@@ -193,7 +194,7 @@ class PerkListItemState extends State<PerkListItem>
   }
 
   updateTrackStatus() async {
-    var objectives = await ObjectivesService().getTrackedObjectives();
+    var objectives = await objectiveTracking.getTrackedObjectives();
     var tracked = objectives.firstWhere(
         (o) =>
             o?.hash == widget?.definition?.hash &&

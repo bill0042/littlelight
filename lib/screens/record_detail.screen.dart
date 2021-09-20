@@ -1,9 +1,10 @@
 import 'package:bungie_api/enums/destiny_record_state.dart';
 import 'package:bungie_api/models/destiny_record_component.dart';
 import 'package:bungie_api/models/destiny_record_definition.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:little_light/core/providers/objective_tracking/objective_tracking.consumer.dart';
 import 'package:little_light/models/tracked_objective.dart';
-import 'package:little_light/services/littlelight/objectives.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:flutter/material.dart';
@@ -16,19 +17,20 @@ import 'package:little_light/widgets/inventory_tabs/inventory_notification.widge
 import 'package:little_light/widgets/item_details/item_lore.widget.dart';
 import 'package:little_light/widgets/presentation_nodes/record_detail_objectives.dart';
 
-class RecordDetailScreen extends StatefulWidget {
+class RecordDetailScreen extends ConsumerStatefulWidget {
   final DestinyRecordDefinition definition;
   final ProfileService profile = ProfileService();
 
   RecordDetailScreen(this.definition, {Key key}) : super(key: key);
 
   @override
-  State<RecordDetailScreen> createState() {
+  createState() {
     return RecordDetailScreenState();
   }
 }
 
-class RecordDetailScreenState extends State<RecordDetailScreen> {
+class RecordDetailScreenState extends ConsumerState<RecordDetailScreen>
+    with ObjectiveTrackingConsumerState {
   bool get isLogged => AuthService().isLogged;
   bool isTracking = false;
 
@@ -66,7 +68,7 @@ class RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   updateTrackStatus() async {
-    var objectives = await ObjectivesService().getTrackedObjectives();
+    var objectives = await objectiveTracking.getTrackedObjectives();
     var tracked = objectives.firstWhere(
         (o) =>
             o.hash == widget.definition.hash &&
@@ -211,12 +213,11 @@ class RecordDetailScreenState extends State<RecordDetailScreen> {
             : TranslatedTextWidget("Track Objectives",
                 key: Key("track_objectives")),
         onPressed: () {
-          var service = ObjectivesService();
           if (isTracking) {
-            service.removeTrackedObjective(
+            objectiveTracking.removeTrackedObjective(
                 TrackedObjectiveType.Triumph, definition.hash);
           } else {
-            service.addTrackedObjective(
+            objectiveTracking.addTrackedObjective(
                 TrackedObjectiveType.Triumph, definition.hash);
           }
           updateTrackStatus();

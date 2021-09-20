@@ -3,10 +3,11 @@ import 'dart:math';
 
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:little_light/core/providers/objective_tracking/objective_tracking.consumer.dart';
 import 'package:little_light/models/tracked_objective.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
-import 'package:little_light/services/littlelight/objectives.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
@@ -16,14 +17,15 @@ import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/presentation_nodes/record_item.widget.dart';
 import 'package:little_light/widgets/progress_tabs/pursuit_item/tracked_pursuit_item.widget.dart';
 
-class ObjectivesScreen extends StatefulWidget {
+class ObjectivesScreen extends ConsumerStatefulWidget {
   final ProfileService profile = ProfileService();
   final ManifestService manifest = ManifestService();
   @override
   ObjectivesScreenState createState() => ObjectivesScreenState();
 }
 
-class ObjectivesScreenState extends State<ObjectivesScreen> {
+class ObjectivesScreenState extends ConsumerState<ObjectivesScreen>
+    with ObjectiveTrackingConsumerState {
   List<TrackedObjective> objectives;
   Map<TrackedObjective, DestinyItemComponent> items;
 
@@ -49,21 +51,20 @@ class ObjectivesScreenState extends State<ObjectivesScreen> {
   }
 
   void loadObjectives() async {
-    ObjectivesService service = ObjectivesService();
-    objectives = (await service.getTrackedObjectives()).reversed.toList();
+    objectives = (await objectiveTracking.getTrackedObjectives()).reversed.toList();
     items = Map();
     var itemObjectives =
         objectives.where((o) => o.type == TrackedObjectiveType.Item);
     var plugObjectives =
         objectives.where((o) => o.type == TrackedObjectiveType.Plug);
     for (var o in itemObjectives) {
-      DestinyItemComponent item = await service.findObjectiveItem(o);
+      DestinyItemComponent item = await objectiveTracking.findObjectiveItem(o);
       if (item != null) {
         items[o] = item;
       }
     }
     for (var o in plugObjectives) {
-      DestinyItemComponent item = await service.findObjectivePlugItem(o);
+      DestinyItemComponent item = await objectiveTracking.findObjectivePlugItem(o);
       if (item != null) {
         items[o] = item;
       }

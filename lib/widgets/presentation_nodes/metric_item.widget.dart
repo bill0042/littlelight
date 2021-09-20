@@ -5,18 +5,19 @@ import 'package:bungie_api/models/destiny_objective_definition.dart';
 import 'package:bungie_api/models/destiny_presentation_node_definition.dart';
 import 'package:bungie_api/models/destiny_trait_definition.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:little_light/core/providers/objective_tracking/objective_tracking.consumer.dart';
 import 'package:little_light/models/tracked_objective.dart';
 import 'package:little_light/services/auth/auth.service.dart';
 import 'package:little_light/services/bungie_api/bungie_api.service.dart';
-import 'package:little_light/services/littlelight/objectives.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 
-class MetricItemWidget extends StatefulWidget {
+class MetricItemWidget extends ConsumerStatefulWidget {
   final ManifestService manifest = ManifestService();
   final int hash;
   MetricItemWidget({Key key, this.hash}) : super(key: key);
@@ -27,7 +28,8 @@ class MetricItemWidget extends StatefulWidget {
   }
 }
 
-class MetricItemWidgetState extends State<MetricItemWidget> {
+class MetricItemWidgetState extends ConsumerState<MetricItemWidget>
+    with ObjectiveTrackingConsumerState {
   DestinyMetricDefinition _definition;
   bool isLogged = false;
   Map<int, DestinyObjectiveDefinition> objectiveDefinitions;
@@ -54,7 +56,7 @@ class MetricItemWidgetState extends State<MetricItemWidget> {
   }
 
   updateTrackStatus() async {
-    var objectives = await ObjectivesService().getTrackedObjectives();
+    var objectives = await objectiveTracking.getTrackedObjectives();
     var tracked = objectives.firstWhere(
         (o) => o.hash == widget.hash && o.type == TrackedObjectiveType.Triumph,
         orElse: () => null);
