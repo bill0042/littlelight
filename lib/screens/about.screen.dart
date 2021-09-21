@@ -6,9 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:little_light/core/providers/littlelight_data/littlelight_data.consumer.dart';
 import 'package:little_light/core/providers/translations/translations.consumer.dart';
 import 'package:little_light/models/collaborators.dart';
-import 'package:little_light/services/littlelight/littlelight_data.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/widgets/about/supporter_character.widget.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
@@ -22,7 +22,7 @@ class AboutScreen extends ConsumerStatefulWidget {
 }
 
 class _AboutScreenState extends ConsumerState<AboutScreen>
-    with TranslationsConsumerState {
+    with TranslationsConsumerState, LittleLightDataConsumerState {
   String packageVersion = "";
   String appName = "";
   CollaboratorsResponse collaborators;

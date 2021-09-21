@@ -10,24 +10,22 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/littlelight_data/littlelight_data.consumer.dart';
+import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/models/game_data.dart';
 import 'package:little_light/models/loadout.dart';
 import 'package:little_light/screens/edit_loadout.screen.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/inventory/inventory.service.dart';
-import 'package:little_light/services/littlelight/littlelight_data.service.dart';
-import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
-
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/utils/item_sorters/power_level_sorter.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
-
 import 'package:little_light/widgets/option_sheets/free_slots_slider.widget.dart';
 import 'package:little_light/widgets/option_sheets/loadout_select_sheet.widget.dart';
 import 'package:shimmer/shimmer.dart';
@@ -46,7 +44,7 @@ class CharacterOptionsSheet extends ConsumerStatefulWidget {
 }
 
 class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
-    with UserSettingsConsumerState, LoadoutsConsumerState {
+    with UserSettingsConsumerState, LoadoutsConsumerState, LittleLightDataConsumerState {
   Map<int, DestinyItemComponent> maxLightLoadout;
   Map<int, DestinyItemComponent> underAverageSlots;
   double maxLight;
@@ -624,7 +622,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
   }
 
   getMaxLightLoadout() async {
-    gameData = await LittleLightDataService().getGameData();
+    gameData = await littlelightData.getGameData();
     var allItems = widget.profile.getAllItems();
     var instancedItems =
         allItems.where((i) => i.itemInstanceId != null).toList();

@@ -4,8 +4,9 @@ import 'dart:math';
 import 'package:bungie_api/models/destiny_faction_progression.dart';
 import 'package:bungie_api/models/destiny_progression.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:little_light/services/littlelight/littlelight_data.service.dart';
+import 'package:little_light/core/providers/littlelight_data/littlelight_data.consumer.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
@@ -13,7 +14,7 @@ import 'package:little_light/widgets/item_list/character_info.widget.dart';
 import 'package:little_light/widgets/progress_tabs/faction_rank_item.widget.dart';
 import 'package:little_light/widgets/progress_tabs/rank_item.widget.dart';
 
-class CharacterRanksListWidget extends StatefulWidget {
+class CharacterRanksListWidget extends ConsumerStatefulWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
   final ManifestService manifest = ManifestService();
@@ -25,8 +26,9 @@ class CharacterRanksListWidget extends StatefulWidget {
       _CharacterRanksListWidgetState();
 }
 
-class _CharacterRanksListWidgetState extends State<CharacterRanksListWidget>
-    with AutomaticKeepAliveClientMixin {
+class _CharacterRanksListWidgetState
+    extends ConsumerState<CharacterRanksListWidget>
+    with AutomaticKeepAliveClientMixin, LittleLightDataConsumerState {
   List<DestinyProgression> ranks;
   List<DestinyFactionProgression> progressions;
   StreamSubscription<NotificationEvent> subscription;
@@ -53,7 +55,7 @@ class _CharacterRanksListWidgetState extends State<CharacterRanksListWidget>
   Future<void> getRanks() async {
     var progressionsRoot =
         widget.profile.getCharacterProgression(widget.characterId);
-    var gameData = await LittleLightDataService().getGameData();
+    var gameData = await littlelightData.getGameData();
     ranks = [
       progressionsRoot.progressions["${gameData.ranks.glory}"],
       progressionsRoot.progressions["${gameData.ranks.valor}"],

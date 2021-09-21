@@ -1,5 +1,5 @@
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
-import 'package:little_light/services/littlelight/littlelight_data.service.dart';
+import 'package:little_light/core/providers/littlelight_data/littlelight_data.provider.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 
 import 'base_item_filter.dart';
@@ -17,7 +17,7 @@ class SeasonSlotFilter extends BaseItemFilter<Set<int>> {
       {Map<int, DestinyInventoryItemDefinition> definitions}) async {
     clear();
 
-    var gameData = await LittleLightDataService().getGameData();
+    var gameData = await globalLittleLightDataProvider.getGameData();
     seasonalSlots = gameData.seasonalModSlots;
     Set<int> hashes = Set();
     for (var item in items) {

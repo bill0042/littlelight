@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/littlelight_data/littlelight_data.consumer.dart';
 import 'package:little_light/core/providers/translations/translations.consumer.dart';
 import 'package:little_light/models/wish_list.dart';
-import 'package:little_light/services/littlelight/littlelight_data.service.dart';
-
 import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/loading_anim.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
@@ -19,7 +18,7 @@ class AddWishlistScreen extends ConsumerStatefulWidget {
 enum ImportType { Link, File, Popular }
 
 class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen>
-    with TranslationsConsumerState {
+    with TranslationsConsumerState, LittleLightDataConsumerState {
   final Map<String, TextEditingController> fieldControllers = Map();
   ImportType _importType = ImportType.Link;
   List<Wishlist> popular;
@@ -46,7 +45,7 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen>
   }
 
   loadPopular() async {
-    popular = await LittleLightDataService().getFeaturedWishlists();
+    popular = await littlelightData.getFeaturedWishlists();
     setState(() {});
   }
 

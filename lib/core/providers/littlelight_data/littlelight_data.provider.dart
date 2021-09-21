@@ -1,19 +1,22 @@
 import 'dart:convert';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/global_container/global.container.dart';
 import 'package:little_light/models/collaborators.dart';
 import 'package:little_light/models/game_data.dart';
 import 'package:little_light/models/wish_list.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:http/http.dart' as http;
 
-class LittleLightDataService {
-  static final LittleLightDataService _singleton =
-      LittleLightDataService._internal();
+final littleLightDataProvider =
+    Provider<LittleLightData>((ref) => LittleLightData._(ref));
+
+get globalLittleLightDataProvider => globalContainer.read(littleLightDataProvider);
+
+class LittleLightData {
   StorageService storage = StorageService.global();
-  factory LittleLightDataService() {
-    return _singleton;
-  }
-  LittleLightDataService._internal();
+
+  LittleLightData._(ProviderRef _ref);
 
   Map<StorageKeys, dynamic> _data = Map();
 
