@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/global_container/global.container.dart';
+import 'package:little_light/core/providers/littlelight_api/littlelight_api.provider.dart';
 import 'package:little_light/models/loadout.dart';
-import 'package:little_light/services/littlelight/littlelight_api.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 
 final loadoutsProvider =
@@ -10,7 +10,11 @@ final loadoutsProvider =
 get globalLoadoutsProvider => globalContainer.read(loadoutsProvider);
 
 class LoadoutsService {
-  LoadoutsService._(ProviderRef<LoadoutsService> ref);
+  ProviderRef<LoadoutsService> _ref;
+
+  LoadoutsService._(this._ref);
+
+  LittleLightApi get _littleLightApi => _ref.read(littleLightApiProvider);
 
   List<Loadout> _loadouts;
 
@@ -55,9 +59,8 @@ class LoadoutsService {
   }
 
   Future<List<Loadout>> _fetchLoadouts() async {
-    var api = LittleLightApiService();
 
-    List<Loadout> _fetchedLoadouts = await api.fetchLoadouts();
+    List<Loadout> _fetchedLoadouts = await _littleLightApi.fetchLoadouts();
     if (_loadouts == null) {
       _loadouts = _fetchedLoadouts;
     } else if (_fetchedLoadouts != null) {
@@ -92,15 +95,13 @@ class LoadoutsService {
     }
 
     await _saveLoadoutsToStorage();
-    var api = LittleLightApiService();
-    return await api.saveLoadout(loadout);
+    return await _littleLightApi.saveLoadout(loadout);
   }
 
   Future<int> deleteLoadout(Loadout loadout) async {
     _loadouts.removeWhere((l) => l.assignedId == loadout.assignedId);
     await _saveLoadoutsToStorage();
-    var api = LittleLightApiService();
-    var response = await api.deleteLoadout(loadout);
+    var response = await _littleLightApi.deleteLoadout(loadout);
     return response;
   }
 

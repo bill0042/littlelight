@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/global_container/global.container.dart';
+import 'package:little_light/core/providers/littlelight_api/littlelight_api.provider.dart';
 import 'package:little_light/models/item_notes.dart';
 import 'package:little_light/models/item_notes_tag.dart';
-import 'package:little_light/services/littlelight/littlelight_api.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 
 final Map<String, ItemNotesTag> _defaultTags = {
@@ -17,10 +17,15 @@ final itemNotesProvider =
 get globalItemNotesProvider => globalContainer.read(itemNotesProvider);
 
 class ItemNotesService {
-  ItemNotesService._(ProviderRef ref);
+  ProviderRef _ref;
+
+  ItemNotesService._(this._ref);
 
   Map<String, ItemNotes> _notes;
   Map<String, ItemNotesTag> _tags;
+
+  LittleLightApi get _littleLightApi => _ref.read(littleLightApiProvider);
+  
 
   reset() {
     _notes = null;
@@ -75,9 +80,8 @@ class ItemNotesService {
   }
 
   Future<bool> _fetchNotes() async {
-    var api = LittleLightApiService();
     try {
-      var response = await api.fetchItemNotes();
+      var response = await _littleLightApi.fetchItemNotes();
       _notes = Map.fromEntries(response.notes?.map((note) {
         return MapEntry(note.uniqueId, note);
       }));
@@ -109,15 +113,13 @@ class ItemNotesService {
     var allNotes = await this.getNotes();
     allNotes[notes.uniqueId] = notes;
     await _saveNotesToStorage();
-    var api = LittleLightApiService();
-    return await api.saveItemNotes(notes);
+    return await _littleLightApi.saveItemNotes(notes);
   }
 
   Future<int> deleteTag(ItemNotesTag tag) async {
     _tags?.remove(tag.tagId);
     await _saveTagsToStorage();
-    var api = LittleLightApiService();
-    return await api.deleteTag(tag);
+    return await _littleLightApi.deleteTag(tag);
   }
 
   Future<int> saveTag(ItemNotesTag tag) async {
@@ -126,8 +128,7 @@ class ItemNotesService {
     }
     _tags[tag.tagId] = tag;
     await _saveTagsToStorage();
-    var api = LittleLightApiService();
-    return await api.saveTag(tag);
+    return await _littleLightApi.saveTag(tag);
   }
 
   Future<void> _saveTagsToStorage() async {

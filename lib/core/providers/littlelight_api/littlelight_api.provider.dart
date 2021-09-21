@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bungie_api/enums/bungie_membership_type.dart';
 import 'package:bungie_api/helpers/bungie_net_token.dart';
 import 'package:bungie_api/models/group_user_info_card.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:little_light/core/providers/env/env.provider.dart';
 import 'package:little_light/core/providers/global_container/global.container.dart';
@@ -13,23 +14,18 @@ import 'package:little_light/services/auth/auth.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:uuid/uuid.dart';
 
-class NotesResponse {
-  List<ItemNotes> notes;
-  List<ItemNotesTag> tags;
+import 'models/notes_response.dart';
 
-  NotesResponse({this.notes, this.tags});
-}
+final littleLightApiProvider =
+    Provider<LittleLightApi>((ref) => LittleLightApi._(ref));
 
-class LittleLightApiService {
+get globalLittleLightProvider => globalContainer.read(littleLightApiProvider);
+
+class LittleLightApi {
   String _uuid;
   String _secret;
 
-  static final LittleLightApiService _singleton =
-      LittleLightApiService._internal();
-  factory LittleLightApiService() {
-    return _singleton;
-  }
-  LittleLightApiService._internal();
+  LittleLightApi._(ProviderRef _ref);
 
   reset() {
     _uuid = null;
