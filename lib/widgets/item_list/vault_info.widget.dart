@@ -5,10 +5,11 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_vendor_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
+import 'package:little_light/core/providers/inventory/transfer_destination.dart';
 import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
 import 'package:little_light/models/loadout.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/inventory/inventory.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
@@ -118,7 +119,7 @@ class VaultOptionsSheet extends ConsumerStatefulWidget {
 }
 
 class VaultOptionsSheetState extends ConsumerState<VaultOptionsSheet>
-    with LoadoutsConsumerState {
+    with LoadoutsConsumerState, InventoryConsumerState {
   final TextStyle buttonStyle =
       TextStyle(fontWeight: FontWeight.bold, fontSize: 12);
 
@@ -162,7 +163,7 @@ class VaultOptionsSheetState extends ConsumerState<VaultOptionsSheet>
             builder: (context) => LoadoutSelectSheet(
                 loadouts: loadouts,
                 onSelect: (loadout) =>
-                    InventoryService().transferLoadout(loadout)));
+                    inventory.transferLoadout(loadout)));
       },
     );
   }
@@ -205,7 +206,6 @@ class VaultOptionsSheetState extends ConsumerState<VaultOptionsSheet>
 
   transferEverythingFromPostmaster() async {
     var characters = widget.profile.getCharacters();
-    var inventory = InventoryService();
     for (var char in characters) {
       var all = widget.profile.getCharacterInventory(char.characterId);
       var inPostmaster =
@@ -257,7 +257,7 @@ class VaultOptionsSheetState extends ConsumerState<VaultOptionsSheet>
                             child: InkWell(
                               onTap: () {
                                 Navigator.of(context).pop();
-                                InventoryService().transferLoadout(loadout);
+                                inventory.transferLoadout(loadout);
                               },
                             ),
                           ))

@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:bungie_api/enums/item_state.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
-import 'package:little_light/services/inventory/inventory.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/selection/selection.service.dart';
@@ -13,11 +14,10 @@ import 'package:little_light/utils/media_query_helper.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
-
 import 'package:little_light/widgets/inventory_tabs/multiselect_management_block.widget.dart';
 import 'package:little_light/widgets/item_list/items/quick_select_item_wrapper.widget.dart';
 
-class SelectedItemsWidget extends StatefulWidget {
+class SelectedItemsWidget extends ConsumerStatefulWidget {
   final service = SelectionService();
 
   SelectedItemsWidget({Key key}) : super(key: key);
@@ -28,7 +28,8 @@ class SelectedItemsWidget extends StatefulWidget {
   }
 }
 
-class SelectedItemsWidgetState extends State<SelectedItemsWidget> {
+class SelectedItemsWidgetState extends ConsumerState<SelectedItemsWidget>
+    with InventoryConsumerState {
   StreamSubscription<List<ItemWithOwner>> subscription;
   List<ItemWithOwner> items;
 
@@ -82,8 +83,7 @@ class SelectedItemsWidgetState extends State<SelectedItemsWidget> {
           uppercase: true,
         ),
         onPressed: () async {
-          InventoryService()
-              .changeMultipleLockState(lockableItems.toList(), true);
+          inventory.changeMultipleLockState(lockableItems.toList(), true);
           setState(() {});
         },
       ));
@@ -96,8 +96,7 @@ class SelectedItemsWidgetState extends State<SelectedItemsWidget> {
           uppercase: true,
         ),
         onPressed: () async {
-          InventoryService()
-              .changeMultipleLockState(unlockableItems.toList(), false);
+          inventory.changeMultipleLockState(unlockableItems.toList(), false);
           setState(() {});
         },
       ));

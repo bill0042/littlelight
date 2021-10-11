@@ -8,18 +8,17 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
+import 'package:little_light/core/providers/inventory/transfer_destination.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
 import 'package:little_light/screens/quick_transfer.screen.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/inventory/inventory.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/selection/selection.service.dart';
-
 import 'package:little_light/utils/item_with_owner.dart';
-
 import 'package:little_light/widgets/item_list/items/armor/armor_inventory_item.widget.dart';
 import 'package:little_light/widgets/item_list/items/armor/medium_armor_inventory_item.widget.dart';
 import 'package:little_light/widgets/item_list/items/armor/minimal_armor_inventory_item.widget.dart';
@@ -59,7 +58,7 @@ class InventoryItemWrapperWidget extends ConsumerStatefulWidget {
 }
 
 class InventoryItemWrapperWidgetState<T extends InventoryItemWrapperWidget>
-    extends ConsumerState<T> with UserSettingsConsumerState {
+    extends ConsumerState<T> with UserSettingsConsumerState, InventoryConsumerState {
   DestinyInventoryItemDefinition definition;
   String uniqueId;
   bool selected = false;
@@ -222,7 +221,7 @@ class InventoryItemWrapperWidgetState<T extends InventoryItemWrapperWidget>
       ),
     );
     if (item != null) {
-      InventoryService().transfer(item.item, item.ownerId,
+      inventory.transfer(item.item, item.ownerId,
           ItemDestination.Character, widget.characterId);
     }
   }

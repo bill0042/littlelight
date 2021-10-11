@@ -2,19 +2,17 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
+import 'package:little_light/core/providers/inventory/transfer_destination.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/models/loadout.dart';
-import 'package:little_light/services/inventory/inventory.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
-
 import 'package:little_light/widgets/common/equip_on_character.button.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
-
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/option_sheets/free_slots_slider.widget.dart';
 
 class LoadoutDestinationsWidget extends ConsumerStatefulWidget {
-  final InventoryService inventory = InventoryService();
   final ProfileService profile = ProfileService();
   final Loadout loadout;
   LoadoutDestinationsWidget(this.loadout, {Key key}) : super(key: key);
@@ -27,7 +25,7 @@ class LoadoutDestinationsWidget extends ConsumerStatefulWidget {
 
 class LoadoutDestinationsWidgetState
     extends ConsumerState<LoadoutDestinationsWidget>
-    with UserSettingsConsumerState {
+    with UserSettingsConsumerState, InventoryConsumerState {
   int freeSlots = 0;
 
   @override
@@ -126,7 +124,7 @@ class LoadoutDestinationsWidgetState
     switch (destination.action) {
       case InventoryAction.Equip:
         {
-          widget.inventory.transferLoadout(
+          inventory.transferLoadout(
               widget.loadout,
               destination.characterId,
               true,
@@ -136,7 +134,7 @@ class LoadoutDestinationsWidgetState
         }
       case InventoryAction.Transfer:
         {
-          widget.inventory.transferLoadout(
+          inventory.transferLoadout(
               widget.loadout,
               destination.characterId,
               false,

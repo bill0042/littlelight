@@ -1,18 +1,14 @@
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
-
 import 'package:flutter/material.dart';
-
-import 'package:little_light/services/inventory/inventory.service.dart';
+import 'package:little_light/core/providers/inventory/transfer_destination.dart';
 import 'package:little_light/widgets/common/equip_on_character.button.dart';
-
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/transfer_destinations/base_transfer_destinations.widget.dart';
 
 class ScreenshotTransferDestinationsWidget
     extends BaseTransferDestinationsWidget {
-  final InventoryService inventory = InventoryService();
   final double pixelSize;
   ScreenshotTransferDestinationsWidget(
       {DestinyItemComponent item,

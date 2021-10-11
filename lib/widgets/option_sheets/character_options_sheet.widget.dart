@@ -10,6 +10,8 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
+import 'package:little_light/core/providers/inventory/transfer_destination.dart';
 import 'package:little_light/core/providers/littlelight_data/littlelight_data.consumer.dart';
 import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
@@ -17,7 +19,6 @@ import 'package:little_light/models/game_data.dart';
 import 'package:little_light/models/loadout.dart';
 import 'package:little_light/screens/edit_loadout.screen.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/inventory/inventory.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/inventory_utils.dart';
@@ -44,7 +45,7 @@ class CharacterOptionsSheet extends ConsumerStatefulWidget {
 }
 
 class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
-    with UserSettingsConsumerState, LoadoutsConsumerState, LittleLightDataConsumerState {
+    with UserSettingsConsumerState, LoadoutsConsumerState, LittleLightDataConsumerState, InventoryConsumerState {
   Map<int, DestinyItemComponent> maxLightLoadout;
   Map<int, DestinyItemComponent> underAverageSlots;
   double maxLight;
@@ -283,7 +284,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
                 loadout.addEquippedItem(item, def);
               }
             }
-            InventoryService().transferLoadout(
+            inventory.transferLoadout(
                 loadout.loadout, widget.character.characterId, true);
           },
         )),
@@ -357,7 +358,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
                         ),
                         character: widget.character,
                         loadouts: loadouts,
-                        onSelect: (loadout) => InventoryService()
+                        onSelect: (loadout) => inventory
                             .transferLoadout(
                                 loadout,
                                 widget.character.characterId,
@@ -387,7 +388,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
                         ),
                         character: widget.character,
                         loadouts: loadouts,
-                        onSelect: (loadout) => InventoryService()
+                        onSelect: (loadout) => inventory
                             .transferLoadout(
                                 loadout,
                                 widget.character.characterId,
@@ -485,7 +486,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
       ),
       onTap: () {
         Navigator.of(context).pop();
-        InventoryService().transferMultiple(
+        inventory.transferMultiple(
             itemsInPostmaster
                 .map((i) => ItemWithOwner(i, widget.character.characterId))
                 .toList(),
@@ -617,7 +618,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
       randomLoadout.addEquippedItem(item, itemDef);
     }
 
-    InventoryService().transferLoadout(
+    inventory.transferLoadout(
         randomLoadout.loadout, widget.character.characterId, true);
   }
 

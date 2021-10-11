@@ -3,8 +3,10 @@ import 'package:bungie_api/enums/destiny_class.dart';
 import 'package:bungie_api/models/destiny_inventory_bucket_definition.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
+import 'package:little_light/core/providers/inventory/transfer_destination.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/inventory/inventory.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/selection/selection.service.dart';
@@ -13,8 +15,8 @@ import 'package:little_light/widgets/common/equip_on_character.button.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
-class MultiselectManagementBlockWidget extends StatelessWidget {
-  final InventoryService inventory = InventoryService();
+class MultiselectManagementBlockWidget extends ConsumerWidget
+    with InventoryConsumerWidget {
   final List<ItemWithOwner> items;
   MultiselectManagementBlockWidget({Key key, this.items})
       : super(
@@ -22,28 +24,39 @@ class MultiselectManagementBlockWidget extends StatelessWidget {
         );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           transferDestinations.length > 0
               ? Expanded(
-                  child: buildEquippingBlock(context, "Transfer",
-                      transferDestinations, Alignment.centerLeft))
+                  child: buildEquippingBlock(
+                  context,
+                  ref,
+                  title: "Transfer",
+                  destinations: transferDestinations,
+                  align: Alignment.centerLeft,
+                ))
               : null,
           equipDestinations.length > 0
-              ? buildEquippingBlock(
-                  context, "Equip", equipDestinations, Alignment.centerRight)
+              ? buildEquippingBlock(context, ref,
+                  title: "Equip",
+                  destinations: equipDestinations,
+                  align: Alignment.centerRight)
               : null
         ].where((value) => value != null).toList(),
       ),
     );
   }
 
-  Widget buildEquippingBlock(BuildContext context, String title,
-      List<TransferDestination> destinations,
-      [Alignment align = Alignment.centerRight]) {
+  Widget buildEquippingBlock(
+    BuildContext context,
+    WidgetRef ref, {
+    String title,
+    List<TransferDestination> destinations,
+    Alignment align = Alignment.centerRight,
+  }) {
     return Stack(children: <Widget>[
       Positioned(right: 0, left: 0, child: buildLabel(context, title, align)),
       Column(
@@ -52,7 +65,7 @@ class MultiselectManagementBlockWidget extends StatelessWidget {
             : CrossAxisAlignment.start,
         children: <Widget>[
           Opacity(opacity: 0, child: buildLabel(context, title)),
-          buttons(context, destinations, align)
+          buttons(context, ref, destinations: destinations, align: align)
         ],
       )
     ]);
@@ -75,8 +88,12 @@ class MultiselectManagementBlockWidget extends StatelessWidget {
         ));
   }
 
-  Widget buttons(BuildContext context, List<TransferDestination> destinations,
-      [Alignment align = Alignment.centerRight]) {
+  Widget buttons(
+    BuildContext context,
+    WidgetRef ref, {
+    List<TransferDestination> destinations,
+    Alignment align = Alignment.centerRight,
+  }) {
     return Container(
         alignment: align,
         padding: EdgeInsets.all(8),
@@ -90,16 +107,21 @@ class MultiselectManagementBlockWidget extends StatelessWidget {
                     characterId: destination.characterId,
                     type: destination.type,
                     onTap: () {
-                      transferTap(destination, context);
+                      transferTap(context, ref, destination: destination);
                     }))
                 .toList()));
   }
 
-  transferTap(TransferDestination destination, BuildContext context) async {
+  transferTap(
+    BuildContext context,
+    WidgetRef ref, {
+    TransferDestination destination,
+  }) async {
     switch (destination.action) {
       case InventoryAction.Equip:
         {
-          inventory.equipMultiple(List.from(items), destination.characterId);
+          inventory(ref)
+              .equipMultiple(List.from(items), destination.characterId);
           SelectionService().clear();
           break;
         }
@@ -109,7 +131,7 @@ class MultiselectManagementBlockWidget extends StatelessWidget {
         }
       case InventoryAction.Transfer:
         {
-          inventory.transferMultiple(
+          inventory(ref).transferMultiple(
               List.from(items), destination.type, destination.characterId);
           SelectionService().clear();
           break;

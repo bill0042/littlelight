@@ -47,7 +47,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen>
       }
     }
     setState(() {});
-    collaborators = await LittleLightDataService().getCollaborators();
+    collaborators = await littlelightData.getCollaborators();
     collaborators.supporters.shuffle();
     this.setState(() {});
   }

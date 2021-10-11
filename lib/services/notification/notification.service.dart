@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bungie_api/models/destiny_item_component.dart';
-import 'package:little_light/services/inventory/inventory.service.dart';
+import 'package:little_light/core/providers/inventory/transfer_error.dart';
 
 enum NotificationType {
   localUpdate,

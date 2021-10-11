@@ -13,6 +13,8 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:bungie_api/enums/bucket_scope.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/global_container/global.container.dart';
 import 'package:little_light/models/loadout.dart';
 import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
@@ -22,41 +24,22 @@ import 'package:little_light/services/profile/profile.service.dart';
 import 'package:bungie_api/enums/bucket_category.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 
-enum ItemDestination { Character, Inventory, Vault }
-enum TransferErrorCode {
-  cantFindSubstitute,
-  cantPullFromPostmaster,
-  cantMoveToVault,
-  cantMoveToCharacter,
-  cantEquip,
-  cantUnequip
-}
+import 'transfer_destination.dart';
+import 'transfer_error.dart';
 
-class TransferError {
-  final TransferErrorCode code;
-  final DestinyItemComponent item;
-  final ItemDestination destination;
-  final String characterId;
 
-  TransferError(this.code, [this.item, this.destination, this.characterId]);
-}
+final inventoryProvider =
+    Provider<Inventory>((ref) => Inventory._(ref));
 
-class TransferDestination {
-  final String characterId;
-  final ItemDestination type;
-  final InventoryAction action;
+get globalInventoryProvider => globalContainer.read(inventoryProvider);
 
-  TransferDestination(this.type,
-      {this.action = InventoryAction.Transfer, this.characterId});
-}
-
-enum InventoryAction { Transfer, Equip, Unequip, Pull }
-
-class InventoryService {
+class Inventory {
   final api = BungieApiService();
   final profile = ProfileService();
   final manifest = ManifestService();
   final _broadcaster = NotificationService();
+
+  Inventory._(ProviderRef _ref);
 
   transfer(DestinyItemComponent item, String sourceCharacterId,
       ItemDestination destination,
