@@ -1,6 +1,6 @@
 import 'package:bungie_api/models/destiny_character_component.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
+import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/widgets/item_list/vault_item_list.widget.dart';
 
 class LargeScreenVaultListWidget extends StatefulWidget {

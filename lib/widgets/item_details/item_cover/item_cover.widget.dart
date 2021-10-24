@@ -1,21 +1,21 @@
 import 'dart:math';
 import 'dart:ui';
+
 import 'package:bungie_api/enums/destiny_item_type.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:little_light/widgets/common/definition_provider.widget.dart';
-import 'package:little_light/widgets/common/masterwork_counter/base_masterwork_counter.widget.dart';
-import 'package:little_light/widgets/common/queued_network_image.widget.dart';
-import 'package:flutter/material.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.provider.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateless_item.widget.dart';
+import 'package:little_light/widgets/common/definition_provider.widget.dart';
 import 'package:little_light/widgets/common/item_icon/item_icon.widget.dart';
 import 'package:little_light/widgets/common/item_name_bar/item_name_bar.widget.dart';
-
+import 'package:little_light/widgets/common/masterwork_counter/base_masterwork_counter.widget.dart';
+import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ItemCoverWidget extends BaseDestinyStatelessItemWidget {
@@ -47,9 +47,14 @@ class ItemCoverWidget extends BaseDestinyStatelessItemWidget {
     }
     return SliverPersistentHeader(
         pinned: true,
-        delegate: ItemCoverDelegate(
-            item, definition, instanceInfo, tag, uniqueId,
-            minHeight: minHeight, maxHeight: maxHeight));
+        delegate: ItemCoverDelegate(ref,
+            item: item,
+            definition: definition,
+            instanceInfo: instanceInfo,
+            tag: tag,
+            uniqueId: uniqueId,
+            minHeight: minHeight,
+            maxHeight: maxHeight));
   }
 }
 
@@ -61,11 +66,20 @@ class ItemCoverDelegate extends SliverPersistentHeaderDelegate {
   double maxHeight;
   String tag;
   String uniqueId;
+  WidgetRef ref;
+
+  BungieApiConfig get apiConfig => ref.read(bungieApiConfigProvider);
 
   ItemCoverDelegate(
-      this.item, this.definition, this.instanceInfo, this.tag, this.uniqueId,
-      {this.minHeight = 50, this.maxHeight = 200})
-      : super();
+    this.ref, {
+    this.item,
+    this.definition,
+    this.instanceInfo,
+    this.tag,
+    this.uniqueId,
+    this.minHeight = 50,
+    this.maxHeight = 200,
+  }) : super();
 
   @override
   Widget build(
@@ -199,7 +213,7 @@ class ItemCoverDelegate extends SliverPersistentHeaderDelegate {
         child: Opacity(
             opacity: opacity,
             child: QueuedNetworkImage(
-              imageUrl: BungieApiService.url(definition.secondaryIcon),
+              imageUrl: apiConfig.bungieUrl(definition.secondaryIcon),
               fit: BoxFit.fitWidth,
             )));
   }
@@ -231,7 +245,7 @@ class ItemCoverDelegate extends SliverPersistentHeaderDelegate {
           item.overrideStyleItemHash, (def) {
         if (def?.plug?.isDummyPlug ?? false) {
           return QueuedNetworkImage(
-              imageUrl: BungieApiService.url(imgUrl),
+              imageUrl: apiConfig.bungieUrl(imgUrl),
               fit: BoxFit.cover,
               placeholder: Shimmer.fromColors(
                   baseColor: Colors.blueGrey.shade500,
@@ -240,7 +254,7 @@ class ItemCoverDelegate extends SliverPersistentHeaderDelegate {
         }
 
         return QueuedNetworkImage(
-            imageUrl: BungieApiService.url(def?.screenshot ?? imgUrl),
+            imageUrl: apiConfig.bungieUrl(def?.screenshot ?? imgUrl),
             fit: BoxFit.cover,
             placeholder: Shimmer.fromColors(
                 baseColor: Colors.blueGrey.shade500,
@@ -249,7 +263,7 @@ class ItemCoverDelegate extends SliverPersistentHeaderDelegate {
       });
     }
     return QueuedNetworkImage(
-        imageUrl: BungieApiService.url(imgUrl),
+        imageUrl: apiConfig.bungieUrl(imgUrl),
         fit: BoxFit.cover,
         placeholder: Shimmer.fromColors(
             baseColor: Colors.blueGrey.shade500,

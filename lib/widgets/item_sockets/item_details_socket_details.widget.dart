@@ -7,7 +7,7 @@ import 'package:bungie_api/models/destiny_item_socket_category_definition.dart';
 import 'package:bungie_api/models/destiny_material_requirement_set_definition.dart';
 import 'package:bungie_api/models/destiny_stat_definition.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
@@ -74,7 +74,7 @@ class ItemDetailsSocketDetailsWidgetState
             height: 48,
             child: QueuedNetworkImage(
                 imageUrl:
-                    BungieApiService.url(definition?.displayProperties?.icon))),
+                    apiConfig.bungieUrl(definition?.displayProperties?.icon))),
         Container(width: 8),
         Expanded(
             child: Column(

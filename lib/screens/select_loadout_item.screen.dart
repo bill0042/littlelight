@@ -2,8 +2,8 @@ import 'package:bungie_api/enums/destiny_class.dart';
 import 'package:bungie_api/models/destiny_inventory_bucket_definition.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:flutter/material.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/screens/search.screen.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:little_light/utils/item_filters/avoid_instance_ids_filter.dart';
 import 'package:little_light/utils/item_filters/class_type_filter.dart';
 import 'package:little_light/utils/item_filters/item_bucket_filter.dart';
@@ -40,7 +40,7 @@ class SelectLoadoutItemScreen extends SearchScreen {
 }
 
 class SelectLoadoutItemScreenState
-    extends SearchScreenState<SelectLoadoutItemScreen> {
+    extends SearchScreenState<SelectLoadoutItemScreen> with BungieApiConfigConsumerState {
   TextFilter get textFilter {
     return [controller.preFilters, controller.filters, controller.postFilters]
         .expand((element) => element)
@@ -92,7 +92,7 @@ class SelectLoadoutItemScreenState
         constraints: BoxConstraints.expand(),
         child: QueuedNetworkImage(
             imageUrl:
-                BungieApiService.url(widget.emblemDefinition.secondarySpecial),
+                apiConfig.bungieUrl(widget.emblemDefinition.secondarySpecial),
             fit: BoxFit.cover,
             alignment: Alignment(-.8, 0)));
   }

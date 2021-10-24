@@ -1,6 +1,7 @@
 import 'dart:math' as Math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:little_light/widgets/inventory_tabs/inventory_notification.widget.dart';
 import 'package:little_light/widgets/inventory_tabs/selected_items.widget.dart';
@@ -11,7 +12,7 @@ import 'package:little_light/widgets/search/search_filters/text_search_filter.wi
 import 'package:little_light/widgets/search/search_list.widget.dart';
 import 'package:little_light/widgets/search/search_sort_menu.widget.dart';
 
-class SearchScreen extends StatefulWidget {
+class SearchScreen extends ConsumerStatefulWidget {
   final SearchController controller;
 
   SearchScreen({
@@ -25,7 +26,7 @@ class SearchScreen extends StatefulWidget {
 
 enum SearchDrawerMode { Sort, Filter }
 
-class SearchScreenState<T extends SearchScreen> extends State<T> {
+class SearchScreenState<T extends SearchScreen> extends ConsumerState<T> {
   SearchDrawerMode drawerMode = SearchDrawerMode.Filter;
   SearchController _controller;
   SearchController get controller => _controller ?? widget.controller;

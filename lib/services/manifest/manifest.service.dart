@@ -1,13 +1,15 @@
 import 'dart:convert';
+import 'dart:io';
+
+import 'package:archive/archive.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_manifest.dart';
 import 'package:bungie_api/responses/destiny_manifest_response.dart';
 import 'package:flutter/foundation.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
-import 'package:little_light/services/bungie_api/enums/definition_table_names.enum.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api.provider.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.provider.dart';
+import 'package:little_light/core/providers/bungie_api/enums/definition_table_names.enum.dart';
 import 'package:little_light/services/storage/storage.service.dart';
-import 'dart:io';
-import 'package:archive/archive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 
@@ -16,7 +18,8 @@ typedef DownloadProgress = void Function(int downloaded, int total);
 class ManifestService {
   sqflite.Database _db;
   DestinyManifest _manifestInfo;
-  final BungieApiService _api = BungieApiService();
+  final BungieApi _api = globalBungieApiProvider;
+  final BungieApiConfig _apiConfig = globalBungieApiConfigProvider;
   final Map<String, dynamic> _cached = Map();
   static final ManifestService _singleton = ManifestService._internal();
 
@@ -77,7 +80,7 @@ class ManifestService {
     DestinyManifest info = await loadManifestInfo();
     String language = StorageService.getLanguage();
     String path = info.mobileWorldContentPaths[language];
-    String url = BungieApiService.url(path);
+    String url = _apiConfig.bungieUrl(path);
     String localPath = await _localPath;
     HttpClient httpClient = HttpClient();
     HttpClientRequest req = await httpClient.getUrl(Uri.parse(url));

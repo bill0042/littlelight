@@ -8,7 +8,9 @@ import 'package:bungie_api/models/destiny_vendor_category.dart';
 import 'package:bungie_api/models/destiny_vendor_item_definition.dart';
 import 'package:bungie_api/models/destiny_vendor_sale_item_component.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
+
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/profile/vendors.service.dart';
@@ -17,7 +19,7 @@ import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:little_light/widgets/vendors/purchasable_item.widget.dart';
 
-class VendorDetailsScreen extends StatefulWidget {
+class VendorDetailsScreen extends ConsumerStatefulWidget {
   final ProfileService profile = ProfileService();
   final ManifestService manifest = ManifestService();
   final String characterId;
@@ -30,7 +32,7 @@ class VendorDetailsScreen extends StatefulWidget {
   VendorDetailsScreenState createState() => VendorDetailsScreenState();
 }
 
-class VendorDetailsScreenState extends State<VendorDetailsScreen> {
+class VendorDetailsScreenState extends ConsumerState<VendorDetailsScreen> with BungieApiConfigConsumerState{
   DestinyInventoryItemDefinition emblemDefinition;
   DestinyVendorDefinition definition;
   List<DestinyVendorCategory> _categories;
@@ -89,7 +91,7 @@ class VendorDetailsScreenState extends State<VendorDetailsScreen> {
           QueuedNetworkImage(
             fit: BoxFit.fitHeight,
             imageUrl:
-                BungieApiService.url(definition.displayProperties.largeIcon),
+                apiConfig.bungieUrl(definition.displayProperties.largeIcon),
           ),
           Positioned.fill(
               child: Container(
@@ -113,7 +115,7 @@ class VendorDetailsScreenState extends State<VendorDetailsScreen> {
               aspectRatio: 1,
               child: QueuedNetworkImage(
                 imageUrl:
-                    BungieApiService.url(definition.displayProperties.mapIcon),
+                    apiConfig.bungieUrl(definition.displayProperties.mapIcon),
               ),
             )),
         Container(

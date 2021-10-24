@@ -7,13 +7,13 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
+import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
 import 'package:little_light/core/providers/translations/translations.consumer.dart';
 import 'package:little_light/models/loadout.dart';
 import 'package:little_light/screens/select_loadout_background.screen.dart';
 import 'package:little_light/screens/select_loadout_item.screen.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
-import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/utils/item_with_owner.dart';
@@ -34,7 +34,7 @@ class EditLoadoutScreen extends ConsumerStatefulWidget {
 }
 
 class EditLoadoutScreenState extends ConsumerState<EditLoadoutScreen>
-    with TranslationsConsumerState, LoadoutsConsumerState {
+    with TranslationsConsumerState, LoadoutsConsumerState, BungieApiConfigConsumerState {
   bool changed = false;
   LoadoutItemIndex _itemIndex;
   DestinyInventoryItemDefinition emblemDefinition;
@@ -278,7 +278,7 @@ class EditLoadoutScreenState extends ConsumerState<EditLoadoutScreen>
     return Container(
         constraints: BoxConstraints.expand(),
         child: QueuedNetworkImage(
-            imageUrl: BungieApiService.url(emblemDefinition.secondarySpecial),
+            imageUrl: apiConfig.bungieUrl(emblemDefinition.secondarySpecial),
             fit: BoxFit.cover,
             alignment: Alignment(-.8, 0)));
   }

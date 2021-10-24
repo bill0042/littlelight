@@ -5,10 +5,9 @@ import 'package:bungie_api/models/destiny_faction_progression.dart';
 import 'package:bungie_api/models/destiny_progression_definition.dart';
 import 'package:bungie_api/models/destiny_progression_step_definition.dart';
 import 'package:bungie_api/models/destiny_vendor_definition.dart';
-
 import 'package:flutter/material.dart';
-
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
@@ -16,7 +15,7 @@ import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/flutter/filled_diamond_progress_indicator.dart';
 
-class FactionRankItemWidget extends StatefulWidget {
+class FactionRankItemWidget extends ConsumerStatefulWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
   final ManifestService manifest = ManifestService();
@@ -31,7 +30,8 @@ class FactionRankItemWidget extends StatefulWidget {
 }
 
 class FactionRankItemWidgetState<T extends FactionRankItemWidget>
-    extends State<T> with AutomaticKeepAliveClientMixin {
+    extends ConsumerState<T>
+    with AutomaticKeepAliveClientMixin, BungieApiConfigConsumerState {
   DestinyProgressionDefinition definition;
   DestinyFactionDefinition factionDefinition;
   DestinyVendorDefinition vendorDefinition;
@@ -112,7 +112,7 @@ class FactionRankItemWidgetState<T extends FactionRankItemWidget>
                 child: Stack(fit: StackFit.passthrough, children: [
                   QueuedNetworkImage(
                     fit: BoxFit.fitHeight,
-                    imageUrl: BungieApiService.url(
+                    imageUrl: apiConfig.bungieUrl(
                         vendorDefinition?.displayProperties?.largeIcon),
                   ),
                   Positioned.fill(
@@ -195,8 +195,8 @@ class FactionRankItemWidgetState<T extends FactionRankItemWidget>
               child: Container(
                   padding: EdgeInsets.all(4),
                   child: QueuedNetworkImage(
-                    imageUrl: BungieApiService.url(
-                        factionDefinition?.displayProperties?.icon),
+                    imageUrl: apiConfig
+                        .bungieUrl(factionDefinition?.displayProperties?.icon),
                   )))
         ]));
   }

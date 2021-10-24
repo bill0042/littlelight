@@ -7,7 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:little_light/core/providers/item_notes/item_notes.provider.dart';
 import 'package:little_light/core/providers/wishlists/wishlists.provider.dart';
 import 'package:little_light/models/wish_list.dart';
-import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
+import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateless_item.widget.dart';
 import 'package:little_light/widgets/common/item_icon/item_icon.widget.dart';
@@ -23,7 +23,7 @@ mixin InventoryItemMixin implements BaseDestinyStatelessItemWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Stack(
       children: <Widget>[
-        background(context),
+        background(context, ref),
         positionedNameBar(context),
         categoryName(context),
         primaryStatWidget(context),
@@ -151,7 +151,7 @@ mixin InventoryItemMixin implements BaseDestinyStatelessItemWidget {
             right: 2));
   }
 
-  background(BuildContext context) {
+  background(BuildContext context, WidgetRef ref) {
     return Positioned(
         top: 0,
         left: 0,

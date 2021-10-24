@@ -2,12 +2,14 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_objective_definition.dart';
 import 'package:bungie_api/models/destiny_objective_progress.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
+
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 
-class MasterworkCounterWidget extends StatefulWidget {
+class MasterworkCounterWidget extends ConsumerStatefulWidget {
   final ManifestService manifest = ManifestService();
   final ProfileService profile = ProfileService();
   final DestinyItemComponent item;
@@ -20,8 +22,8 @@ class MasterworkCounterWidget extends StatefulWidget {
   }
 }
 
-class MasterworkCounterWidgetState extends State<MasterworkCounterWidget>
-    with AutomaticKeepAliveClientMixin {
+class MasterworkCounterWidgetState extends ConsumerState<MasterworkCounterWidget>
+    with AutomaticKeepAliveClientMixin, BungieApiConfigConsumerState {
   DestinyObjectiveProgress masterworkObjective;
   DestinyObjectiveDefinition masterworkObjectiveDefinition;
 
@@ -65,7 +67,7 @@ class MasterworkCounterWidgetState extends State<MasterworkCounterWidget>
               width: 26,
               height: 26,
               child: QueuedNetworkImage(
-                  imageUrl: BungieApiService.url(
+                  imageUrl: apiConfig.bungieUrl(
                       masterworkObjectiveDefinition.displayProperties.icon)),
             ),
             Container(

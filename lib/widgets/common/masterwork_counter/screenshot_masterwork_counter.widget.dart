@@ -1,7 +1,7 @@
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/widgets/common/masterwork_counter/base_masterwork_counter.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
@@ -53,7 +53,7 @@ class ScreenshotMasterworkCounterState extends BaseMasterworkCounterWidgetState<
       width: widget.pixelSize * 24,
       height: widget.pixelSize * 24,
       child: QueuedNetworkImage(
-          imageUrl: BungieApiService.url(
+          imageUrl: apiConfig.bungieUrl(
               masterworkObjectiveDefinition.displayProperties.icon)),
     );
   }

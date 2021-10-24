@@ -4,6 +4,7 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:bungie_api/models/destiny_item_talent_grid_component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/item_list/items/base/medium_base_inventory_item.widget.dart';
 import 'package:little_light/widgets/item_list/items/subclass/subclass_properties.mixin.dart';
@@ -30,7 +31,7 @@ class MediumSubclassInventoryItemWidget extends MediumBaseInventoryItemWidget
   }
 
   @override
-  background(BuildContext context) {
+  background(BuildContext context, WidgetRef ref) {
     var damageTypeColor =
         DestinyData.getDamageTypeColor(definition?.talentGrid?.hudDamageType);
     BoxDecoration decoration = BoxDecoration(

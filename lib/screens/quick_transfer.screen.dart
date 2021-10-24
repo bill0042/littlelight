@@ -2,8 +2,8 @@ import 'package:bungie_api/enums/bucket_scope.dart';
 import 'package:bungie_api/enums/destiny_class.dart';
 import 'package:bungie_api/models/destiny_inventory_bucket_definition.dart';
 import 'package:flutter/material.dart';
+import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/screens/search.screen.dart';
-import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 
 import 'package:little_light/utils/item_filters/class_type_filter.dart';

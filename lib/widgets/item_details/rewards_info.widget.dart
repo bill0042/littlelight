@@ -5,8 +5,9 @@ import 'package:bungie_api/models/destiny_item_quantity.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateless_item.widget.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
@@ -15,7 +16,8 @@ import 'package:little_light/widgets/common/translated_text.widget.dart';
 
 import 'package:little_light/widgets/item_list/items/weapon/weapon_inventory_item.widget.dart';
 
-class RewardsInfoWidget extends BaseDestinyStatelessItemWidget {
+class RewardsInfoWidget extends BaseDestinyStatelessItemWidget
+    with BungieApiConfigConsumer {
   RewardsInfoWidget(
       DestinyItemComponent item,
       DestinyInventoryItemDefinition definition,
@@ -34,8 +36,10 @@ class RewardsInfoWidget extends BaseDestinyStatelessItemWidget {
     var items =
         definition.value?.itemValue?.where((i) => i.itemHash != null)?.toList();
     if ((items?.length ?? 0) == 0) return Container();
-    return Column(
-        children: [buildHeader(context), buildRewardItems(context, items)]);
+    return Column(children: [
+      buildHeader(context),
+      buildRewardItems(context, ref, items: items)
+    ]);
   }
 
   Widget buildHeader(BuildContext context) {
@@ -48,13 +52,16 @@ class RewardsInfoWidget extends BaseDestinyStatelessItemWidget {
         ));
   }
 
-  Widget buildRewardItems(
-      BuildContext context, List<DestinyItemQuantity> items) {
+  Widget buildRewardItems(BuildContext context, WidgetRef ref,
+      {List<DestinyItemQuantity> items}) {
     return Column(
-        children: items.map((item) => buildRewardItem(context, item)).toList());
+        children: items
+            .map((item) => buildRewardItem(context, ref, rewardItem: item))
+            .toList());
   }
 
-  Widget buildRewardItem(BuildContext context, DestinyItemQuantity rewardItem) {
+  Widget buildRewardItem(BuildContext context, WidgetRef ref,
+      {DestinyItemQuantity rewardItem}) {
     return DefinitionProviderWidget<DestinyInventoryItemDefinition>(
         rewardItem.itemHash, (def) {
       if (def.equippable ?? false) {
@@ -93,7 +100,8 @@ class RewardsInfoWidget extends BaseDestinyStatelessItemWidget {
           child: Row(children: [
             Container(
                 child: QueuedNetworkImage(
-                  imageUrl: BungieApiService.url(def.displayProperties.icon),
+                  imageUrl:
+                      apiConfig(ref).bungieUrl(def.displayProperties.icon),
                 ),
                 width: 24,
                 height: 24),

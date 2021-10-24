@@ -1,7 +1,7 @@
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+
 import 'package:little_light/widgets/presentation_nodes/collectible_item.widget.dart';
 
 class NestedCollectibleItemWidget extends CollectibleItemWidget {
@@ -38,7 +38,7 @@ class NestedCollectibleItemWidgetState extends CollectibleItemWidgetState {
   Widget buildIcon(BuildContext context) {
     if (definition?.displayProperties?.icon == null) return Container();
     return QueuedNetworkImage(
-        imageUrl: BungieApiService.url(definition.displayProperties.icon));
+        imageUrl: apiConfig.bungieUrl(definition.displayProperties.icon));
   }
 
   bool get unlocked {

@@ -1,14 +1,15 @@
 import 'package:bungie_api/models/destiny_collectible_definition.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
-import 'package:little_light/utils/shimmer_helper.dart';
-import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/services/auth/auth.service.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/utils/shimmer_helper.dart';
+import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 
-class LoadoutBackgroundItemWidget extends StatefulWidget {
+class LoadoutBackgroundItemWidget extends ConsumerStatefulWidget {
   final ManifestService manifest = ManifestService();
   final ProfileService profile = ProfileService();
   final AuthService auth = AuthService();
@@ -22,7 +23,8 @@ class LoadoutBackgroundItemWidget extends StatefulWidget {
 }
 
 class LoadoutBackgroundItemWidgetState
-    extends State<LoadoutBackgroundItemWidget> {
+    extends ConsumerState<LoadoutBackgroundItemWidget>
+    with BungieApiConfigConsumerState {
   DestinyInventoryItemDefinition definition;
 
   @override
@@ -54,7 +56,7 @@ class LoadoutBackgroundItemWidgetState
 
   buildEmblemBackground(BuildContext context) {
     if (definition == null) return buildPlaceholder(context);
-    String url = BungieApiService.url(definition.secondarySpecial);
+    String url = apiConfig.bungieUrl(definition.secondarySpecial);
     if (url == null) return buildPlaceholder(context);
     return Stack(children: [
       Positioned.fill(

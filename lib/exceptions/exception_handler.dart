@@ -6,7 +6,7 @@ import 'package:bungie_api/enums/platform_error_codes.dart';
 import 'package:bungie_api/helpers/oauth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/bungie_api/bungie_api.exception.dart';
+import 'package:little_light/core/providers/bungie_api/exceptions/bungie_api.exception.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 

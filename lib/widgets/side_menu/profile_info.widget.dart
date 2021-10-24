@@ -5,6 +5,8 @@ import 'package:bungie_api/models/general_user.dart';
 import 'package:bungie_api/models/group_user_info_card.dart';
 import 'package:bungie_api/models/user_membership_data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/screens/initial.screen.dart';
 import 'package:little_light/services/auth/auth.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
@@ -12,7 +14,7 @@ import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/models/character_sort_parameter.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+
 import 'package:little_light/utils/platform_data.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:shimmer/shimmer.dart';
@@ -20,7 +22,7 @@ import 'package:timeago/timeago.dart' as timeago;
 
 const Duration _kExpand = Duration(milliseconds: 200);
 
-class ProfileInfoWidget extends StatefulWidget {
+class ProfileInfoWidget extends ConsumerStatefulWidget {
   final AuthService auth = AuthService();
   final ProfileService profile = ProfileService();
   final List<Widget> menuItems;
@@ -32,8 +34,8 @@ class ProfileInfoWidget extends StatefulWidget {
   }
 }
 
-class ProfileInfoState extends State<ProfileInfoWidget>
-    with SingleTickerProviderStateMixin {
+class ProfileInfoState extends ConsumerState<ProfileInfoWidget>
+    with SingleTickerProviderStateMixin, BungieApiConfigConsumerState {
   GeneralUser bungieNetUser;
   GroupUserInfoCard selectedMembership;
 
@@ -147,7 +149,7 @@ class ProfileInfoState extends State<ProfileInfoWidget>
             Theme.of(context).primaryColor, .3),
         child: Container(color: Colors.white));
     if (bungieNetUser?.profileThemeName != null) {
-      String url = BungieApiService.url(
+      String url = apiConfig.bungieUrl(
           "/img/UserThemes/${bungieNetUser.profileThemeName}/mobiletheme.jpg");
       return Stack(
         children: <Widget>[
@@ -232,7 +234,7 @@ class ProfileInfoState extends State<ProfileInfoWidget>
         highlightColor: Colors.grey.shade400,
         child: Container(color: Colors.white));
     if (bungieNetUser != null && bungieNetUser.profileThemeName != null) {
-      String url = BungieApiService.url(bungieNetUser.profilePicturePath);
+      String url = apiConfig.bungieUrl(bungieNetUser.profilePicturePath);
       return QueuedNetworkImage(
         imageUrl: url,
         placeholder: shimmer,

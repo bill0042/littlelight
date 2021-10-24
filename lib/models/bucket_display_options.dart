@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
+import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 
 part 'bucket_display_options.g.dart';
 

@@ -9,7 +9,8 @@ import 'package:bungie_api/models/destiny_vendor_component.dart';
 import 'package:bungie_api/models/destiny_vendor_group.dart';
 import 'package:bungie_api/models/destiny_vendor_sale_item_component.dart';
 import 'package:bungie_api/models/destiny_vendors_response.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api.provider.dart';
+
 
 import 'package:little_light/services/storage/storage.service.dart';
 
@@ -29,7 +30,7 @@ class VendorsService {
     return _singleton;
   }
   VendorsService._internal();
-  final _api = BungieApiService();
+  final _api = globalBungieApiProvider;
 
   Map<String, DestinyVendorsResponse> _vendors = {};
 

@@ -7,7 +7,8 @@ import 'package:bungie_api/helpers/oauth.dart';
 import 'package:bungie_api/models/group_user_info_card.dart';
 import 'package:bungie_api/models/user_membership_data.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api.provider.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.provider.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -15,6 +16,8 @@ import 'package:url_launcher/url_launcher.dart';
 bool initialLinkHandled = false;
 
 class AuthService {
+  BungieApi get _bungieApi => globalBungieApiProvider;
+  BungieApiConfig get _bungieApiConfig => globalBungieApiConfigProvider;
   BungieNetToken _currentToken;
   GroupUserInfoCard _currentMembership;
   UserMembershipData _membershipData;
@@ -44,7 +47,7 @@ class AuthService {
 
   Future<BungieNetToken> refreshToken(BungieNetToken token) async {
     BungieNetToken bNetToken =
-        await BungieApiService().refreshToken(token.refreshToken);
+        await _bungieApi.refreshToken(token.refreshToken);
     _saveToken(bNetToken);
     return bNetToken;
   }
@@ -85,7 +88,7 @@ class AuthService {
   }
 
   Future<BungieNetToken> requestToken(String code) async {
-    BungieNetToken token = await BungieApiService().requestToken(code);
+    BungieNetToken token = await _bungieApi.requestToken(code);
     await _saveToken(token);
     return token;
   }
@@ -118,7 +121,7 @@ class AuthService {
     String currentLanguage = StorageService.getLanguage();
     var browser = BungieAuthBrowser();
     OAuth.openOAuth(
-        browser, BungieApiService.clientId, currentLanguage, forceReauth);
+        browser, _bungieApiConfig.clientId, currentLanguage, forceReauth);
     Stream<String> _stream = linkStream;
     Completer<String> completer = Completer();
 
@@ -171,7 +174,7 @@ class AuthService {
 
   Future<UserMembershipData> updateMembershipData() async {
     UserMembershipData membershipData =
-        await BungieApiService().getMemberships();
+        await _bungieApi.getMemberships();
     var storage = StorageService.account();
     await storage.setJson(StorageKeys.membershipData, membershipData);
     return membershipData;

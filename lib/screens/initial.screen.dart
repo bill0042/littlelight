@@ -7,6 +7,8 @@ import 'package:bungie_api/models/user_membership_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api.consumer.dart';
+import 'package:little_light/core/providers/bungie_api/exceptions/bungie_api.exception.dart';
 import 'package:little_light/core/providers/env/env.consumer.dart';
 import 'package:little_light/core/providers/littlelight_api/littlelight_api.consumer.dart';
 import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
@@ -16,8 +18,6 @@ import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
 import 'package:little_light/exceptions/exception_handler.dart';
 import 'package:little_light/screens/main.screen.dart';
 import 'package:little_light/services/auth/auth.service.dart';
-import 'package:little_light/services/bungie_api/bungie_api.exception.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/destiny_settings.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
@@ -31,7 +31,6 @@ import 'package:little_light/widgets/initial_page/select_platform.widget.dart';
 import 'package:little_light/widgets/layouts/floating_content_layout.dart';
 
 class InitialScreen extends ConsumerStatefulWidget {
-  final BungieApiService apiService = BungieApiService();
   final AuthService auth = AuthService();
   final ManifestService manifest = ManifestService();
   final ProfileService profile = ProfileService();
@@ -50,7 +49,8 @@ class InitialScreenState extends FloatingContentState<InitialScreen>
         UserSettingsConsumerState,
         LoadoutsConsumerState,
         ObjectiveTrackingConsumerState,
-        LittleLightApiConsumerState {
+        LittleLightApiConsumerState,
+        BungieApiConsumer {
   @override
   void initState() {
     super.initState();
@@ -240,7 +240,7 @@ class InitialScreenState extends FloatingContentState<InitialScreen>
   showSelectMembership() async {
     this.changeContent(null, null);
     UserMembershipData membershipData =
-        await this.widget.apiService.getMemberships();
+        await bungieApi.getMemberships();
 
     if (membershipData?.destinyMemberships?.length == 1) {
       await this.widget.auth.saveMembership(

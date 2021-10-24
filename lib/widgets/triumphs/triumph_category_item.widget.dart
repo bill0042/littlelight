@@ -1,11 +1,13 @@
 import 'package:bungie_api/models/destiny_presentation_node_definition.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
+
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/utils/shimmer_helper.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 
-class TriumphCategoryItemWidget extends StatefulWidget {
+class TriumphCategoryItemWidget extends ConsumerStatefulWidget {
   final int nodeHash;
 
   TriumphCategoryItemWidget({Key key, this.nodeHash}) : super(key: key);
@@ -14,7 +16,9 @@ class TriumphCategoryItemWidget extends StatefulWidget {
       _TriumphCategoryItemWidgetState();
 }
 
-class _TriumphCategoryItemWidgetState extends State<TriumphCategoryItemWidget> {
+class _TriumphCategoryItemWidgetState
+    extends ConsumerState<TriumphCategoryItemWidget>
+    with BungieApiConfigConsumerState {
   DestinyPresentationNodeDefinition definition;
 
   @override
@@ -44,7 +48,7 @@ class _TriumphCategoryItemWidgetState extends State<TriumphCategoryItemWidget> {
         QueuedNetworkImage(
           fit: BoxFit.contain,
           alignment: Alignment.center,
-          imageUrl: BungieApiService.url(definition.originalIcon),
+          imageUrl: apiConfig.bungieUrl(definition.originalIcon),
         )
       ],
     );

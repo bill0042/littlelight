@@ -1,7 +1,7 @@
 import 'package:bungie_api/models/core_settings_configuration.dart';
 import 'package:bungie_api/models/destiny_season_definition.dart';
 import 'package:bungie_api/models/destiny_season_pass_definition.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api.provider.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 
@@ -13,7 +13,7 @@ class DestinySettingsService {
     return _singleton;
   }
   DestinySettingsService._internal();
-  final _api = BungieApiService();
+  final _api = globalBungieApiProvider;
 
   CoreSettingsConfiguration _currentSettings;
   DestinySeasonPassDefinition _currentSeasonPassDef;

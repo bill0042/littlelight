@@ -2,16 +2,18 @@ import 'package:bungie_api/models/destiny_character_component.dart';
 import 'package:bungie_api/models/destiny_character_progression_component.dart';
 import 'package:bungie_api/models/destiny_progression.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/services/profile/destiny_settings.service.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:shimmer/shimmer.dart';
 
-class TabHeaderWidget extends StatefulWidget {
+class TabHeaderWidget extends ConsumerStatefulWidget {
   final DestinyCharacterComponent character;
   final ManifestService manifest = ManifestService();
   final ProfileService profile = ProfileService();
@@ -22,7 +24,8 @@ class TabHeaderWidget extends StatefulWidget {
   TabHeaderWidgetState createState() => TabHeaderWidgetState();
 }
 
-class TabHeaderWidgetState extends State<TabHeaderWidget> {
+class TabHeaderWidgetState extends ConsumerState<TabHeaderWidget>
+    with BungieApiConfigConsumerState {
   DestinyInventoryItemDefinition emblemDefinition;
 
   DestinyCharacterProgressionComponent progression;
@@ -80,7 +83,7 @@ class TabHeaderWidgetState extends State<TabHeaderWidget> {
         height: kToolbarHeight + 8,
         child: QueuedNetworkImage(
           key: Key("secondary_overlay_${emblemDefinition.hash}"),
-          imageUrl: BungieApiService.url(emblemDefinition.secondaryOverlay),
+          imageUrl: apiConfig.bungieUrl(emblemDefinition.secondaryOverlay),
           fit: BoxFit.fill,
           placeholder: shimmer,
         ));
@@ -99,7 +102,7 @@ class TabHeaderWidgetState extends State<TabHeaderWidget> {
         color: Theme.of(context).backgroundColor,
         child: QueuedNetworkImage(
           key: Key("secondary_special_${emblemDefinition.hash}"),
-          imageUrl: BungieApiService.url(emblemDefinition.secondarySpecial),
+          imageUrl: apiConfig.bungieUrl(emblemDefinition.secondarySpecial),
           placeholder: shimmer,
           fit: BoxFit.cover,
           alignment: Alignment.center,

@@ -7,13 +7,14 @@ import 'package:bungie_api/models/destiny_record_component.dart';
 import 'package:bungie_api/models/destiny_record_definition.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/core/providers/objective_tracking/objective_tracking.consumer.dart';
 import 'package:little_light/models/tracked_objective.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:little_light/screens/record_detail.screen.dart';
 import 'package:little_light/services/auth/auth.service.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/widgets/common/objective.widget.dart';
@@ -31,7 +32,10 @@ class RecordItemWidget extends ConsumerStatefulWidget {
 }
 
 class RecordItemWidgetState extends ConsumerState<RecordItemWidget>
-    with AutomaticKeepAliveClientMixin, ObjectiveTrackingConsumerState {
+    with
+        AutomaticKeepAliveClientMixin,
+        ObjectiveTrackingConsumerState,
+        BungieApiConfigConsumerState {
   DestinyRecordDefinition _definition;
   bool isLogged = false;
   Map<int, DestinyObjectiveDefinition> objectiveDefinitions;
@@ -242,7 +246,7 @@ class RecordItemWidgetState extends ConsumerState<RecordItemWidget>
             ? Container()
             : QueuedNetworkImage(
                 imageUrl:
-                    BungieApiService.url(definition?.displayProperties?.icon)));
+                    apiConfig.bungieUrl(definition?.displayProperties?.icon)));
   }
 
   buildTitle(BuildContext context) {

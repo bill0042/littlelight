@@ -19,11 +19,12 @@ import 'package:bungie_api/models/destiny_presentation_node_component.dart';
 import 'package:bungie_api/models/destiny_profile_response.dart';
 import 'package:bungie_api/models/destiny_record_component.dart';
 import 'package:bungie_api/models/destiny_stat.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api.provider.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.provider.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+
 import 'package:bungie_api/enums/destiny_component_type.dart';
 import 'package:bungie_api/enums/destiny_scope.dart';
-import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
+import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/models/character_sort_parameter.dart';
@@ -109,7 +110,7 @@ class ProfileService {
     InventoryBucket.shaders,
     InventoryBucket.consumables
   ];
-  final _api = BungieApiService();
+  final _api = globalBungieApiProvider;
 
   DestinyProfileResponse _profile;
   LastLoadedFrom _lastLoadedFrom;

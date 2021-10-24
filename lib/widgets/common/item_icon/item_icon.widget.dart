@@ -6,8 +6,9 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
-import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
+
+import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateless_item.widget.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
@@ -16,7 +17,7 @@ import 'package:little_light/widgets/common/item_icon/subclass_icon.widget.dart'
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:shimmer/shimmer.dart';
 
-class ItemIconWidget extends BaseDestinyStatelessItemWidget {
+class ItemIconWidget extends BaseDestinyStatelessItemWidget with BungieApiConfigConsumer{
   final double iconBorderWidth;
 
   factory ItemIconWidget.builder(
@@ -70,8 +71,8 @@ class ItemIconWidget extends BaseDestinyStatelessItemWidget {
               color: useBackgroundColor
                   ? DestinyData.getTierColor(definition.inventory.tierType)
                   : null,
-              child: itemIconImage(context))),
-      itemSeasonIcon(context),
+              child: itemIconImage(context, ref))),
+      itemSeasonIcon(context, ref),
       Positioned.fill(
           child: state.contains(ItemState.Masterwork)
               ? getMasterworkOutline()
@@ -99,10 +100,10 @@ class ItemIconWidget extends BaseDestinyStatelessItemWidget {
     return null;
   }
 
-  Widget itemSeasonIcon(BuildContext context) {
+  Widget itemSeasonIcon(BuildContext context, WidgetRef ref) {
     if (seasonBadgeUrl() != null) {
       return QueuedNetworkImage(
-        imageUrl: BungieApiService.url(seasonBadgeUrl()),
+        imageUrl: apiConfig(ref).bungieUrl(seasonBadgeUrl()),
         fit: BoxFit.fill,
         placeholder: itemIconPlaceholder(context),
       );
@@ -120,19 +121,19 @@ class ItemIconWidget extends BaseDestinyStatelessItemWidget {
             Border.all(color: Colors.grey.shade300, width: iconBorderWidth));
   }
 
-  Widget itemIconImage(BuildContext context) {
+  Widget itemIconImage(BuildContext context, WidgetRef ref) {
     if (item?.overrideStyleItemHash != null) {
       return DefinitionProviderWidget<DestinyInventoryItemDefinition>(
           item?.overrideStyleItemHash, (def) {
         return QueuedNetworkImage(
-          imageUrl: BungieApiService.url(def.displayProperties.icon),
+          imageUrl: apiConfig(ref).bungieUrl(def.displayProperties.icon),
           fit: BoxFit.fill,
           placeholder: itemIconPlaceholder(context),
         );
       });
     }
     return QueuedNetworkImage(
-      imageUrl: BungieApiService.url(definition.displayProperties.icon),
+      imageUrl: apiConfig(ref).bungieUrl(definition.displayProperties.icon),
       fit: BoxFit.fill,
       placeholder: itemIconPlaceholder(context),
     );

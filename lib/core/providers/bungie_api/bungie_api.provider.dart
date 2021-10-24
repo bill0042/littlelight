@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io' as io;
 
 import 'package:bungie_api/api/destiny2.dart';
 import 'package:bungie_api/api/settings.dart';
@@ -9,7 +7,6 @@ import 'package:bungie_api/enums/bungie_membership_type.dart';
 import 'package:bungie_api/enums/destiny_component_type.dart';
 import 'package:bungie_api/enums/destiny_vendor_filter.dart';
 import 'package:bungie_api/helpers/bungie_net_token.dart';
-import 'package:bungie_api/helpers/http.dart';
 import 'package:bungie_api/helpers/oauth.dart';
 import 'package:bungie_api/models/core_settings_configuration.dart';
 import 'package:bungie_api/models/destiny_equip_item_result.dart';
@@ -27,55 +24,48 @@ import 'package:bungie_api/responses/destiny_profile_response_response.dart';
 import 'package:bungie_api/responses/destiny_vendors_response_response.dart';
 import 'package:bungie_api/responses/int32_response.dart';
 import 'package:bungie_api/responses/user_membership_data_response.dart';
-import 'package:little_light/core/providers/env/env.provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_client.provider.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.provider.dart';
 import 'package:little_light/core/providers/global_container/global.container.dart';
 import 'package:little_light/services/auth/auth.service.dart';
-import 'package:little_light/services/bungie_api/bungie_api.exception.dart';
 
-class BungieApiService {
-  static const String baseUrl = 'https://www.bungie.net';
-  static const String apiUrl = "$baseUrl/Platform";
+final bungieApiProvider =
+    Provider<BungieApi>((ref) => BungieApi._(ref));
 
-  static final BungieApiService _singleton = BungieApiService._internal();
+BungieApi get globalBungieApiProvider => globalContainer.read(bungieApiProvider);
 
-  factory BungieApiService() {
-    return _singleton;
-  }
-  BungieApiService._internal();
+class BungieApi {
+  ProviderRef _ref;
+
+  BungieApi._(this._ref);
 
   AuthService get auth => AuthService();
 
-  static String url(String url) {
+  BungieApiConfig get config => _ref.read(bungieApiConfigProvider);
+
+  ClientBuilder get clientBuilder => _ref.read(bungieApiClientBuilderProvider);
+
+  String get baseUrl => config.baseUrl;
+
+  String url(String url) {
     if (url == null ?? url.length == 0) return null;
     if (url.contains('://')) return url;
     return "$baseUrl$url";
   }
 
-  static Map<String, String> get env => globalContainer.read(envProvider).env;
-
-  static String get clientSecret {
-    return env['client_secret'];
-  }
-
-  static String get apiKey {
-    return env['api_key'];
-  }
-
-  static String get clientId {
-    return env['client_id'];
-  }
 
   Future<DestinyManifestResponse> getManifest() {
-    return Destiny2.getDestinyManifest(Client());
+    return Destiny2.getDestinyManifest(clientBuilder());
   }
 
   Future<BungieNetToken> requestToken(String code) {
-    return OAuth.getToken(Client(), clientId, clientSecret, code);
+    return OAuth.getToken(clientBuilder(), config.clientId, config.clientSecret, code);
   }
 
   Future<BungieNetToken> refreshToken(String refreshToken) {
     return OAuth.refreshToken(
-        Client(autoRefreshToken: false), clientId, clientSecret, refreshToken);
+        clientBuilder(autoRefreshToken: false), config.clientId, config.clientSecret, refreshToken);
   }
 
   Future<DestinyProfileResponse> getCurrentProfile(
@@ -94,7 +84,7 @@ class BungieApiService {
       BungieMembershipType membershipType,
       [BungieNetToken token]) async {
     DestinyProfileResponseResponse response = await Destiny2.getProfile(
-        Client(token: token), components, membershipId, membershipType);
+        clientBuilder(token: token), components, membershipId, membershipType);
     return response.response;
   }
 
@@ -104,7 +94,7 @@ class BungieApiService {
     GroupUserInfoCard membership = await auth.getMembership();
     if (membership == null) return null;
     DestinyVendorsResponseResponse response = await Destiny2.getVendors(
-        Client(token: token),
+        clientBuilder(token: token),
         characterId,
         components,
         membership.membershipId,
@@ -116,7 +106,7 @@ class BungieApiService {
   Future<UserMembershipData> getMemberships() async {
     BungieNetToken token = await auth.getToken();
     UserMembershipDataResponse response =
-        await User.getMembershipDataForCurrentUser(Client(token: token));
+        await User.getMembershipDataForCurrentUser(clientBuilder(token: token));
     return response.response;
   }
 
@@ -125,7 +115,7 @@ class BungieApiService {
     BungieNetToken token = await auth.getToken();
     GroupUserInfoCard membership = await auth.getMembership();
     Int32Response response = await Destiny2.transferItem(
-        Client(token: token),
+        clientBuilder(token: token),
         DestinyItemTransferRequest()
           ..itemReferenceHash = itemHash
           ..stackSize = stackSize
@@ -141,7 +131,7 @@ class BungieApiService {
     BungieNetToken token = await auth.getToken();
     GroupUserInfoCard membership = await auth.getMembership();
     Int32Response response = await Destiny2.pullFromPostmaster(
-        Client(token: token),
+        clientBuilder(token: token),
         DestinyPostmasterTransferRequest()
           ..itemReferenceHash = itemHash
           ..stackSize = stackSize
@@ -155,7 +145,7 @@ class BungieApiService {
     BungieNetToken token = await auth.getToken();
     GroupUserInfoCard membership = await auth.getMembership();
     Int32Response response = await Destiny2.equipItem(
-        Client(token: token),
+        clientBuilder(token: token),
         DestinyItemActionRequest()
           ..itemId = itemId
           ..characterId = characterId
@@ -168,7 +158,7 @@ class BungieApiService {
     BungieNetToken token = await auth.getToken();
     GroupUserInfoCard membership = await auth.getMembership();
     var response = await Destiny2.setItemLockState(
-        Client(token: token),
+        clientBuilder(token: token),
         DestinyItemStateRequest()
           ..itemId = itemId
           ..membershipType = membership.membershipType
@@ -182,7 +172,7 @@ class BungieApiService {
     BungieNetToken token = await auth.getToken();
     GroupUserInfoCard membership = await auth.getMembership();
     var response = await Destiny2.setQuestTrackedState(
-        Client(token: token),
+        clientBuilder(token: token),
         DestinyItemStateRequest()
           ..itemId = itemId
           ..membershipType = membership.membershipType
@@ -196,7 +186,7 @@ class BungieApiService {
     BungieNetToken token = await auth.getToken();
     GroupUserInfoCard membership = await auth.getMembership();
     var response = await Destiny2.equipItems(
-        Client(token: token),
+        clientBuilder(token: token),
         DestinyItemSetActionRequest()
           ..itemIds = itemIds
           ..characterId = characterId
@@ -205,102 +195,8 @@ class BungieApiService {
   }
 
   Future<CoreSettingsConfiguration> getCommonSettings() async {
-    var response = await Settings.getCommonSettings(Client());
+    var response = await Settings.getCommonSettings(clientBuilder());
     return response.response;
   }
 }
 
-class Client implements HttpClient {
-  BungieNetToken token;
-  bool autoRefreshToken;
-  int retries = 0;
-  Client({this.token, this.autoRefreshToken = true});
-
-  @override
-  Future<HttpResponse> request(HttpClientConfig config) async {
-    var req = await _request(config);
-    return req;
-  }
-
-  Future<HttpResponse> _request(HttpClientConfig config) async {
-    Map<String, String> headers = {
-      'X-API-Key': BungieApiService.apiKey,
-      'Accept': 'application/json'
-    };
-    if (config.bodyContentType != null) {
-      headers['Content-Type'] = config.bodyContentType;
-    }
-    if (this.token != null) {
-      headers['Authorization'] = "Bearer ${this.token.accessToken}";
-    }
-    String paramsString = "";
-    if (config.params != null) {
-      config.params.forEach((name, value) {
-        String valueStr;
-        if (value is String) {
-          valueStr = value;
-        }
-        if (value is num) {
-          valueStr = "$value";
-        }
-        if (value is List) {
-          valueStr = value.join(',');
-        }
-        if (paramsString.length == 0) {
-          paramsString += "?";
-        } else {
-          paramsString += "&";
-        }
-        paramsString += "$name=$valueStr";
-      });
-    }
-
-    io.HttpClientResponse response;
-    io.HttpClient client = io.HttpClient();
-
-    if (config.method == 'GET') {
-      var req = await client.getUrl(
-          Uri.parse("${BungieApiService.apiUrl}${config.url}$paramsString"));
-      headers.forEach((name, value) {
-        req.headers.add(name, value);
-      });
-      response = await req.close().timeout(Duration(seconds: 12));
-    } else {
-      String body = config.bodyContentType == 'application/json'
-          ? jsonEncode(config.body)
-          : config.body;
-      var req = await client.postUrl(
-          Uri.parse("${BungieApiService.apiUrl}${config.url}$paramsString"));
-      headers.forEach((name, value) {
-        req.headers.add(name, value);
-      });
-      req.write(body);
-      response = await req.close().timeout(Duration(seconds: 12));
-    }
-
-    if (response.statusCode == 401 && autoRefreshToken) {
-      this.token = await AuthService().refreshToken(token);
-      return _request(config);
-    }
-    dynamic json;
-    try {
-      var stream = response.transform(Utf8Decoder());
-      var text = "";
-      await for (var t in stream) {
-        text += t;
-      }
-      json = jsonDecode(text ?? "{}");
-    } catch (e) {
-      json = {};
-    }
-
-    if (response.statusCode != 200) {
-      throw BungieApiException.fromJson(json, response.statusCode);
-    }
-
-    if (json["ErrorCode"] != null && json["ErrorCode"] > 2) {
-      throw BungieApiException.fromJson(json, response.statusCode);
-    }
-    return HttpResponse(json, response.statusCode);
-  }
-}

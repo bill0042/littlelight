@@ -3,11 +3,12 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
 import 'package:little_light/models/loadout.dart';
 import 'package:little_light/screens/edit_loadout.screen.dart';
 import 'package:little_light/screens/equip_loadout.screen.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/utils/inventory_utils.dart';
@@ -33,7 +34,7 @@ class LoadoutListItemWidget extends ConsumerStatefulWidget {
 }
 
 class LoadoutListItemWidgetState extends ConsumerState<LoadoutListItemWidget>
-    with LoadoutsConsumerState {
+    with LoadoutsConsumerState, BungieApiConfigConsumerState {
   LoadoutItemIndex _itemIndex;
   Loadout _loadout;
   @override
@@ -86,7 +87,7 @@ class LoadoutListItemWidgetState extends ConsumerState<LoadoutListItemWidget>
           children: <Widget>[
             Positioned.fill(
                 child: QueuedNetworkImage(
-              imageUrl: BungieApiService.url(definition.secondarySpecial),
+              imageUrl: apiConfig.bungieUrl(definition.secondarySpecial),
               fit: BoxFit.cover,
               alignment: Alignment(-1, 0),
             )),

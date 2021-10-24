@@ -10,9 +10,10 @@ import 'package:bungie_api/models/destiny_vendor_item_definition.dart';
 import 'package:bungie_api/models/destiny_vendor_sale_item_component.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/screens/vendor_details.screen.dart';
 
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
@@ -21,7 +22,7 @@ import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 
-class VendorsListItemWidget extends StatefulWidget {
+class VendorsListItemWidget extends ConsumerStatefulWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
   final ManifestService manifest = ManifestService();
@@ -35,7 +36,8 @@ class VendorsListItemWidget extends StatefulWidget {
 }
 
 class VendorsListItemWidgetState<T extends VendorsListItemWidget>
-    extends State<T> with AutomaticKeepAliveClientMixin {
+    extends ConsumerState<T>
+    with AutomaticKeepAliveClientMixin, BungieApiConfigConsumerState {
   DestinyVendorDefinition definition;
   StreamSubscription<NotificationEvent> subscription;
   List<DestinyVendorCategory> _categories;
@@ -165,7 +167,7 @@ class VendorsListItemWidgetState<T extends VendorsListItemWidget>
     return Stack(fit: StackFit.passthrough, children: [
       QueuedNetworkImage(
         fit: BoxFit.fitHeight,
-        imageUrl: BungieApiService.url(definition.displayProperties.largeIcon),
+        imageUrl: apiConfig.bungieUrl(definition.displayProperties.largeIcon),
       ),
       Positioned.fill(
           child: Container(
@@ -187,7 +189,7 @@ class VendorsListItemWidgetState<T extends VendorsListItemWidget>
             aspectRatio: 1,
             child: QueuedNetworkImage(
               imageUrl:
-                  BungieApiService.url(definition.displayProperties.mapIcon),
+                  apiConfig.bungieUrl(definition.displayProperties.mapIcon),
             ),
           ),
           Container(

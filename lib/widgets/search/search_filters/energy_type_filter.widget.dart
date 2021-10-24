@@ -1,7 +1,7 @@
 import 'package:bungie_api/enums/destiny_energy_type.dart';
 import 'package:bungie_api/models/destiny_energy_type_definition.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/utils/item_filters/energy_type_filter.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
@@ -17,7 +17,9 @@ class EnergyTypeFilterWidget extends BaseSearchFilterWidget<EnergyTypeFilter> {
 }
 
 class _EnergyTypeFilterWidgetState extends BaseSearchFilterWidgetState<
-    EnergyTypeFilterWidget, EnergyTypeFilter, DestinyEnergyTypeDefinition> {
+    EnergyTypeFilterWidget,
+    EnergyTypeFilter,
+    DestinyEnergyTypeDefinition> with BungieApiConfigConsumerState {
   Map<int, DestinyEnergyTypeDefinition> _definitions;
 
   @override
@@ -58,7 +60,7 @@ class _EnergyTypeFilterWidgetState extends BaseSearchFilterWidgetState<
           width: 32,
           height: 32,
           child: QueuedNetworkImage(
-              imageUrl: BungieApiService.url(value?.displayProperties?.icon)));
+              imageUrl: apiConfig.bungieUrl(value?.displayProperties?.icon)));
     }
     var name = value?.displayProperties?.name ?? value?.enumValue?.toString();
     if (name != null) {

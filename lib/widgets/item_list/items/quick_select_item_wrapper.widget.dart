@@ -3,8 +3,9 @@ import 'dart:math';
 import 'package:bungie_api/enums/destiny_item_type.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
-import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
+
+import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
@@ -28,7 +29,7 @@ class QuickSelectItemWrapperWidget extends InventoryItemWrapperWidget {
 }
 
 class QuickSelectItemWrapperWidgetState<T extends QuickSelectItemWrapperWidget>
-    extends InventoryItemWrapperWidgetState<QuickSelectItemWrapperWidget> {
+    extends InventoryItemWrapperWidgetState<QuickSelectItemWrapperWidget> with BungieApiConfigConsumerState{
   @override
   Widget build(BuildContext context) {
     return buildItem(context);
@@ -136,7 +137,7 @@ class QuickSelectItemWrapperWidgetState<T extends QuickSelectItemWrapperWidget>
     } else {
       var character = widget.profile.getCharacter(widget.characterId);
       icon = QueuedNetworkImage(
-          imageUrl: BungieApiService.url(character?.emblemPath));
+          imageUrl: apiConfig.bungieUrl(character?.emblemPath));
     }
 
     return Container(

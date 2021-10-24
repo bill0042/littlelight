@@ -11,9 +11,9 @@ import 'package:bungie_api/models/destiny_stat_definition.dart';
 import 'package:bungie_api/models/destiny_stat_group_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/core/providers/wishlists/wishlists.provider.dart';
 import 'package:little_light/models/wish_list.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateful_item.widget.dart';
@@ -47,7 +47,8 @@ class BaseSocketDetailsWidget extends BaseDestinyStatefulItemWidget {
 }
 
 class BaseSocketDetailsWidgetState<T extends BaseSocketDetailsWidget>
-    extends BaseDestinyItemState<T> with TickerProviderStateMixin {
+    extends BaseDestinyItemState<T>
+    with TickerProviderStateMixin, BungieApiConfigConsumerState {
   DestinyStatGroupDefinition _statGroupDefinition;
   ItemSocketController get controller => widget.controller;
   Map<int, DestinySandboxPerkDefinition> _sandboxPerkDefinitions;
@@ -129,8 +130,8 @@ class BaseSocketDetailsWidgetState<T extends BaseSocketDetailsWidget>
                     width: 32,
                     height: 32,
                     child: QueuedNetworkImage(
-                      imageUrl: BungieApiService.url(
-                          definition?.displayProperties?.icon),
+                      imageUrl: apiConfig
+                          .bungieUrl(definition?.displayProperties?.icon),
                     ),
                   ),
                   Container(

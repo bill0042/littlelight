@@ -4,7 +4,6 @@ import 'package:bungie_api/helpers/oauth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:little_light/services/auth/auth.service.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
 typedef LoginCallback = void Function(String code);
@@ -12,7 +11,6 @@ typedef SkipCallback = void Function();
 
 class LoginWidget extends StatefulWidget {
   final String title = "Login";
-  final BungieApiService api = BungieApiService();
   final AuthService auth = AuthService();
   final LoginCallback onLogin;
   final SkipCallback onSkip;

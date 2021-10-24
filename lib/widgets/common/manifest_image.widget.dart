@@ -1,13 +1,15 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/utils/shimmer_helper.dart';
 import 'package:shimmer/shimmer.dart';
 
 typedef ExtractUrlFromData<T> = String Function(T definition);
 
-class ManifestImageWidget<T> extends StatefulWidget {
+class ManifestImageWidget<T> extends ConsumerStatefulWidget {
   final int hash;
   final ExtractUrlFromData<T> urlExtractor;
   final ManifestService _manifest = ManifestService();
@@ -31,7 +33,7 @@ class ManifestImageWidget<T> extends StatefulWidget {
   }
 }
 
-class ManifestImageState<T> extends State<ManifestImageWidget<T>> {
+class ManifestImageState<T> extends ConsumerState<ManifestImageWidget<T>> with BungieApiConfigConsumerState{
   T definition;
 
   @override
@@ -65,7 +67,7 @@ class ManifestImageState<T> extends State<ManifestImageWidget<T>> {
       return shimmer;
     }
     return QueuedNetworkImage(
-      imageUrl: BungieApiService.url(url),
+      imageUrl: apiConfig.bungieUrl(url),
       fit: widget.fit,
       alignment: widget.alignment,
       placeholder: widget.placeholder ?? shimmer,

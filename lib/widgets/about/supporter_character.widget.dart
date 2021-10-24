@@ -6,7 +6,9 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_race_definition.dart';
 import 'package:bungie_api/models/user_info_card.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api.consumer.dart';
+
 import 'package:little_light/utils/platform_data.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
@@ -14,10 +16,9 @@ import 'package:little_light/widgets/icon_fonts/littlelight_icons.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
-class SupporterCharacterWidget extends StatefulWidget {
+class SupporterCharacterWidget extends ConsumerStatefulWidget {
   final String membershipId;
   final BungieMembershipType membershipType;
-  final BungieApiService bungie = BungieApiService();
   final String link;
   final Widget badge;
   SupporterCharacterWidget(this.membershipId, this.membershipType,
@@ -29,8 +30,8 @@ class SupporterCharacterWidget extends StatefulWidget {
   }
 }
 
-class SupporterCharacterWidgetState extends State<SupporterCharacterWidget>
-    with AutomaticKeepAliveClientMixin {
+class SupporterCharacterWidgetState extends ConsumerState<SupporterCharacterWidget>
+    with AutomaticKeepAliveClientMixin, BungieApiConsumer {
   DestinyCharacterComponent lastPlayed;
   UserInfoCard userInfo;
 
@@ -41,7 +42,7 @@ class SupporterCharacterWidgetState extends State<SupporterCharacterWidget>
   }
 
   loadCharacters() async {
-    var profile = await widget.bungie.getProfile(
+    var profile = await bungieApi.getProfile(
         [DestinyComponentType.Characters, DestinyComponentType.Profiles],
         "${widget.membershipId}",
         widget.membershipType);

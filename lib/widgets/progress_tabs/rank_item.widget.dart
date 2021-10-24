@@ -4,8 +4,10 @@ import 'package:bungie_api/models/destiny_progression_definition.dart';
 import 'package:bungie_api/models/destiny_progression_step_definition.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
@@ -13,7 +15,7 @@ import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:little_light/widgets/flutter/filled_circular_progress_indicator.dart';
 
-class RankItemWidget extends StatefulWidget {
+class RankItemWidget extends ConsumerStatefulWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
   final ManifestService manifest = ManifestService();
@@ -27,8 +29,8 @@ class RankItemWidget extends StatefulWidget {
   RankItemWidgetState createState() => RankItemWidgetState();
 }
 
-class RankItemWidgetState<T extends RankItemWidget> extends State<T>
-    with AutomaticKeepAliveClientMixin {
+class RankItemWidgetState<T extends RankItemWidget> extends ConsumerState<T>
+    with AutomaticKeepAliveClientMixin, BungieApiConfigConsumerState {
   DestinyProgressionDefinition definition;
   StreamSubscription<NotificationEvent> subscription;
 
@@ -109,7 +111,7 @@ class RankItemWidgetState<T extends RankItemWidget> extends State<T>
     return FractionallySizedBox(
         widthFactor: .56,
         child: QueuedNetworkImage(
-          imageUrl: BungieApiService.url(currentStep.icon),
+          imageUrl: apiConfig.bungieUrl(currentStep.icon),
         ));
   }
 

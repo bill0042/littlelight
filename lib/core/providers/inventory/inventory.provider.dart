@@ -14,10 +14,10 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:bungie_api/enums/bucket_scope.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api.provider.dart';
+import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/core/providers/global_container/global.container.dart';
 import 'package:little_light/models/loadout.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
-import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
@@ -27,19 +27,19 @@ import 'package:little_light/utils/item_with_owner.dart';
 import 'transfer_destination.dart';
 import 'transfer_error.dart';
 
-
-final inventoryProvider =
-    Provider<Inventory>((ref) => Inventory._(ref));
+final inventoryProvider = Provider<Inventory>((ref) => Inventory._(ref));
 
 get globalInventoryProvider => globalContainer.read(inventoryProvider);
 
 class Inventory {
-  final api = BungieApiService();
+  ProviderRef _ref;
+
+  BungieApi get api => _ref.read(bungieApiProvider);
   final profile = ProfileService();
   final manifest = ManifestService();
   final _broadcaster = NotificationService();
 
-  Inventory._(ProviderRef _ref);
+  Inventory._(this._ref);
 
   transfer(DestinyItemComponent item, String sourceCharacterId,
       ItemDestination destination,

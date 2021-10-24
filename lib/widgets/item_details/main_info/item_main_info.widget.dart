@@ -3,9 +3,10 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:flutter/material.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
 import 'package:little_light/models/wish_list.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+
 import 'package:little_light/widgets/common/base/base_destiny_stateful_item.widget.dart';
 import 'package:little_light/widgets/common/primary_stat.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
@@ -33,7 +34,7 @@ class ItemMainInfoWidget extends BaseDestinyStatefulItemWidget {
 }
 
 class ItemMainInfoWidgetState extends BaseDestinyItemState<ItemMainInfoWidget>
-    with WishlistsConsumerState {
+    with WishlistsConsumerState, BungieApiConfigConsumerState {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -72,7 +73,7 @@ class ItemMainInfoWidgetState extends BaseDestinyItemState<ItemMainInfoWidget>
     return Container(
         alignment: Alignment.center,
         child: QueuedNetworkImage(
-          imageUrl: BungieApiService.url(definition.secondaryIcon),
+          imageUrl: apiConfig.bungieUrl(definition.secondaryIcon),
         ));
   }
 

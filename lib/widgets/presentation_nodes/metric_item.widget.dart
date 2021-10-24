@@ -7,10 +7,10 @@ import 'package:bungie_api/models/destiny_trait_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/core/providers/objective_tracking/objective_tracking.consumer.dart';
 import 'package:little_light/models/tracked_objective.dart';
 import 'package:little_light/services/auth/auth.service.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
@@ -29,7 +29,7 @@ class MetricItemWidget extends ConsumerStatefulWidget {
 }
 
 class MetricItemWidgetState extends ConsumerState<MetricItemWidget>
-    with ObjectiveTrackingConsumerState {
+    with ObjectiveTrackingConsumerState, BungieApiConfigConsumerState {
   DestinyMetricDefinition _definition;
   bool isLogged = false;
   Map<int, DestinyObjectiveDefinition> objectiveDefinitions;
@@ -113,7 +113,7 @@ class MetricItemWidgetState extends ConsumerState<MetricItemWidget>
       }
     }
     icons.add(QueuedNetworkImage(
-        imageUrl: BungieApiService.url(definition?.displayProperties?.icon)));
+        imageUrl: apiConfig.bungieUrl(definition?.displayProperties?.icon)));
     return Container(
         width: 28,
         margin: EdgeInsets.only(right: 8),

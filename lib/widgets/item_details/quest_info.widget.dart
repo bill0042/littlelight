@@ -4,7 +4,8 @@ import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:bungie_api/models/destiny_objective_definition.dart';
 import 'package:bungie_api/models/destiny_objective_progress.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
+
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateful_item.widget.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
@@ -32,7 +33,8 @@ class QuestInfoWidget extends BaseDestinyStatefulItemWidget {
   }
 }
 
-class QuestInfoWidgetState extends BaseDestinyItemState<QuestInfoWidget> {
+class QuestInfoWidgetState extends BaseDestinyItemState<QuestInfoWidget>
+    with BungieApiConfigConsumerState {
   DestinyInventoryItemDefinition questlineDefinition;
   Map<int, DestinyInventoryItemDefinition> questSteps;
   Map<int, DestinyObjectiveDefinition> objectiveDefinitions;
@@ -164,7 +166,7 @@ class QuestInfoWidgetState extends BaseDestinyItemState<QuestInfoWidget> {
                     color: DestinyData.getTierColor(def.inventory.tierType),
                     child: QueuedNetworkImage(
                         imageUrl:
-                            BungieApiService.url(def.displayProperties.icon))))
+                            apiConfig.bungieUrl(def.displayProperties.icon))))
           ])
         ].followedBy(buildObjectives(context, def, index)).toList()));
   }
@@ -233,7 +235,7 @@ class QuestInfoWidgetState extends BaseDestinyItemState<QuestInfoWidget> {
                             width: 72,
                             height: 72,
                             child: QueuedNetworkImage(
-                              imageUrl: BungieApiService.url(
+                              imageUrl: apiConfig.bungieUrl(
                                   questlineDefinition.displayProperties.icon),
                             ))),
                     Expanded(

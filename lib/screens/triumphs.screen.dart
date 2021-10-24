@@ -1,6 +1,8 @@
 import 'package:bungie_api/models/destiny_presentation_node_definition.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
+
 import 'package:little_light/services/profile/destiny_settings.service.dart';
 import 'package:little_light/utils/media_query_helper.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
@@ -9,12 +11,12 @@ import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:little_light/widgets/triumphs/seals_grid.widget.dart';
 import 'package:little_light/widgets/triumphs/triumph_categories_grid.widget.dart';
 
-class TriumphsScreen extends StatefulWidget {
+class TriumphsScreen extends ConsumerStatefulWidget {
   @override
   _TriumphsScreenState createState() => _TriumphsScreenState();
 }
 
-class _TriumphsScreenState extends State<TriumphsScreen> {
+class _TriumphsScreenState extends ConsumerState<TriumphsScreen> with BungieApiConfigConsumerState{
   DestinySettingsService settings = DestinySettingsService();
 
   @override
@@ -59,7 +61,7 @@ class _TriumphsScreenState extends State<TriumphsScreen> {
             (def) => Stack(
                   children: [
                     QueuedNetworkImage(
-                      imageUrl: BungieApiService.url(
+                      imageUrl: apiConfig.bungieUrl(
                           def.displayProperties.iconSequences[0].frames[0]),
                     )
                   ],

@@ -1,12 +1,12 @@
 import 'package:bungie_api/models/destiny_character_component.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
-import 'package:little_light/widgets/common/corner_badge.decoration.dart';
-import 'package:little_light/widgets/common/queued_network_image.widget.dart';
-
 import 'package:flutter/material.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/utils/shimmer_helper.dart';
+import 'package:little_light/widgets/common/corner_badge.decoration.dart';
+import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:shimmer/shimmer.dart';
 
 class TabsCharacterMenuWidget extends StatelessWidget {
@@ -68,7 +68,7 @@ class TabsCharacterMenuWidget extends StatelessWidget {
   }
 }
 
-class TabMenuButton extends StatefulWidget {
+class TabMenuButton extends ConsumerStatefulWidget {
   final DestinyCharacterComponent character;
   final ManifestService manifest = ManifestService();
   final bool lastPlayed;
@@ -80,7 +80,7 @@ class TabMenuButton extends StatefulWidget {
   createState() => TabMenuButtonState();
 }
 
-class TabMenuButtonState extends State<TabMenuButton> {
+class TabMenuButtonState extends ConsumerState<TabMenuButton> with BungieApiConfigConsumerState{
   DestinyInventoryItemDefinition emblemDefinition;
 
   @override
@@ -120,7 +120,7 @@ class TabMenuButtonState extends State<TabMenuButton> {
     }
     return QueuedNetworkImage(
       key: Key("emblem_${emblemDefinition.hash}"),
-      imageUrl: BungieApiService.url(emblemDefinition.displayProperties.icon),
+      imageUrl: apiConfig.bungieUrl(emblemDefinition.displayProperties.icon),
       placeholder: shimmer,
     );
   }

@@ -6,22 +6,24 @@ import 'package:bungie_api/models/group_user_info_card.dart';
 import 'package:bungie_api/models/user_membership_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/screens/initial.screen.dart';
 import 'package:little_light/services/auth/auth.service.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/utils/platform_data.dart';
 import 'package:little_light/widgets/common/loading_anim.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
-class AccountsScreen extends StatefulWidget {
+class AccountsScreen extends ConsumerStatefulWidget {
   final AuthService auth = AuthService();
   @override
   _AccountsScreenState createState() => _AccountsScreenState();
 }
 
-class _AccountsScreenState extends State<AccountsScreen> {
+class _AccountsScreenState extends ConsumerState<AccountsScreen>
+    with BungieApiConfigConsumerState {
   List<String> accounts;
   String currentAccount;
   Map<String, UserMembershipData> memberships;
@@ -103,7 +105,7 @@ class _AccountsScreenState extends State<AccountsScreen> {
             Positioned.fill(
                 child: QueuedNetworkImage(
               fit: BoxFit.cover,
-              imageUrl: BungieApiService.url(
+              imageUrl: apiConfig.bungieUrl(
                   "/img/UserThemes/${membership?.bungieNetUser?.profileThemeName}/mobiletheme.jpg"),
             )),
             Positioned(
@@ -134,7 +136,7 @@ class _AccountsScreenState extends State<AccountsScreen> {
                 height: 48,
                 child: QueuedNetworkImage(
                   fit: BoxFit.cover,
-                  imageUrl: BungieApiService.url(
+                  imageUrl: apiConfig.bungieUrl(
                       membership?.bungieNetUser?.profilePicturePath),
                 )),
             !isCurrent

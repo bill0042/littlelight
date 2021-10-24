@@ -3,6 +3,7 @@ import 'package:bungie_api/models/destiny_item_talent_grid_component.dart';
 import 'package:bungie_api/models/destiny_talent_grid_definition.dart';
 import 'package:bungie_api/models/destiny_talent_node_category.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
 import 'package:little_light/widgets/common/item_icon/subclass_icon.widget.dart';
@@ -126,7 +127,7 @@ mixin SubclassPropertiesMixin on InventoryItemMixin {
   }
 
   @override
-  background(BuildContext context) {
+  background(BuildContext context, WidgetRef ref) {
     var damageTypeColor =
         DestinyData.getDamageTypeColor(definition.talentGrid.hudDamageType);
     BoxDecoration decoration = BoxDecoration(

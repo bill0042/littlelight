@@ -10,6 +10,7 @@ import 'package:bungie_api/models/destiny_power_cap_definition.dart';
 import 'package:bungie_api/models/destiny_stat_definition.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.provider.dart';
 import 'package:little_light/core/providers/item_notes/item_notes.provider.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
@@ -17,7 +18,7 @@ import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/masterwork_counter/screenshot_masterwork_counter.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateless_item.widget.dart';
 import 'package:little_light/widgets/common/item_icon/item_icon.widget.dart';
@@ -67,12 +68,18 @@ class LandscapeItemCoverWidget extends BaseDestinyStatelessItemWidget {
     return SliverPersistentHeader(
         pinned: true,
         delegate: LandscapeItemCoverDelegate(
-            item, definition, instanceInfo, tag, uniqueId,
-            characterId: characterId,
-            socketController: socketController,
-            hideTransferBlock: hideTransferBlock,
-            minHeight: minHeight,
-            maxHeight: maxHeight));
+          ref,
+          item: item,
+          definition: definition,
+          instanceInfo: instanceInfo,
+          tag: tag,
+          uniqueId: uniqueId,
+          characterId: characterId,
+          socketController: socketController,
+          hideTransferBlock: hideTransferBlock,
+          minHeight: minHeight,
+          maxHeight: maxHeight,
+        ));
   }
 }
 
@@ -89,9 +96,17 @@ class LandscapeItemCoverDelegate extends SliverPersistentHeaderDelegate {
 
   bool hideTransferBlock;
 
-  LandscapeItemCoverDelegate(
-      this.item, this.definition, this.instanceInfo, this.tag, this.uniqueId,
-      {this.minHeight = 50,
+  WidgetRef ref;
+
+  BungieApiConfig get apiConfig => ref.read(bungieApiConfigProvider);
+
+  LandscapeItemCoverDelegate(this.ref,
+      {this.item,
+      this.definition,
+      this.instanceInfo,
+      this.tag,
+      this.uniqueId,
+      this.minHeight = 50,
       this.maxHeight = 200,
       this.socketController,
       this.characterId,
@@ -470,7 +485,7 @@ class LandscapeItemCoverDelegate extends SliverPersistentHeaderDelegate {
           child: Opacity(
               opacity: opacity * .5,
               child: QueuedNetworkImage(
-                imageUrl: BungieApiService.url(imgUrl),
+                imageUrl: apiConfig.bungieUrl(imgUrl),
                 fit: BoxFit.cover,
               )));
     }
@@ -482,7 +497,7 @@ class LandscapeItemCoverDelegate extends SliverPersistentHeaderDelegate {
         child: Opacity(
             opacity: opacity * .5,
             child: QueuedNetworkImage(
-              imageUrl: BungieApiService.url(imgUrl),
+              imageUrl: apiConfig.bungieUrl(imgUrl),
               fit: BoxFit.cover,
             )));
   }
@@ -514,7 +529,7 @@ class LandscapeItemCoverDelegate extends SliverPersistentHeaderDelegate {
           item.overrideStyleItemHash, (def) {
         if (def?.plug?.isDummyPlug ?? false) {
           return QueuedNetworkImage(
-              imageUrl: BungieApiService.url(imgUrl),
+              imageUrl: apiConfig.bungieUrl(imgUrl),
               fit: BoxFit.cover,
               placeholder: Shimmer.fromColors(
                   baseColor: Colors.blueGrey.shade500,
@@ -523,7 +538,7 @@ class LandscapeItemCoverDelegate extends SliverPersistentHeaderDelegate {
         }
 
         return QueuedNetworkImage(
-            imageUrl: BungieApiService.url(def?.screenshot ?? imgUrl),
+            imageUrl: apiConfig.bungieUrl(def?.screenshot ?? imgUrl),
             fit: BoxFit.cover,
             placeholder: Shimmer.fromColors(
                 baseColor: Colors.blueGrey.shade500,
@@ -532,7 +547,7 @@ class LandscapeItemCoverDelegate extends SliverPersistentHeaderDelegate {
       });
     }
     return QueuedNetworkImage(
-        imageUrl: BungieApiService.url(imgUrl),
+        imageUrl: apiConfig.bungieUrl(imgUrl),
         fit: BoxFit.cover,
         placeholder: Shimmer.fromColors(
             baseColor: Colors.blueGrey.shade500,

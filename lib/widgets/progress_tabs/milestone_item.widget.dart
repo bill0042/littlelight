@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:bungie_api/models/destiny_activity_definition.dart';
 import 'package:bungie_api/models/destiny_activity_modifier_definition.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
@@ -10,7 +11,8 @@ import 'package:bungie_api/models/destiny_milestone_reward_category_definition.d
 import 'package:bungie_api/models/destiny_objective_definition.dart';
 import 'package:bungie_api/models/destiny_objective_progress.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/bungie_api/bungie_api.service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
@@ -22,7 +24,7 @@ import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/icon_fonts/littlelight_icons.dart';
 
-class MilestoneItemWidget extends StatefulWidget {
+class MilestoneItemWidget extends ConsumerStatefulWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
   final ManifestService manifest = ManifestService();
@@ -36,8 +38,8 @@ class MilestoneItemWidget extends StatefulWidget {
   MilestoneItemWidgetState createState() => MilestoneItemWidgetState();
 }
 
-class MilestoneItemWidgetState<T extends MilestoneItemWidget> extends State<T>
-    with AutomaticKeepAliveClientMixin {
+class MilestoneItemWidgetState<T extends MilestoneItemWidget> extends ConsumerState<T>
+    with AutomaticKeepAliveClientMixin, BungieApiConfigConsumerState {
   DestinyMilestoneDefinition definition;
   StreamSubscription<NotificationEvent> subscription;
   DestinyMilestone milestone;
@@ -95,7 +97,7 @@ class MilestoneItemWidgetState<T extends MilestoneItemWidget> extends State<T>
             ? Positioned.fill(
                 child: QueuedNetworkImage(
                     fit: BoxFit.cover,
-                    imageUrl: BungieApiService.url(definition.image)),
+                    imageUrl: apiConfig.bungieUrl(definition.image)),
               )
             : Container(),
         Positioned.fill(
@@ -136,7 +138,7 @@ class MilestoneItemWidgetState<T extends MilestoneItemWidget> extends State<T>
                   height: 64,
                   child: QueuedNetworkImage(
                       fit: BoxFit.cover,
-                      imageUrl: BungieApiService.url(
+                      imageUrl: apiConfig.bungieUrl(
                           definition.displayProperties.icon)))
               : Container(),
           Expanded(
@@ -209,9 +211,9 @@ class MilestoneItemWidgetState<T extends MilestoneItemWidget> extends State<T>
                                     imageUrl:
                                         (def?.displayProperties?.hasIcon ??
                                                 false)
-                                            ? BungieApiService.url(
+                                            ? apiConfig.bungieUrl(
                                                 def?.displayProperties?.icon)
-                                            : BungieApiService.url(definition
+                                            : apiConfig.bungieUrl(definition
                                                 ?.displayProperties?.icon))),
                             Container(width: 4),
                             Text(
@@ -322,7 +324,7 @@ class MilestoneItemWidgetState<T extends MilestoneItemWidget> extends State<T>
                                   width: 24,
                                   height: 24,
                                   child: QueuedNetworkImage(
-                                      imageUrl: BungieApiService.url(
+                                      imageUrl: apiConfig.bungieUrl(
                                           def?.displayProperties?.icon))),
                               Container(
                                 width: 8,
@@ -401,7 +403,7 @@ class MilestoneItemWidgetState<T extends MilestoneItemWidget> extends State<T>
                                   width: 24,
                                   height: 24,
                                   child: QueuedNetworkImage(
-                                    imageUrl: BungieApiService.url(
+                                    imageUrl: apiConfig.bungieUrl(
                                         def.displayProperties?.icon),
                                   )),
                               Container(
