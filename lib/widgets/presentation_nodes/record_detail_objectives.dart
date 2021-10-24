@@ -1,20 +1,21 @@
 import 'dart:async';
 
+import 'package:bungie_api/enums/destiny_record_state.dart';
 import 'package:bungie_api/models/destiny_objective_definition.dart';
 import 'package:bungie_api/models/destiny_objective_progress.dart';
 import 'package:bungie_api/models/destiny_record_component.dart';
 import 'package:bungie_api/models/destiny_record_definition.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/auth/auth.service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/objective.widget.dart';
-import 'package:bungie_api/enums/destiny_record_state.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
-class RecordObjectivesWidget extends StatefulWidget {
+class RecordObjectivesWidget extends ConsumerStatefulWidget {
   final ManifestService manifest = ManifestService();
   final ProfileService profile = ProfileService();
   final NotificationService broadcaster = NotificationService();
@@ -28,8 +29,9 @@ class RecordObjectivesWidget extends StatefulWidget {
   }
 }
 
-class RecordObjectivesWidgetState extends State<RecordObjectivesWidget> {
-  bool isLogged = false;
+class RecordObjectivesWidgetState extends ConsumerState<RecordObjectivesWidget>
+    with BungieAuthConsumerState {
+  bool get isLogged => auth.isLogged;
   Map<int, DestinyObjectiveDefinition> objectiveDefinitions;
   StreamSubscription<NotificationEvent> subscription;
 
@@ -40,7 +42,6 @@ class RecordObjectivesWidgetState extends State<RecordObjectivesWidget> {
   @override
   void initState() {
     super.initState();
-    isLogged = AuthService().isLogged;
     loadDefinitions();
     if (isLogged) {
       listenToUpdates();
@@ -73,7 +74,7 @@ class RecordObjectivesWidgetState extends State<RecordObjectivesWidget> {
   }
 
   DestinyRecordComponent get record {
-    if (!AuthService().isLogged) return null;
+    if (!isLogged) return null;
     return ProfileService().getRecord(definition.hash, definition.scope);
   }
 

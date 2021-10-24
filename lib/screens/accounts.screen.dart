@@ -8,8 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
+import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dart';
 import 'package:little_light/screens/initial.screen.dart';
-import 'package:little_light/services/auth/auth.service.dart';
+
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/utils/platform_data.dart';
 import 'package:little_light/widgets/common/loading_anim.widget.dart';
@@ -17,13 +18,12 @@ import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
 class AccountsScreen extends ConsumerStatefulWidget {
-  final AuthService auth = AuthService();
   @override
   _AccountsScreenState createState() => _AccountsScreenState();
 }
 
 class _AccountsScreenState extends ConsumerState<AccountsScreen>
-    with BungieApiConfigConsumerState {
+    with BungieApiConfigConsumerState, BungieAuthConsumerState {
   List<String> accounts;
   String currentAccount;
   Map<String, UserMembershipData> memberships;
@@ -214,7 +214,7 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen>
 
   addAccount(BuildContext context) async {
     try {
-      String code = await widget.auth.authorize(true);
+      String code = await auth.authorize(true);
       if (code != null) {
         await StorageService.setAccount(null);
         await StorageService.setMembership(null);

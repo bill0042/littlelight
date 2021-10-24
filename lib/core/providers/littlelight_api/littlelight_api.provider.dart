@@ -5,12 +5,13 @@ import 'package:bungie_api/helpers/bungie_net_token.dart';
 import 'package:bungie_api/models/group_user_info_card.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:little_light/core/providers/bungie_auth/bungie_auth.provider.dart';
 import 'package:little_light/core/providers/env/env.provider.dart';
 import 'package:little_light/core/providers/global_container/global.container.dart';
 import 'package:little_light/models/item_notes.dart';
 import 'package:little_light/models/item_notes_tag.dart';
 import 'package:little_light/models/loadout.dart';
-import 'package:little_light/services/auth/auth.service.dart';
+
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:uuid/uuid.dart';
 
@@ -22,10 +23,13 @@ final littleLightApiProvider =
 get globalLittleLightProvider => globalContainer.read(littleLightApiProvider);
 
 class LittleLightApi {
+  ProviderRef _ref;
+  BungieAuth get auth => _ref.read(bungieAuthProvider);
+
   String _uuid;
   String _secret;
 
-  LittleLightApi._(ProviderRef _ref);
+  LittleLightApi._(this._ref);
 
   reset() {
     _uuid = null;
@@ -84,7 +88,6 @@ class LittleLightApi {
 
   Future<dynamic> _authorizedRequest(String path,
       {Map<String, dynamic> body = const {}}) async {
-    AuthService auth = AuthService();
     GroupUserInfoCard membership = await auth.getMembership();
     BungieNetToken token = await auth.getToken();
     String uuid = await _getUuid();

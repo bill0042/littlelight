@@ -4,8 +4,8 @@ import 'package:bungie_api/models/destiny_presentation_node_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
+import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
-import 'package:little_light/services/auth/auth.service.dart';
 
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
@@ -38,7 +38,10 @@ class PresentationNodeItemWidget extends ConsumerStatefulWidget {
 
 class PresentationNodeWidgetState
     extends ConsumerState<PresentationNodeItemWidget>
-    with UserSettingsConsumerState, BungieApiConfigConsumerState {
+    with
+        UserSettingsConsumerState,
+        BungieApiConfigConsumerState,
+        BungieAuthConsumerState {
   DestinyPresentationNodeComponent progress;
   Map<String, DestinyPresentationNodeComponent> multiProgress;
   DestinyPresentationNodeDefinition definition;
@@ -47,7 +50,7 @@ class PresentationNodeWidgetState
   void initState() {
     super.initState();
     this.loadDefinition();
-    if (AuthService().isLogged) {
+    if (auth.isLogged) {
       this.loadCompletionData();
     }
   }

@@ -1,11 +1,14 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:little_light/services/auth/auth.service.dart';
+import 'package:little_light/core/providers/bungie_auth/bungie_auth.provider.dart';
+
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/utils/platform_capabilities.dart';
 
 FirebaseAnalytics _analytics = FirebaseAnalytics();
 
 class SelectedPagePersistence {
+  static BungieAuth get auth => globalBungieAuthProvider;
+
   static const String equipment = "Equipment";
   static const String collections = "Collections";
   static const String triumphs = "Triumphs";
@@ -20,7 +23,7 @@ class SelectedPagePersistence {
   static Future<String> getLatestScreen() async {
     StorageService _prefs = StorageService.global();
     String latest = _prefs.getString(StorageKeys.latestScreen);
-    AuthService auth = AuthService();
+    
     if (auth.isLogged) {
       List<String> all = logged + public;
       if (all.contains(latest)) {

@@ -6,8 +6,8 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
+import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
-import 'package:little_light/services/auth/auth.service.dart';
 
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
@@ -24,7 +24,6 @@ import 'package:little_light/widgets/item_list/items/weapon/weapon_inventory_ite
 class CollectibleItemWidget extends ConsumerStatefulWidget {
   final ManifestService manifest = ManifestService();
   final ProfileService profile = ProfileService();
-  final AuthService auth = AuthService();
   final Map<int, List<ItemWithOwner>> itemsByHash;
   final int hash;
   CollectibleItemWidget({Key key, this.hash, this.itemsByHash})
@@ -37,7 +36,7 @@ class CollectibleItemWidget extends ConsumerStatefulWidget {
 }
 
 class CollectibleItemWidgetState extends ConsumerState<CollectibleItemWidget>
-    with BungieApiConfigConsumerState {
+    with BungieApiConfigConsumerState, BungieAuthConsumerState {
   DestinyCollectibleDefinition _definition;
   DestinyInventoryItemDefinition _itemDefinition;
   DestinyCollectibleDefinition get definition {
@@ -279,7 +278,7 @@ class CollectibleItemWidgetState extends ConsumerState<CollectibleItemWidget>
   }
 
   bool get unlocked {
-    if (!widget.auth.isLogged) return true;
+    if (!auth.isLogged) return true;
     if (definition == null) return false;
     return widget.profile.isCollectibleUnlocked(widget.hash, definition.scope);
   }

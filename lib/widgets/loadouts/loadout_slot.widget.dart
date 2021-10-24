@@ -4,7 +4,7 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:flutter/material.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
-import 'package:little_light/services/auth/auth.service.dart';
+
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
@@ -27,7 +27,6 @@ typedef OnAddItemToLoadout = void Function(
 class LoadoutSlotWidget extends StatelessWidget {
   final ManifestService manifest = ManifestService();
   final ProfileService profile = ProfileService();
-  final AuthService auth = AuthService();
   final DestinyInventoryBucketDefinition bucketDefinition;
   final Map<DestinyClass, DestinyItemComponent> equippedClassItems;
   final DestinyItemComponent equippedGenericItem;

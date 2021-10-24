@@ -1,6 +1,7 @@
 import 'package:bungie_api/enums/destiny_presentation_screen_style.dart';
 import 'package:bungie_api/models/destiny_presentation_node_definition.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import 'package:little_light/services/manifest/manifest.service.dart';
@@ -17,7 +18,7 @@ import 'package:little_light/widgets/presentation_nodes/presentation_node_item.w
 import 'package:little_light/widgets/presentation_nodes/presentation_node_list.widget.dart';
 import 'package:little_light/widgets/presentation_nodes/record_item.widget.dart';
 
-class PresentationNodeScreen extends StatefulWidget {
+class PresentationNodeScreen extends ConsumerStatefulWidget {
   final ManifestService manifest = ManifestService();
   final ProfileService profile = ProfileService();
   final int presentationNodeHash;
@@ -37,7 +38,7 @@ class PresentationNodeScreen extends StatefulWidget {
 }
 
 class PresentationNodeScreenState<T extends PresentationNodeScreen>
-    extends State<T> {
+    extends ConsumerState<T> {
   DestinyPresentationNodeDefinition definition;
   @override
   void initState() {

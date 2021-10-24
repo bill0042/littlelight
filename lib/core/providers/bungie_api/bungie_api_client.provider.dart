@@ -5,7 +5,8 @@ import 'package:bungie_api/helpers/bungie_net_token.dart';
 import 'package:bungie_api/helpers/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.provider.dart';
-import 'package:little_light/services/auth/auth.service.dart';
+import 'package:little_light/core/providers/bungie_auth/bungie_auth.provider.dart';
+
 
 import 'exceptions/bungie_api.exception.dart';
 
@@ -29,7 +30,7 @@ class BungieApiClient implements HttpClient {
 
   BungieNetToken token;
 
-  AuthService get auth => AuthService();
+  BungieAuth get auth => _ref.read(bungieAuthProvider);
 
   BungieApiClient._(this._ref, {this.token, this.autoRefreshToken = true});
 
@@ -96,7 +97,7 @@ class BungieApiClient implements HttpClient {
     }
 
     if (response.statusCode == 401 && autoRefreshToken) {
-      this.token = await AuthService().refreshToken(token);
+      this.token = await auth.refreshToken(token);
       return _request(clientConfig);
     }
     dynamic json;

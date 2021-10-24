@@ -27,8 +27,9 @@ import 'package:bungie_api/responses/user_membership_data_response.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_client.provider.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.provider.dart';
+import 'package:little_light/core/providers/bungie_auth/bungie_auth.provider.dart';
 import 'package:little_light/core/providers/global_container/global.container.dart';
-import 'package:little_light/services/auth/auth.service.dart';
+
 
 final bungieApiProvider =
     Provider<BungieApi>((ref) => BungieApi._(ref));
@@ -40,7 +41,7 @@ class BungieApi {
 
   BungieApi._(this._ref);
 
-  AuthService get auth => AuthService();
+  BungieAuth get auth => _ref.read(bungieAuthProvider);
 
   BungieApiConfig get config => _ref.read(bungieApiConfigProvider);
 

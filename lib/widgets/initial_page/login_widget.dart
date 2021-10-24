@@ -3,15 +3,16 @@ import 'dart:io';
 import 'package:bungie_api/helpers/oauth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:little_light/services/auth/auth.service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dart';
+
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
 typedef LoginCallback = void Function(String code);
 typedef SkipCallback = void Function();
 
-class LoginWidget extends StatefulWidget {
+class LoginWidget extends ConsumerStatefulWidget {
   final String title = "Login";
-  final AuthService auth = AuthService();
   final LoginCallback onLogin;
   final SkipCallback onSkip;
   final bool forceReauth;
@@ -22,7 +23,8 @@ class LoginWidget extends StatefulWidget {
   LoginWidgetState createState() => LoginWidgetState();
 }
 
-class LoginWidgetState extends State<LoginWidget> {
+class LoginWidgetState extends ConsumerState<LoginWidget>
+    with BungieAuthConsumerState {
   @override
   void initState() {
     super.initState();
@@ -30,7 +32,7 @@ class LoginWidgetState extends State<LoginWidget> {
 
   void authorizeClick(BuildContext context) async {
     try {
-      String code = await widget.auth.authorize(widget.forceReauth);
+      String code = await auth.authorize(widget.forceReauth);
       widget.onLogin(code);
     } on OAuthException catch (e) {
       bool isIOS = Platform.isIOS;

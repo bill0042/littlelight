@@ -7,8 +7,9 @@ import 'package:bungie_api/models/user_membership_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
+import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dart';
 import 'package:little_light/screens/initial.screen.dart';
-import 'package:little_light/services/auth/auth.service.dart';
+
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/models/character_sort_parameter.dart';
@@ -23,7 +24,6 @@ import 'package:timeago/timeago.dart' as timeago;
 const Duration _kExpand = Duration(milliseconds: 200);
 
 class ProfileInfoWidget extends ConsumerStatefulWidget {
-  final AuthService auth = AuthService();
   final ProfileService profile = ProfileService();
   final List<Widget> menuItems;
   ProfileInfoWidget({this.menuItems});
@@ -35,7 +35,10 @@ class ProfileInfoWidget extends ConsumerStatefulWidget {
 }
 
 class ProfileInfoState extends ConsumerState<ProfileInfoWidget>
-    with SingleTickerProviderStateMixin, BungieApiConfigConsumerState {
+    with
+        SingleTickerProviderStateMixin,
+        BungieApiConfigConsumerState,
+        BungieAuthConsumerState {
   GeneralUser bungieNetUser;
   GroupUserInfoCard selectedMembership;
 
@@ -55,7 +58,7 @@ class ProfileInfoState extends ConsumerState<ProfileInfoWidget>
     _isExpanded = PageStorage.of(context)?.readState(context) ?? false;
     if (_isExpanded) _controller.value = 1.0;
 
-    if (widget.auth.isLogged) {
+    if (auth.isLogged) {
       loadUser();
     }
   }
@@ -110,8 +113,8 @@ class ProfileInfoState extends ConsumerState<ProfileInfoWidget>
   }
 
   loadUser() async {
-    UserMembershipData membershipData = await widget.auth.getMembershipData();
-    GroupUserInfoCard currentMembership = await widget.auth.getMembership();
+    UserMembershipData membershipData = await auth.getMembershipData();
+    GroupUserInfoCard currentMembership = await auth.getMembership();
     if (!mounted) return;
     setState(() {
       bungieNetUser = membershipData?.bungieNetUser;
@@ -137,7 +140,7 @@ class ProfileInfoState extends ConsumerState<ProfileInfoWidget>
   }
 
   Widget background(context) {
-    if (!widget.auth.isLogged) {
+    if (!auth.isLogged) {
       return Container(
           alignment: Alignment.center,
           child: TranslatedTextWidget("Not logged in"));
@@ -226,7 +229,7 @@ class ProfileInfoState extends ConsumerState<ProfileInfoWidget>
   }
 
   Widget profilePicture(context) {
-    if (!widget.auth.isLogged) {
+    if (!auth.isLogged) {
       return Container();
     }
     Shimmer shimmer = Shimmer.fromColors(
@@ -245,7 +248,7 @@ class ProfileInfoState extends ConsumerState<ProfileInfoWidget>
   }
 
   Widget profileInfo(context) {
-    if (!widget.auth.isLogged) {
+    if (!auth.isLogged) {
       return Container(
         color: Theme.of(context).primaryColor,
         child: Row(

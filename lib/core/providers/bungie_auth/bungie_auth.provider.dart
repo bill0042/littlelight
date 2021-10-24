@@ -7,30 +7,35 @@ import 'package:bungie_api/helpers/oauth.dart';
 import 'package:bungie_api/models/group_user_info_card.dart';
 import 'package:bungie_api/models/user_membership_data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api.provider.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.provider.dart';
+import 'package:little_light/core/providers/global_container/global.container.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 bool initialLinkHandled = false;
 
-class AuthService {
-  BungieApi get _bungieApi => globalBungieApiProvider;
-  BungieApiConfig get _bungieApiConfig => globalBungieApiConfigProvider;
+final bungieAuthProvider = Provider<BungieAuth>((ref) => BungieAuth._(ref));
+
+BungieAuth get globalBungieAuthProvider =>
+    globalContainer.read(bungieAuthProvider);
+
+class BungieAuth {
+  BungieApi get _bungieApi => _ref.read(bungieApiProvider);
+  BungieApiConfig get _bungieApiConfig => _ref.read(bungieApiConfigProvider);
+
   BungieNetToken _currentToken;
   GroupUserInfoCard _currentMembership;
   UserMembershipData _membershipData;
   bool waitingAuthCode = false;
 
+  ProviderRef _ref;
+
   StreamSubscription<String> linkStreamSub;
 
-  static final AuthService _singleton = AuthService._internal();
-
-  factory AuthService() {
-    return _singleton;
-  }
-  AuthService._internal();
+  BungieAuth._(this._ref);
 
   Future<BungieNetToken> _getStoredToken() async {
     StorageService storage = StorageService.account();
@@ -173,8 +178,7 @@ class AuthService {
   }
 
   Future<UserMembershipData> updateMembershipData() async {
-    UserMembershipData membershipData =
-        await _bungieApi.getMemberships();
+    UserMembershipData membershipData = await _bungieApi.getMemberships();
     var storage = StorageService.account();
     await storage.setJson(StorageKeys.membershipData, membershipData);
     return membershipData;

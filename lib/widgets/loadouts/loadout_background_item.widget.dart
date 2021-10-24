@@ -3,7 +3,7 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
-import 'package:little_light/services/auth/auth.service.dart';
+
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/shimmer_helper.dart';
@@ -12,7 +12,6 @@ import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 class LoadoutBackgroundItemWidget extends ConsumerStatefulWidget {
   final ManifestService manifest = ManifestService();
   final ProfileService profile = ProfileService();
-  final AuthService auth = AuthService();
   final int hash;
   LoadoutBackgroundItemWidget({Key key, this.hash}) : super(key: key);
 
