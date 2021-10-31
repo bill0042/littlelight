@@ -8,7 +8,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:little_light/core/providers/objective_tracking/objective_tracking.consumer.dart';
 import 'package:little_light/models/tracked_objective.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/media_query_helper.dart';
@@ -19,7 +18,6 @@ import 'package:little_light/widgets/progress_tabs/pursuit_item/tracked_pursuit_
 
 class ObjectivesScreen extends ConsumerStatefulWidget {
   final ProfileService profile = ProfileService();
-  final ManifestService manifest = ManifestService();
   @override
   ObjectivesScreenState createState() => ObjectivesScreenState();
 }
@@ -51,7 +49,8 @@ class ObjectivesScreenState extends ConsumerState<ObjectivesScreen>
   }
 
   void loadObjectives() async {
-    objectives = (await objectiveTracking.getTrackedObjectives()).reversed.toList();
+    objectives =
+        (await objectiveTracking.getTrackedObjectives()).reversed.toList();
     items = Map();
     var itemObjectives =
         objectives.where((o) => o.type == TrackedObjectiveType.Item);
@@ -64,7 +63,8 @@ class ObjectivesScreenState extends ConsumerState<ObjectivesScreen>
       }
     }
     for (var o in plugObjectives) {
-      DestinyItemComponent item = await objectiveTracking.findObjectivePlugItem(o);
+      DestinyItemComponent item =
+          await objectiveTracking.findObjectivePlugItem(o);
       if (item != null) {
         items[o] = item;
       }

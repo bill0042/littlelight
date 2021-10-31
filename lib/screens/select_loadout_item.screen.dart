@@ -40,7 +40,8 @@ class SelectLoadoutItemScreen extends SearchScreen {
 }
 
 class SelectLoadoutItemScreenState
-    extends SearchScreenState<SelectLoadoutItemScreen> with BungieApiConfigConsumerState {
+    extends SearchScreenState<SelectLoadoutItemScreen>
+    with BungieApiConfigConsumerState {
   TextFilter get textFilter {
     return [controller.preFilters, controller.filters, controller.postFilters]
         .expand((element) => element)

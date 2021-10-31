@@ -59,7 +59,6 @@ class LoadoutsService {
   }
 
   Future<List<Loadout>> _fetchLoadouts() async {
-
     List<Loadout> _fetchedLoadouts = await _littleLightApi.fetchLoadouts();
     if (_loadouts == null) {
       _loadouts = _fetchedLoadouts;

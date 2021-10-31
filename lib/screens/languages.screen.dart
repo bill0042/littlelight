@@ -2,11 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/translations/translations.consumer.dart';
 import 'package:little_light/screens/initial.screen.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
-
 import 'package:little_light/widgets/common/loading_anim.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
@@ -16,7 +15,7 @@ class LanguagesScreen extends ConsumerStatefulWidget {
 }
 
 class _LanguagesScreenState extends ConsumerState<LanguagesScreen>
-    with TranslationsConsumerState {
+    with TranslationsConsumerState, ManifestConsumerState {
   List<String> languages;
   Map<String, int> fileSizes;
   String currentLanguage;
@@ -30,7 +29,7 @@ class _LanguagesScreenState extends ConsumerState<LanguagesScreen>
 
   void loadLanguages() async {
     currentLanguage = selectedLanguage = StorageService.getLanguage();
-    languages = await ManifestService().getAvailableLanguages();
+    languages = await manifest.getAvailableLanguages();
     fileSizes = Map();
     for (var l in languages) {
       var storage = StorageService.language(l);

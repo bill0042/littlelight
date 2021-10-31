@@ -29,7 +29,8 @@ class SearchItemWrapperWidget extends InventoryItemWrapperWidget {
 }
 
 class SearchItemWrapperWidgetState<T extends SearchItemWrapperWidget>
-    extends InventoryItemWrapperWidgetState<SearchItemWrapperWidget> with BungieApiConfigConsumerState{
+    extends InventoryItemWrapperWidgetState<SearchItemWrapperWidget>
+    with BungieApiConfigConsumerState {
   @override
   Widget build(BuildContext context) {
     return Container(

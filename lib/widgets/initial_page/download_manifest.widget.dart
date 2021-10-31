@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
 typedef OnFinishCallback = void Function();
 
-class DownloadManifestWidget extends StatefulWidget {
+class DownloadManifestWidget extends ConsumerStatefulWidget {
   final String title = "Download Database";
-  final ManifestService manifest = ManifestService();
   final String selectedLanguage;
   final OnFinishCallback onFinish;
   DownloadManifestWidget({this.selectedLanguage, this.onFinish});
@@ -17,7 +17,8 @@ class DownloadManifestWidget extends StatefulWidget {
   }
 }
 
-class DownloadManifestWidgetState extends State<DownloadManifestWidget> {
+class DownloadManifestWidgetState extends ConsumerState<DownloadManifestWidget>
+    with ManifestConsumerState {
   double _downloadProgress = 0;
   int _loaded = 0;
   int _total = 0;
@@ -31,8 +32,7 @@ class DownloadManifestWidgetState extends State<DownloadManifestWidget> {
   }
 
   void download() async {
-    bool result =
-        await this.widget.manifest.download(onProgress: (loaded, total) {
+    bool result = await manifest.download(onProgress: (loaded, total) {
       setState(() {
         _downloadProgress = loaded / total;
         _loaded = (loaded / 1024).floor();

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
-
-import 'package:little_light/services/manifest/manifest.service.dart';
-
 import 'package:little_light/widgets/inventory_tabs/inventory_notification.widget.dart';
 
 abstract class DefinitionSearchScreen extends ConsumerStatefulWidget {
@@ -14,7 +12,8 @@ abstract class DefinitionSearchScreen extends ConsumerStatefulWidget {
 }
 
 abstract class DefinitionSearchScreenState<T extends DefinitionSearchScreen, DT>
-    extends ConsumerState<T> with UserSettingsConsumerState {
+    extends ConsumerState<T>
+    with UserSettingsConsumerState, ManifestConsumerState {
   TextEditingController _searchFieldController = TextEditingController();
   List<DT> items;
 
@@ -29,10 +28,10 @@ abstract class DefinitionSearchScreenState<T extends DefinitionSearchScreen, DT>
   }
 
   loadItems() async {
-    this.items = (await ManifestService()
-            .searchDefinitions<DT>([_searchFieldController.text]))
-        .values
-        .toList();
+    this.items =
+        (await manifest.searchDefinitions<DT>([_searchFieldController.text]))
+            .values
+            .toList();
     setState(() {});
   }
 

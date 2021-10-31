@@ -11,7 +11,8 @@ import 'package:http/http.dart' as http;
 final littleLightDataProvider =
     Provider<LittleLightData>((ref) => LittleLightData._(ref));
 
-get globalLittleLightDataProvider => globalContainer.read(littleLightDataProvider);
+get globalLittleLightDataProvider =>
+    globalContainer.read(littleLightDataProvider);
 
 class LittleLightData {
   StorageService storage = StorageService.global();

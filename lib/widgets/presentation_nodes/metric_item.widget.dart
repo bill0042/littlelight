@@ -9,17 +9,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/objective_tracking/objective_tracking.consumer.dart';
 import 'package:little_light/models/tracked_objective.dart';
-
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 
 class MetricItemWidget extends ConsumerStatefulWidget {
-  final ManifestService manifest = ManifestService();
   final int hash;
   MetricItemWidget({Key key, this.hash}) : super(key: key);
 
@@ -33,7 +31,8 @@ class MetricItemWidgetState extends ConsumerState<MetricItemWidget>
     with
         ObjectiveTrackingConsumerState,
         BungieApiConfigConsumerState,
-        BungieAuthConsumerState {
+        BungieAuthConsumerState,
+        ManifestConsumerState {
   DestinyMetricDefinition _definition;
   bool isLogged = false;
   Map<int, DestinyObjectiveDefinition> objectiveDefinitions;
@@ -41,7 +40,7 @@ class MetricItemWidgetState extends ConsumerState<MetricItemWidget>
   bool isTracking = false;
 
   DestinyMetricDefinition get definition {
-    return widget.manifest
+    return manifest
             .getDefinitionFromCache<DestinyMetricDefinition>(widget.hash) ??
         _definition;
   }
@@ -71,7 +70,6 @@ class MetricItemWidgetState extends ConsumerState<MetricItemWidget>
 
   loadDefinitions() async {
     isLogged = auth.isLogged;
-    var manifest = ManifestService();
     if (this.definition == null) {
       _definition =
           await manifest.getDefinition<DestinyMetricDefinition>(widget.hash);

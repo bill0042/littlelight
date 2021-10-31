@@ -6,7 +6,8 @@ import 'package:little_light/core/providers/global_container/global.container.da
 final bungieApiConfigProvider =
     Provider<BungieApiConfig>((ref) => BungieApiConfig(ref));
 
-BungieApiConfig get globalBungieApiConfigProvider => globalContainer.read(bungieApiConfigProvider);
+BungieApiConfig get globalBungieApiConfigProvider =>
+    globalContainer.read(bungieApiConfigProvider);
 
 class BungieApiConfig {
   ProviderRef _ref;

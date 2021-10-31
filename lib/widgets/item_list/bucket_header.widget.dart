@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:bungie_api/models/destiny_inventory_bucket_definition.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/item_list/bucket_display_options_selector.widget.dart';
 
-class BucketHeaderWidget extends StatefulWidget {
-  final ManifestService manifest = ManifestService();
+class BucketHeaderWidget extends ConsumerStatefulWidget {
   final int hash;
   final int itemCount;
   final bool isVault;
@@ -25,7 +25,8 @@ class BucketHeaderWidget extends StatefulWidget {
   BucketHeaderWidgetState createState() => BucketHeaderWidgetState();
 }
 
-class BucketHeaderWidgetState<T extends BucketHeaderWidget> extends State<T> {
+class BucketHeaderWidgetState<T extends BucketHeaderWidget>
+    extends ConsumerState<T> with ManifestConsumerState {
   DestinyInventoryBucketDefinition bucketDef;
 
   @override
@@ -37,7 +38,7 @@ class BucketHeaderWidgetState<T extends BucketHeaderWidget> extends State<T> {
   }
 
   fetchDefinition() async {
-    bucketDef = await widget.manifest
+    bucketDef = await manifest
         .getDefinition<DestinyInventoryBucketDefinition>(widget.hash);
     if (mounted) {
       setState(() {});

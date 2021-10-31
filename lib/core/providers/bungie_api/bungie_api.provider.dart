@@ -30,11 +30,10 @@ import 'package:little_light/core/providers/bungie_api/bungie_api_config.provide
 import 'package:little_light/core/providers/bungie_auth/bungie_auth.provider.dart';
 import 'package:little_light/core/providers/global_container/global.container.dart';
 
+final bungieApiProvider = Provider<BungieApi>((ref) => BungieApi._(ref));
 
-final bungieApiProvider =
-    Provider<BungieApi>((ref) => BungieApi._(ref));
-
-BungieApi get globalBungieApiProvider => globalContainer.read(bungieApiProvider);
+BungieApi get globalBungieApiProvider =>
+    globalContainer.read(bungieApiProvider);
 
 class BungieApi {
   ProviderRef _ref;
@@ -55,18 +54,18 @@ class BungieApi {
     return "$baseUrl$url";
   }
 
-
   Future<DestinyManifestResponse> getManifest() {
     return Destiny2.getDestinyManifest(clientBuilder());
   }
 
   Future<BungieNetToken> requestToken(String code) {
-    return OAuth.getToken(clientBuilder(), config.clientId, config.clientSecret, code);
+    return OAuth.getToken(
+        clientBuilder(), config.clientId, config.clientSecret, code);
   }
 
   Future<BungieNetToken> refreshToken(String refreshToken) {
-    return OAuth.refreshToken(
-        clientBuilder(autoRefreshToken: false), config.clientId, config.clientSecret, refreshToken);
+    return OAuth.refreshToken(clientBuilder(autoRefreshToken: false),
+        config.clientId, config.clientSecret, refreshToken);
   }
 
   Future<DestinyProfileResponse> getCurrentProfile(
@@ -200,4 +199,3 @@ class BungieApi {
     return response.response;
   }
 }
-

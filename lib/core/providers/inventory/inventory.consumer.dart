@@ -8,6 +8,5 @@ mixin InventoryConsumerState<T extends ConsumerStatefulWidget>
 }
 
 mixin InventoryConsumerWidget on ConsumerWidget {
-  Inventory inventory(WidgetRef ref) =>
-      ref.read(inventoryProvider);
+  Inventory inventory(WidgetRef ref) => ref.read(inventoryProvider);
 }

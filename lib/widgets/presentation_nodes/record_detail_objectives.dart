@@ -8,7 +8,7 @@ import 'package:bungie_api/models/destiny_record_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
@@ -16,7 +16,6 @@ import 'package:little_light/widgets/common/objective.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
 class RecordObjectivesWidget extends ConsumerStatefulWidget {
-  final ManifestService manifest = ManifestService();
   final ProfileService profile = ProfileService();
   final NotificationService broadcaster = NotificationService();
   final DestinyRecordDefinition definition;
@@ -30,7 +29,7 @@ class RecordObjectivesWidget extends ConsumerStatefulWidget {
 }
 
 class RecordObjectivesWidgetState extends ConsumerState<RecordObjectivesWidget>
-    with BungieAuthConsumerState {
+    with BungieAuthConsumerState, ManifestConsumerState {
   bool get isLogged => auth.isLogged;
   Map<int, DestinyObjectiveDefinition> objectiveDefinitions;
   StreamSubscription<NotificationEvent> subscription;
@@ -64,7 +63,6 @@ class RecordObjectivesWidgetState extends ConsumerState<RecordObjectivesWidget>
   }
 
   loadDefinitions() async {
-    var manifest = ManifestService();
     if (definition?.objectiveHashes != null) {
       objectiveDefinitions =
           await manifest.getDefinitions<DestinyObjectiveDefinition>(

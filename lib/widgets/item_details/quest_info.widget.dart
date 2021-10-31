@@ -5,6 +5,7 @@ import 'package:bungie_api/models/destiny_objective_definition.dart';
 import 'package:bungie_api/models/destiny_objective_progress.dart';
 import 'package:flutter/material.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateful_item.widget.dart';
@@ -34,7 +35,7 @@ class QuestInfoWidget extends BaseDestinyStatefulItemWidget {
 }
 
 class QuestInfoWidgetState extends BaseDestinyItemState<QuestInfoWidget>
-    with BungieApiConfigConsumerState {
+    with BungieApiConfigConsumerState, ManifestConsumerState {
   DestinyInventoryItemDefinition questlineDefinition;
   Map<int, DestinyInventoryItemDefinition> questSteps;
   Map<int, DestinyObjectiveDefinition> objectiveDefinitions;
@@ -52,19 +53,19 @@ class QuestInfoWidgetState extends BaseDestinyItemState<QuestInfoWidget>
   loadDefinitions() async {
     itemObjectives = widget.profile
         .getItemObjectives(item?.itemInstanceId, characterId, item?.itemHash);
-    questlineDefinition = await widget.manifest
-        .getDefinition<DestinyInventoryItemDefinition>(
+    questlineDefinition =
+        await manifest.getDefinition<DestinyInventoryItemDefinition>(
             definition.objectives.questlineItemHash);
     List<int> stepHashes = questlineDefinition.setData?.itemList
             ?.map((i) => i.itemHash)
             ?.toList() ??
         [];
     currentIndex = stepHashes.indexOf(item.itemHash);
-    questSteps = await widget.manifest
+    questSteps = await manifest
         .getDefinitions<DestinyInventoryItemDefinition>(stepHashes);
     Iterable<int> objectiveHashes =
         questSteps.values.expand((step) => step.objectives.objectiveHashes);
-    objectiveDefinitions = await widget.manifest
+    objectiveDefinitions = await manifest
         .getDefinitions<DestinyObjectiveDefinition>(objectiveHashes);
     setState(() {});
   }

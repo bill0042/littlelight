@@ -7,13 +7,12 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
+import 'package:little_light/models/bucket_display_options.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
-import 'package:little_light/models/bucket_display_options.dart';
-
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/utils/media_query_helper.dart';
@@ -40,7 +39,7 @@ const _suppressEmptySpaces = [
 
 class ItemListWidget extends ConsumerStatefulWidget {
   final String characterId;
-  final ManifestService manifest = ManifestService();
+
   final ProfileService profile = ProfileService();
   final NotificationService broadcaster = NotificationService();
   final EdgeInsets padding;
@@ -71,7 +70,10 @@ class ItemListWidget extends ConsumerStatefulWidget {
 }
 
 class ItemListWidgetState extends ConsumerState<ItemListWidget>
-    with AutomaticKeepAliveClientMixin, UserSettingsConsumerState {
+    with
+        AutomaticKeepAliveClientMixin,
+        UserSettingsConsumerState,
+        ManifestConsumerState {
   Map<int, DestinyInventoryBucketDefinition> bucketDefs;
   List<ListBucket> buckets;
   StreamSubscription<NotificationEvent> subscription;
@@ -108,7 +110,7 @@ class ItemListWidgetState extends ConsumerState<ItemListWidget>
         widget.profile.getCharacterInventory(widget.characterId);
     List<DestinyItemComponent> profileInventory =
         widget.profile.getProfileInventory();
-    this.bucketDefs = await widget.manifest
+    this.bucketDefs = await manifest
         .getDefinitions<DestinyInventoryBucketDefinition>(widget.bucketHashes);
     this.buckets = [];
     for (int bucketHash in widget.bucketHashes) {

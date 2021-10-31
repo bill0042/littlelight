@@ -1,15 +1,15 @@
 import 'package:bungie_api/enums/destiny_presentation_screen_style.dart';
 import 'package:bungie_api/models/destiny_presentation_node_definition.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/presentation_nodes/presentation_node_body.widget.dart';
 import 'package:little_light/widgets/presentation_nodes/presentation_node_list.widget.dart';
 
-class PresentationNodeTabsWidget extends StatefulWidget {
-  final _manifest = ManifestService();
+class PresentationNodeTabsWidget extends ConsumerStatefulWidget {
   final int presentationNodeHash;
   final List<int> presentationNodeHashes;
   final int depth;
@@ -33,7 +33,8 @@ class PresentationNodeTabsWidget extends StatefulWidget {
 }
 
 class PresentationNodeTabsWidgetState
-    extends State<PresentationNodeTabsWidget> {
+    extends ConsumerState<PresentationNodeTabsWidget>
+    with ManifestConsumerState {
   DestinyPresentationNodeDefinition definition;
   @override
   void initState() {
@@ -44,8 +45,8 @@ class PresentationNodeTabsWidgetState
   }
 
   loadDefinition() async {
-    definition = await widget._manifest
-        .getDefinition<DestinyPresentationNodeDefinition>(
+    definition =
+        await manifest.getDefinition<DestinyPresentationNodeDefinition>(
             widget.presentationNodeHash);
     if (mounted) {
       setState(() {});

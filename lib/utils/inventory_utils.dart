@@ -8,7 +8,7 @@ import 'package:bungie_api/models/interpolation_point.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.provider.dart';
 import 'package:little_light/models/loadout.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.provider.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/models/item_sort_parameter.dart';
 
@@ -19,6 +19,7 @@ import 'package:little_light/utils/item_with_owner.dart';
 
 class InventoryUtils {
   static UserSettingsService get userSettings => globalUserSettingsProvider;
+  static Manifest get manifest => globalManifestProvider;
 
   static int interpolateStat(
       int investmentValue, List<InterpolationPoint> displayInterpolation) {
@@ -55,7 +56,7 @@ class InventoryUtils {
     if (sortingParams == null) {
       sortingParams = userSettings.itemOrdering;
     }
-    await ManifestService().getDefinitions<DestinyInventoryItemDefinition>(
+    await manifest.getDefinitions<DestinyInventoryItemDefinition>(
         items.map((i) => i?.item?.itemHash));
     List<BaseItemSorter> sorters =
         sortingParams.map((p) => p.sorter).where((s) => s != null).toList();
@@ -81,7 +82,6 @@ class InventoryUtils {
   }
 
   static debugLoadout(LoadoutItemIndex loadout, int classType) async {
-    ManifestService manifest = ManifestService();
     ProfileService profile = ProfileService();
 
     var isInDebug = false;
@@ -120,6 +120,8 @@ class InventoryUtils {
 }
 
 class LoadoutItemIndex {
+  static Manifest get manifest => globalManifestProvider;
+
   static const List<int> genericBucketHashes = [
     InventoryBucket.kineticWeapons,
     InventoryBucket.energyWeapons,
@@ -207,7 +209,6 @@ class LoadoutItemIndex {
     }
 
     List<int> hashes = items.map((item) => item.itemHash).toList();
-    ManifestService manifest = ManifestService();
     Map<int, DestinyInventoryItemDefinition> defs =
         await manifest.getDefinitions<DestinyInventoryItemDefinition>(hashes);
 

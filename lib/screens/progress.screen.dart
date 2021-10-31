@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
-import 'package:little_light/screens/search.screen.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
-import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/models/item_sort_parameter.dart';
-
+import 'package:little_light/screens/search.screen.dart';
+import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/item_filters/item_owner_filter.dart';
 import 'package:little_light/utils/item_filters/pseudo_item_type_filter.dart';
 import 'package:little_light/utils/selected_page_persistence.dart';
@@ -27,7 +25,6 @@ import 'package:little_light/widgets/search/search.controller.dart';
 
 class ProgressScreen extends ConsumerStatefulWidget {
   final profile = ProfileService();
-  final manifest = ManifestService();
 
   @override
   ProgressScreenState createState() => ProgressScreenState();

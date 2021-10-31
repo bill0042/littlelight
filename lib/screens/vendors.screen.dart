@@ -2,9 +2,7 @@ import 'package:bungie_api/models/destiny_character_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
-
 import 'package:little_light/widgets/common/animated_character_background.widget.dart';
 import 'package:little_light/widgets/flutter/passive_tab_bar_view.dart';
 import 'package:little_light/widgets/inventory_tabs/character_tab_header.widget.dart';
@@ -14,7 +12,6 @@ import 'package:little_light/widgets/vendors/vendors_list.widget.dart';
 
 class VendorsScreen extends ConsumerStatefulWidget {
   final profile = ProfileService();
-  final manifest = ManifestService();
 
   @override
   VendorsScreenState createState() => VendorsScreenState();

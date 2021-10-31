@@ -5,12 +5,11 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_vendor_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
 import 'package:little_light/core/providers/inventory/transfer_destination.dart';
 import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
 import 'package:little_light/models/loadout.dart';
-import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/inventory_utils.dart';
@@ -22,8 +21,9 @@ import 'package:little_light/widgets/item_list/character_info.widget.dart';
 import 'package:little_light/widgets/option_sheets/loadout_select_sheet.widget.dart';
 
 class VaultInfoWidget extends CharacterInfoWidget {
-  final ManifestService manifest = ManifestService();
-  final ProfileService profile = ProfileService();
+  final ProfileService profile = ProfileService(
+    
+  );
   final NotificationService broadcaster = NotificationService();
 
   VaultInfoWidget({Key key}) : super(key: key);
@@ -108,7 +108,6 @@ class VaultInfoWidgetState extends CharacterInfoWidgetState<VaultInfoWidget>
 
 class VaultOptionsSheet extends ConsumerStatefulWidget {
   final ProfileService profile = ProfileService();
-  final ManifestService manifest = ManifestService();
 
   VaultOptionsSheet({Key key}) : super(key: key);
 
@@ -162,8 +161,7 @@ class VaultOptionsSheetState extends ConsumerState<VaultOptionsSheet>
             context: context,
             builder: (context) => LoadoutSelectSheet(
                 loadouts: loadouts,
-                onSelect: (loadout) =>
-                    inventory.transferLoadout(loadout)));
+                onSelect: (loadout) => inventory.transferLoadout(loadout)));
       },
     );
   }

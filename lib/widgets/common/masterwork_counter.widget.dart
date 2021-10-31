@@ -4,13 +4,11 @@ import 'package:bungie_api/models/destiny_objective_progress.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
-
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 
 class MasterworkCounterWidget extends ConsumerStatefulWidget {
-  final ManifestService manifest = ManifestService();
   final ProfileService profile = ProfileService();
   final DestinyItemComponent item;
 
@@ -22,8 +20,12 @@ class MasterworkCounterWidget extends ConsumerStatefulWidget {
   }
 }
 
-class MasterworkCounterWidgetState extends ConsumerState<MasterworkCounterWidget>
-    with AutomaticKeepAliveClientMixin, BungieApiConfigConsumerState {
+class MasterworkCounterWidgetState
+    extends ConsumerState<MasterworkCounterWidget>
+    with
+        AutomaticKeepAliveClientMixin,
+        BungieApiConfigConsumerState,
+        ManifestConsumerState {
   DestinyObjectiveProgress masterworkObjective;
   DestinyObjectiveDefinition masterworkObjectiveDefinition;
 
@@ -40,8 +42,8 @@ class MasterworkCounterWidgetState extends ConsumerState<MasterworkCounterWidget
       for (var objective in objectives) {
         if (objective.visible) {
           masterworkObjective = objective;
-          masterworkObjectiveDefinition = await widget.manifest
-              .getDefinition<DestinyObjectiveDefinition>(
+          masterworkObjectiveDefinition =
+              await manifest.getDefinition<DestinyObjectiveDefinition>(
                   objective.objectiveHash);
         }
       }

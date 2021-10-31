@@ -5,7 +5,6 @@ import 'package:bungie_api/models/destiny_vendor_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/profile/vendors.service.dart';
 
@@ -15,7 +14,7 @@ import 'package:shimmer/shimmer.dart';
 class VendorsListWidget extends StatefulWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
-  final ManifestService manifest = ManifestService();
+
   final VendorsService service = VendorsService();
   final List<int> ignoreVendorHashes = const [
     997622907, //prismatic matrix

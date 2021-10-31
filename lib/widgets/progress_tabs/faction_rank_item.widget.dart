@@ -8,7 +8,7 @@ import 'package:bungie_api/models/destiny_vendor_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
@@ -18,7 +18,7 @@ import 'package:little_light/widgets/flutter/filled_diamond_progress_indicator.d
 class FactionRankItemWidget extends ConsumerStatefulWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
-  final ManifestService manifest = ManifestService();
+
   final NotificationService broadcaster = NotificationService();
 
   final DestinyFactionProgression progression;
@@ -31,7 +31,10 @@ class FactionRankItemWidget extends ConsumerStatefulWidget {
 
 class FactionRankItemWidgetState<T extends FactionRankItemWidget>
     extends ConsumerState<T>
-    with AutomaticKeepAliveClientMixin, BungieApiConfigConsumerState {
+    with
+        AutomaticKeepAliveClientMixin,
+        BungieApiConfigConsumerState,
+        ManifestConsumerState {
   DestinyProgressionDefinition definition;
   DestinyFactionDefinition factionDefinition;
   DestinyVendorDefinition vendorDefinition;
@@ -62,14 +65,13 @@ class FactionRankItemWidgetState<T extends FactionRankItemWidget>
   }
 
   Future<void> loadDefinitions() async {
-    definition = await widget.manifest
-        .getDefinition<DestinyProgressionDefinition>(
-            widget.progression.progressionHash);
-    factionDefinition = await widget.manifest
+    definition = await manifest.getDefinition<DestinyProgressionDefinition>(
+        widget.progression.progressionHash);
+    factionDefinition = await manifest
         .getDefinition<DestinyFactionDefinition>(progression.factionHash);
     if ((factionDefinition?.vendors?.length ?? 0) > 0) {
-      vendorDefinition = await widget.manifest
-          .getDefinition<DestinyVendorDefinition>(factionDefinition
+      vendorDefinition = await manifest.getDefinition<DestinyVendorDefinition>(
+          factionDefinition
               .vendors[factionDefinition.vendors.length - 1].vendorHash);
     }
 

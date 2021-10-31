@@ -3,7 +3,7 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.provider.dart';
 import 'package:uuid/uuid.dart';
 
 part 'loadout.g.dart';
@@ -62,7 +62,7 @@ class Loadout {
     unequipped
         .removeWhere((i) => i.itemInstanceId == loadoutItem.itemInstanceId);
     if (asEquipped) {
-      var def = await ManifestService()
+      var def = await globalManifestProvider
           .getDefinition<DestinyInventoryItemDefinition>(hash);
       int blockingItemHash;
       if (def?.inventory?.tierType == TierType.Exotic) {
@@ -78,9 +78,8 @@ class Loadout {
   }
 
   Future<void> _removeEquipped(DestinyInventoryItemDefinition _itemDef) async {
-    var defs = await ManifestService()
-        .getDefinitions<DestinyInventoryItemDefinition>(
-            equipped.map((i) => i.itemHash));
+    var defs = await globalManifestProvider.getDefinitions<
+        DestinyInventoryItemDefinition>(equipped.map((i) => i.itemHash));
     equipped.removeWhere((i) {
       var def = defs[i.itemHash];
       return def?.inventory?.bucketTypeHash ==
@@ -96,9 +95,8 @@ class Loadout {
     var isWeapon = InventoryBucket.exoticWeaponBlockBuckets
         .contains(_itemDef.inventory?.bucketTypeHash);
     if (!isArmor && !isWeapon) return null;
-    var defs = await ManifestService()
-        .getDefinitions<DestinyInventoryItemDefinition>(
-            equipped.map((i) => i.itemHash));
+    var defs = await globalManifestProvider.getDefinitions<
+        DestinyInventoryItemDefinition>(equipped.map((i) => i.itemHash));
     int hashResult;
     equipped.removeWhere((i) {
       var def = defs[i.itemHash];

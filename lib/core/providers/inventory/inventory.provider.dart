@@ -18,7 +18,7 @@ import 'package:little_light/core/providers/bungie_api/bungie_api.provider.dart'
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/core/providers/global_container/global.container.dart';
 import 'package:little_light/models/loadout.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.provider.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:bungie_api/enums/bucket_category.dart';
@@ -36,7 +36,7 @@ class Inventory {
 
   BungieApi get api => _ref.read(bungieApiProvider);
   final profile = ProfileService();
-  final manifest = ManifestService();
+  Manifest get manifest => _ref.read(manifestProvider);
   final _broadcaster = NotificationService();
 
   Inventory._(this._ref);
@@ -136,9 +136,8 @@ class Inventory {
     DestinyCharacterComponent character =
         profile.getCharacter(destinationCharacterId);
     List<ItemWithOwner> itemsToTransfer = itemStates.where((i) {
-      var def = ManifestService()
-          .getDefinitionFromCache<DestinyInventoryItemDefinition>(
-              i?.item?.itemHash);
+      var def = manifest.getDefinitionFromCache<DestinyInventoryItemDefinition>(
+          i?.item?.itemHash);
       if (def?.equippable == false) return false;
       if (def?.nonTransferrable == true && i?.ownerId != character.characterId)
         return false;
@@ -149,9 +148,8 @@ class Inventory {
     Set<int> ocuppiedBuckets = Set();
     Set<DestinyItemType> ocuppiedExoticTypes = Set();
     List<ItemWithOwner> itemsToEquip = itemsToTransfer.where((i) {
-      var def = ManifestService()
-          .getDefinitionFromCache<DestinyInventoryItemDefinition>(
-              i?.item?.itemHash);
+      var def = manifest.getDefinitionFromCache<DestinyInventoryItemDefinition>(
+          i?.item?.itemHash);
       if (ocuppiedBuckets.contains(def?.inventory?.bucketTypeHash))
         return false;
       if (def?.inventory?.tierType == TierType.Exotic) {

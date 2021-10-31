@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/models/bucket_display_options.dart';
 
 import 'package:little_light/widgets/common/translated_text.widget.dart';
@@ -9,7 +8,6 @@ import 'package:little_light/widgets/item_list/bucket_display_options_selector.w
 
 class PursuitsDisplayOptionsSelectorWidget
     extends BucketDisplayOptionsSelectorWidget {
-  final ManifestService manifest = ManifestService();
   final String typeIdentifier;
   PursuitsDisplayOptionsSelectorWidget(
       {this.typeIdentifier, Function onChanged})

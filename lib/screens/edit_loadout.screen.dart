@@ -10,11 +10,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/translations/translations.consumer.dart';
 import 'package:little_light/models/loadout.dart';
 import 'package:little_light/screens/select_loadout_background.screen.dart';
 import 'package:little_light/screens/select_loadout_item.screen.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
@@ -27,14 +27,16 @@ class EditLoadoutScreen extends ConsumerStatefulWidget {
   EditLoadoutScreen({Key key, this.loadout, this.forceCreate = false})
       : super(key: key);
 
-  final ManifestService manifest = ManifestService();
-
   @override
   EditLoadoutScreenState createState() => EditLoadoutScreenState();
 }
 
 class EditLoadoutScreenState extends ConsumerState<EditLoadoutScreen>
-    with TranslationsConsumerState, LoadoutsConsumerState, BungieApiConfigConsumerState {
+    with
+        TranslationsConsumerState,
+        LoadoutsConsumerState,
+        BungieApiConfigConsumerState,
+        ManifestConsumerState {
   bool changed = false;
   LoadoutItemIndex _itemIndex;
   DestinyInventoryItemDefinition emblemDefinition;
@@ -72,14 +74,14 @@ class EditLoadoutScreenState extends ConsumerState<EditLoadoutScreen>
 
   loadEmblemDefinition() async {
     if (_loadout.emblemHash == null) return;
-    emblemDefinition = await widget.manifest
+    emblemDefinition = await manifest
         .getDefinition<DestinyInventoryItemDefinition>(_loadout.emblemHash);
     setState(() {});
   }
 
   buildItemIndex() async {
-    bucketDefinitions = await widget.manifest
-        .getDefinitions<DestinyInventoryBucketDefinition>(
+    bucketDefinitions =
+        await manifest.getDefinitions<DestinyInventoryBucketDefinition>(
             InventoryBucket.loadoutBucketHashes);
     _itemIndex = await InventoryUtils.buildLoadoutItemIndex(_loadout);
     if (mounted) {
@@ -206,8 +208,8 @@ class EditLoadoutScreenState extends ConsumerState<EditLoadoutScreen>
   }
 
   showRemovingExoticMessage(BuildContext context, int hash) async {
-    DestinyInventoryItemDefinition definition = await widget.manifest
-        .getDefinition<DestinyInventoryItemDefinition>(hash);
+    DestinyInventoryItemDefinition definition =
+        await manifest.getDefinition<DestinyInventoryItemDefinition>(hash);
     if (definition.itemType == DestinyItemType.Weapon) {
       _showSnackBar(
           context,
@@ -230,7 +232,7 @@ class EditLoadoutScreenState extends ConsumerState<EditLoadoutScreen>
   }
 
   void removeItem(bool equipped, DestinyItemComponent item) async {
-    var def = await ManifestService()
+    var def = await manifest
         .getDefinition<DestinyInventoryItemDefinition>(item.itemHash);
     if (equipped) {
       _itemIndex.removeEquippedItem(item, def);

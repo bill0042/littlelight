@@ -2,14 +2,12 @@ import 'package:bungie_api/models/destiny_inventory_bucket_definition.dart';
 import 'package:bungie_api/models/destiny_item_category_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/item_list/bucket_header.widget.dart';
 import 'package:little_light/widgets/progress_tabs/pursuits_display_options_selector.widget.dart';
 
 class PursuitCategoryHeaderWidget extends BucketHeaderWidget {
-  final ManifestService manifest = ManifestService();
   final Function onChanged;
   final String label;
   PursuitCategoryHeaderWidget(
@@ -23,9 +21,8 @@ class PursuitCategoryHeaderWidget extends BucketHeaderWidget {
 class PursuitCategoryHeaderWidgetState
     extends BucketHeaderWidgetState<PursuitCategoryHeaderWidget> {
   fetchDefinition() async {
-    bucketDef = await widget.manifest
-        .getDefinition<DestinyInventoryBucketDefinition>(
-            InventoryBucket.pursuits);
+    bucketDef = await manifest.getDefinition<DestinyInventoryBucketDefinition>(
+        InventoryBucket.pursuits);
     if (mounted) {
       setState(() {});
     }

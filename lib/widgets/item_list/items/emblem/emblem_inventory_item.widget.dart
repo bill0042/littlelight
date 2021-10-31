@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 
 import 'package:little_light/widgets/item_list/items/base/base_inventory_item.widget.dart';
 
-class EmblemInventoryItemWidget extends BaseInventoryItemWidget with BungieApiConfigConsumer {
+class EmblemInventoryItemWidget extends BaseInventoryItemWidget
+    with BungieApiConfigConsumer {
   EmblemInventoryItemWidget(
     DestinyItemComponent item,
     DestinyInventoryItemDefinition definition,
@@ -38,6 +39,7 @@ class EmblemInventoryItemWidget extends BaseInventoryItemWidget with BungieApiCo
             child: QueuedNetworkImage(
                 alignment: Alignment.center,
                 fit: BoxFit.cover,
-                imageUrl: apiConfig(ref).bungieUrl(definition.secondarySpecial))));
+                imageUrl:
+                    apiConfig(ref).bungieUrl(definition.secondarySpecial))));
   }
 }

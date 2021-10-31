@@ -7,18 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/objective_tracking/objective_tracking.consumer.dart';
 import 'package:little_light/models/tracked_objective.dart';
-
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/widgets/common/objective.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
-
 import 'package:little_light/widgets/item_details/item_stats.widget.dart';
 
 class PerkListItem extends ConsumerStatefulWidget {
-  final ManifestService manifest = ManifestService();
   final DestinyInventoryItemDefinition definition;
   final DestinyItemPlug plug;
 
@@ -31,7 +28,11 @@ class PerkListItem extends ConsumerStatefulWidget {
 }
 
 class PerkListItemState extends ConsumerState<PerkListItem>
-    with TickerProviderStateMixin, ObjectiveTrackingConsumerState, BungieApiConfigConsumerState {
+    with
+        TickerProviderStateMixin,
+        ObjectiveTrackingConsumerState,
+        BungieApiConfigConsumerState,
+        ManifestConsumerState {
   bool isTracking = false;
 
   DestinyInventoryItemDefinition get definition => widget.definition;
@@ -47,8 +48,8 @@ class PerkListItemState extends ConsumerState<PerkListItem>
 
   loadDefinitions() async {
     if ((definition?.objectives?.objectiveHashes?.length ?? 0) > 0) {
-      objectiveDefinitions = await widget.manifest
-          .getDefinitions<DestinyObjectiveDefinition>(
+      objectiveDefinitions =
+          await manifest.getDefinitions<DestinyObjectiveDefinition>(
               definition.objectives.objectiveHashes);
       if (mounted) {
         setState(() {});
@@ -76,8 +77,8 @@ class PerkListItemState extends ConsumerState<PerkListItem>
                     width: 32,
                     height: 32,
                     child: QueuedNetworkImage(
-                      imageUrl: apiConfig.bungieUrl(
-                          definition?.displayProperties?.icon),
+                      imageUrl: apiConfig
+                          .bungieUrl(definition?.displayProperties?.icon),
                     ),
                   ),
                   Container(

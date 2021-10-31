@@ -7,14 +7,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.provider.dart';
 import 'package:little_light/core/providers/bungie_auth/bungie_auth.provider.dart';
 
-
 import 'exceptions/bungie_api.exception.dart';
 
-typedef BungieApiClient ClientBuilder(
+typedef ClientBuilder = BungieApiClient Function(
     {BungieNetToken token, bool autoRefreshToken});
 
-final Provider<ClientBuilder> bungieApiClientBuilderProvider = Provider<ClientBuilder>(
-    (ref) => ({BungieNetToken token, bool autoRefreshToken}) =>
+final Provider<ClientBuilder> bungieApiClientBuilderProvider =
+    Provider<ClientBuilder>((ref) => (
+            {BungieNetToken token, bool autoRefreshToken}) =>
         _clientBuilder(ref, token: token, autoRefreshToken: autoRefreshToken));
 
 BungieApiClient _clientBuilder(ProviderRef ref,

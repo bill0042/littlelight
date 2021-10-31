@@ -3,5 +3,6 @@ import 'package:little_light/core/providers/objective_tracking/objective_trackin
 
 mixin ObjectiveTrackingConsumerState<T extends ConsumerStatefulWidget>
     on ConsumerState<T> {
-  ObjectiveTracking get objectiveTracking => ref.read(objectiveTrackingProvider);
+  ObjectiveTracking get objectiveTracking =>
+      ref.read(objectiveTrackingProvider);
 }

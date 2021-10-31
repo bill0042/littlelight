@@ -3,10 +3,10 @@ import 'package:bungie_api/models/destiny_inventory_bucket_definition.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/screens/item_detail.screen.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
+import 'package:little_light/screens/item_detail.screen.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/utils/inventory_utils.dart';
@@ -24,8 +24,7 @@ typedef OnRemoveItemFromLoadout = void Function(
 typedef OnAddItemToLoadout = void Function(
     bool equipped, DestinyClass classType);
 
-class LoadoutSlotWidget extends StatelessWidget {
-  final ManifestService manifest = ManifestService();
+class LoadoutSlotWidget extends ConsumerWidget with ManifestConsumerWidget {
   final ProfileService profile = ProfileService();
   final DestinyInventoryBucketDefinition bucketDefinition;
   final Map<DestinyClass, DestinyItemComponent> equippedClassItems;
@@ -44,7 +43,7 @@ class LoadoutSlotWidget extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (bucketDefinition == null) {
       return AspectRatio(aspectRatio: .3);
     }
@@ -52,9 +51,10 @@ class LoadoutSlotWidget extends StatelessWidget {
       HeaderWidget(
           child: Text(bucketDefinition.displayProperties.name.toUpperCase(),
               style: TextStyle(fontWeight: FontWeight.bold))),
-      buildSlotBlock(context, headerText: "Equip"),
+      buildSlotBlock(context, ref, headerText: "Equip"),
       buildSlotBlock(
         context,
+        ref,
         headerText: "Transfer",
         isEquipment: false,
       ),
@@ -62,7 +62,7 @@ class LoadoutSlotWidget extends StatelessWidget {
     ]);
   }
 
-  Widget buildSlotBlock(BuildContext context,
+  Widget buildSlotBlock(BuildContext context, WidgetRef ref,
       {String headerText, bool isEquipment = true}) {
     if (!isEquipment && !bucketDefinition.hasTransferDestination)
       return Container();
@@ -73,7 +73,7 @@ class LoadoutSlotWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             buildBlockTitle(context, headerText),
-            buildItemIcons(context, isEquipment: isEquipment)
+            buildItemIcons(context, ref, isEquipment: isEquipment)
           ],
         ));
   }
@@ -90,7 +90,8 @@ class LoadoutSlotWidget extends StatelessWidget {
     );
   }
 
-  buildItemIcons(BuildContext context, {bool isEquipment = true}) {
+  buildItemIcons(BuildContext context, WidgetRef ref,
+      {bool isEquipment = true}) {
     List<Widget> items = [];
     if (isEquipment) {
       if (LoadoutItemIndex.classBucketHashes.contains(bucketDefinition.hash)) {
@@ -98,7 +99,7 @@ class LoadoutSlotWidget extends StatelessWidget {
           DestinyClass.Titan,
           DestinyClass.Hunter,
           DestinyClass.Warlock
-        ].map((classType) => buildItemIcon(context,
+        ].map((classType) => buildItemIcon(context, ref,
             item: equippedClassItems[classType], classType: classType)));
       } else {
         items.addAll(equippedClassItems
@@ -106,19 +107,20 @@ class LoadoutSlotWidget extends StatelessWidget {
                 classType,
                 item == null
                     ? null
-                    : buildItemIcon(context, item: item, classType: classType)))
+                    : buildItemIcon(context, ref,
+                        item: item, classType: classType)))
             .values
             .where((i) => i != null));
 
-        items.add(buildItemIcon(context, item: equippedGenericItem));
+        items.add(buildItemIcon(context, ref, item: equippedGenericItem));
       }
     } else {
       if ((unequippedItems?.length ?? 0) < 9) {
-        items.add(buildItemIcon(context, equipped: false));
+        items.add(buildItemIcon(context, ref, equipped: false));
       }
       if (unequippedItems != null) {
-        items.addAll(unequippedItems.map(
-            (item) => buildItemIcon(context, item: item, equipped: false)));
+        items.addAll(unequippedItems.map((item) =>
+            buildItemIcon(context, ref, item: item, equipped: false)));
       }
     }
 
@@ -127,7 +129,7 @@ class LoadoutSlotWidget extends StatelessWidget {
         child: Wrap(children: items));
   }
 
-  Widget buildItemIcon(BuildContext context,
+  Widget buildItemIcon(BuildContext context, WidgetRef ref,
       {DestinyItemComponent item,
       DestinyClass classType,
       bool equipped = true}) {
@@ -181,7 +183,7 @@ class LoadoutSlotWidget extends StatelessWidget {
               onTap: () {
                 if (item != null) {
                   // onRemove(item, equipped);
-                  openModal(context, item, equipped);
+                  openModal(context, ref, item: item, equipped: equipped);
                 } else {
                   onAdd(equipped, classType);
                 }
@@ -190,8 +192,9 @@ class LoadoutSlotWidget extends StatelessWidget {
                 if (item == null) {
                   return;
                 }
-                var def = await manifest.getDefinition<
-                    DestinyInventoryItemDefinition>(item.itemHash);
+                var def = await manifest(ref)
+                    .getDefinition<DestinyInventoryItemDefinition>(
+                        item.itemHash);
                 var instanceInfo = profile.getInstanceInfo(item.itemInstanceId);
                 Navigator.push(
                   context,
@@ -223,7 +226,8 @@ class LoadoutSlotWidget extends StatelessWidget {
             child: AspectRatio(aspectRatio: 1, child: itemIcon)));
   }
 
-  openModal(BuildContext context, DestinyItemComponent item, bool equipped) {
+  openModal(BuildContext context, WidgetRef ref,
+      {DestinyItemComponent item, bool equipped}) {
     var ownerId = ProfileService().getItemOwner(item.itemInstanceId);
     var padding = EdgeInsets.all(8).copyWith(bottom: 4);
     var screenWidth = MediaQuery.of(context).size.width;
@@ -264,7 +268,7 @@ class LoadoutSlotWidget extends StatelessWidget {
                                         TextStyle(fontWeight: FontWeight.bold)),
                                 onPressed: () async {
                                   Navigator.of(context).pop();
-                                  var def = await manifest.getDefinition<
+                                  var def = await manifest(ref).getDefinition<
                                           DestinyInventoryItemDefinition>(
                                       item.itemHash);
                                   var instanceInfo = profile

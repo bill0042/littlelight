@@ -17,7 +17,8 @@ import 'package:little_light/widgets/common/item_icon/subclass_icon.widget.dart'
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:shimmer/shimmer.dart';
 
-class ItemIconWidget extends BaseDestinyStatelessItemWidget with BungieApiConfigConsumer{
+class ItemIconWidget extends BaseDestinyStatelessItemWidget
+    with BungieApiConfigConsumer {
   final double iconBorderWidth;
 
   factory ItemIconWidget.builder(

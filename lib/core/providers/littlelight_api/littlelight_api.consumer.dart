@@ -7,6 +7,5 @@ mixin LittleLightApiConsumerState<T extends ConsumerStatefulWidget>
 }
 
 mixin LittleLightApiConsumerWidget on ConsumerWidget {
-  LittleLightApi itemNotes(WidgetRef ref) =>
-      ref.read(littleLightApiProvider);
+  LittleLightApi itemNotes(WidgetRef ref) => ref.read(littleLightApiProvider);
 }

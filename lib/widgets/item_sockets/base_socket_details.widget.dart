@@ -14,7 +14,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/core/providers/wishlists/wishlists.provider.dart';
 import 'package:little_light/models/wish_list.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateful_item.widget.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
@@ -28,7 +27,6 @@ import 'package:little_light/widgets/item_stats/item_details_socket_item_stats.w
 import 'item_socket.controller.dart';
 
 class BaseSocketDetailsWidget extends BaseDestinyStatefulItemWidget {
-  final ManifestService manifest = ManifestService();
   final ItemSocketController controller;
   final DestinyItemSocketCategoryDefinition category;
 
@@ -87,21 +85,20 @@ class BaseSocketDetailsWidgetState<T extends BaseSocketDetailsWidget>
       }
       return;
     }
-    _definition = await widget.manifest
-        .getDefinition<DestinyInventoryItemDefinition>(
-            controller.selectedPlugHash);
+    _definition = await manifest.getDefinition<DestinyInventoryItemDefinition>(
+        controller.selectedPlugHash);
 
-    _sandboxPerkDefinitions = await widget.manifest
-        .getDefinitions<DestinySandboxPerkDefinition>(
+    _sandboxPerkDefinitions =
+        await manifest.getDefinitions<DestinySandboxPerkDefinition>(
             _definition?.perks?.map((p) => p.perkHash)?.toList() ?? []);
 
-    _statGroupDefinition = await widget.manifest
-        .getDefinition<DestinyStatGroupDefinition>(
+    _statGroupDefinition =
+        await manifest.getDefinition<DestinyStatGroupDefinition>(
             itemDefinition?.stats?.statGroupHash);
 
     if ((definition?.objectives?.objectiveHashes?.length ?? 0) > 0) {
-      objectiveDefinitions = await widget.manifest
-          .getDefinitions<DestinyObjectiveDefinition>(
+      objectiveDefinitions =
+          await manifest.getDefinitions<DestinyObjectiveDefinition>(
               definition.objectives.objectiveHashes);
     }
 

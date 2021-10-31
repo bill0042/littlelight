@@ -40,10 +40,10 @@ class VaultItemListWidgetState extends ItemListWidgetState {
         .getProfileInventory()
         .where((i) => i.bucketHash == InventoryBucket.general)
         .toList();
-    this.bucketDefs = await widget.manifest
+    this.bucketDefs = await manifest
         .getDefinitions<DestinyInventoryBucketDefinition>(widget.bucketHashes);
-    Map<int, DestinyInventoryItemDefinition> itemDefs = await widget.manifest
-        .getDefinitions<DestinyInventoryItemDefinition>(
+    Map<int, DestinyInventoryItemDefinition> itemDefs =
+        await manifest.getDefinitions<DestinyInventoryItemDefinition>(
             itemsOnVault.map((i) => i.itemHash));
     this.buckets = [];
     for (int bucketHash in widget.bucketHashes) {

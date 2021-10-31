@@ -1,12 +1,13 @@
 import 'package:bungie_api/models/destiny_presentation_node_child_entry.dart';
 import 'package:bungie_api/models/destiny_presentation_node_definition.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/mixins/tab_grid/tab_grid.mixin.dart';
 import 'package:little_light/widgets/triumphs/triumph_category_item.widget.dart';
 
-class TriumphCategoriesGridWidget extends StatefulWidget {
+class TriumphCategoriesGridWidget extends ConsumerStatefulWidget {
   final int nodeHash;
   final int columns;
   final int rows;
@@ -25,11 +26,12 @@ class TriumphCategoriesGridWidget extends StatefulWidget {
 }
 
 class _TriumphCategoriesGridWidgetState
-    extends State<TriumphCategoriesGridWidget>
+    extends ConsumerState<TriumphCategoriesGridWidget>
     with
         TickerProviderStateMixin,
         TabGridMixin<TriumphCategoriesGridWidget,
-            DestinyPresentationNodeChildEntry> {
+            DestinyPresentationNodeChildEntry>,
+        ManifestConsumerState {
   DestinyPresentationNodeDefinition definition;
   TabController _controller;
 
@@ -40,7 +42,7 @@ class _TriumphCategoriesGridWidgetState
   }
 
   void getDefinitions() async {
-    definition = await ManifestService()
+    definition = await manifest
         .getDefinition<DestinyPresentationNodeDefinition>(widget.nodeHash);
     _controller =
         TabController(initialIndex: 0, length: pageCount, vsync: this);

@@ -4,17 +4,15 @@ import 'package:bungie_api/enums/vendor_item_status.dart';
 import 'package:bungie_api/models/destiny_faction_definition.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_vendor_category.dart';
-import 'package:bungie_api/models/destiny_vendor_definition.dart';
 import 'package:bungie_api/models/destiny_vendor_component.dart';
+import 'package:bungie_api/models/destiny_vendor_definition.dart';
 import 'package:bungie_api/models/destiny_vendor_item_definition.dart';
 import 'package:bungie_api/models/destiny_vendor_sale_item_component.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/screens/vendor_details.screen.dart';
-
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/profile/vendors.service.dart';
@@ -25,7 +23,7 @@ import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 class VendorsListItemWidget extends ConsumerStatefulWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
-  final ManifestService manifest = ManifestService();
+
   final NotificationService broadcaster = NotificationService();
   final DestinyVendorComponent vendor;
 
@@ -37,7 +35,10 @@ class VendorsListItemWidget extends ConsumerStatefulWidget {
 
 class VendorsListItemWidgetState<T extends VendorsListItemWidget>
     extends ConsumerState<T>
-    with AutomaticKeepAliveClientMixin, BungieApiConfigConsumerState {
+    with
+        AutomaticKeepAliveClientMixin,
+        BungieApiConfigConsumerState,
+        ManifestConsumerState {
   DestinyVendorDefinition definition;
   StreamSubscription<NotificationEvent> subscription;
   List<DestinyVendorCategory> _categories;
@@ -61,7 +62,7 @@ class VendorsListItemWidgetState<T extends VendorsListItemWidget>
   }
 
   Future<void> loadDefinitions() async {
-    definition = await widget.manifest
+    definition = await manifest
         .getDefinition<DestinyVendorDefinition>(widget.vendor.vendorHash);
     var _service = VendorsService();
     _categories = await _service.getVendorCategories(

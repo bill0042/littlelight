@@ -72,8 +72,8 @@ class BaseItemStatsState<T extends BaseItemStatsWidget>
 
   Future loadStatGroupDefinition() async {
     if (definition?.stats?.statGroupHash != null) {
-      statGroupDefinition = await widget.manifest
-          .getDefinition<DestinyStatGroupDefinition>(
+      statGroupDefinition =
+          await manifest.getDefinition<DestinyStatGroupDefinition>(
               definition?.stats?.statGroupHash);
       if (mounted) {
         setState(() {});

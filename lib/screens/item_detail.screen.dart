@@ -14,8 +14,8 @@ import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dar
 import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
 import 'package:little_light/core/providers/item_notes/item_notes.consumer.dart';
 import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/models/loadout.dart';
-
 import 'package:little_light/services/profile/vendors.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/utils/inventory_utils.dart';
@@ -89,7 +89,8 @@ class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen>
         LoadoutsConsumerState,
         ItemNotesConsumerState,
         InventoryConsumerState,
-        BungieAuthConsumerState {
+        BungieAuthConsumerState,
+        ManifestConsumerState {
   int selectedPerk;
   Map<int, int> selectedPerks = Map();
   ItemSocketController socketController;
@@ -176,8 +177,8 @@ class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen>
 
   Future loadStatGroupDefinition() async {
     if (definition?.stats?.statGroupHash != null) {
-      statGroupDefinition = await widget.manifest
-          .getDefinition<DestinyStatGroupDefinition>(
+      statGroupDefinition =
+          await manifest.getDefinition<DestinyStatGroupDefinition>(
               definition?.stats?.statGroupHash);
       if (mounted) {
         setState(() {});

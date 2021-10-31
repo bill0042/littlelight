@@ -3,8 +3,7 @@ import 'package:bungie_api/models/destiny_presentation_node_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/media_query_helper.dart';
 import 'package:little_light/widgets/common/refresh_button.widget.dart';
@@ -12,14 +11,12 @@ import 'package:little_light/widgets/inventory_tabs/selected_items.widget.dart';
 import 'package:little_light/widgets/presentation_nodes/collectible_item.widget.dart';
 import 'package:little_light/widgets/presentation_nodes/metric_item.widget.dart';
 import 'package:little_light/widgets/presentation_nodes/nested_collectible_item.widget.dart';
-
 import 'package:little_light/widgets/presentation_nodes/presentation_node_body.widget.dart';
 import 'package:little_light/widgets/presentation_nodes/presentation_node_item.widget.dart';
 import 'package:little_light/widgets/presentation_nodes/presentation_node_list.widget.dart';
 import 'package:little_light/widgets/presentation_nodes/record_item.widget.dart';
 
 class PresentationNodeScreen extends ConsumerStatefulWidget {
-  final ManifestService manifest = ManifestService();
   final ProfileService profile = ProfileService();
   final int presentationNodeHash;
   final int depth;
@@ -38,7 +35,7 @@ class PresentationNodeScreen extends ConsumerStatefulWidget {
 }
 
 class PresentationNodeScreenState<T extends PresentationNodeScreen>
-    extends ConsumerState<T> {
+    extends ConsumerState<T> with ManifestConsumerState {
   DestinyPresentationNodeDefinition definition;
   @override
   void initState() {
@@ -50,8 +47,8 @@ class PresentationNodeScreenState<T extends PresentationNodeScreen>
   }
 
   loadDefinition() async {
-    definition = await widget.manifest
-        .getDefinition<DestinyPresentationNodeDefinition>(
+    definition =
+        await manifest.getDefinition<DestinyPresentationNodeDefinition>(
             widget.presentationNodeHash);
     setState(() {});
   }

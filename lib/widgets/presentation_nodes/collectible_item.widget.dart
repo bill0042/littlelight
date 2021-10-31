@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
 
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/selection/selection.service.dart';
 import 'package:little_light/utils/item_with_owner.dart';
@@ -22,7 +22,6 @@ import 'package:little_light/widgets/item_list/items/mod/mod_inventory_item.widg
 import 'package:little_light/widgets/item_list/items/weapon/weapon_inventory_item.widget.dart';
 
 class CollectibleItemWidget extends ConsumerStatefulWidget {
-  final ManifestService manifest = ManifestService();
   final ProfileService profile = ProfileService();
   final Map<int, List<ItemWithOwner>> itemsByHash;
   final int hash;
@@ -36,11 +35,14 @@ class CollectibleItemWidget extends ConsumerStatefulWidget {
 }
 
 class CollectibleItemWidgetState extends ConsumerState<CollectibleItemWidget>
-    with BungieApiConfigConsumerState, BungieAuthConsumerState {
+    with
+        BungieApiConfigConsumerState,
+        BungieAuthConsumerState,
+        ManifestConsumerState {
   DestinyCollectibleDefinition _definition;
   DestinyInventoryItemDefinition _itemDefinition;
   DestinyCollectibleDefinition get definition {
-    return widget.manifest.getDefinitionFromCache<DestinyCollectibleDefinition>(
+    return manifest.getDefinitionFromCache<DestinyCollectibleDefinition>(
             widget.hash) ??
         _definition;
   }
@@ -76,13 +78,13 @@ class CollectibleItemWidgetState extends ConsumerState<CollectibleItemWidget>
 
   loadDefinition() async {
     if (definition == null) {
-      _definition = await widget.manifest
+      _definition = await manifest
           .getDefinition<DestinyCollectibleDefinition>(widget.hash);
       if (mounted) {
         setState(() {});
       }
     }
-    _itemDefinition = await widget.manifest
+    _itemDefinition = await manifest
         .getDefinition<DestinyInventoryItemDefinition>(definition.itemHash);
     if (mounted) {
       setState(() {});
@@ -204,7 +206,7 @@ class CollectibleItemWidgetState extends ConsumerState<CollectibleItemWidget>
       return;
     }
 
-    DestinyInventoryItemDefinition itemDef = await widget.manifest
+    DestinyInventoryItemDefinition itemDef = await manifest
         .getDefinition<DestinyInventoryItemDefinition>(definition.itemHash);
     if (itemDef == null) {
       return;

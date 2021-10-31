@@ -6,9 +6,8 @@ import 'package:bungie_api/models/destiny_progression_step_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 
-
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 
@@ -18,7 +17,7 @@ import 'package:little_light/widgets/flutter/filled_circular_progress_indicator.
 class RankItemWidget extends ConsumerStatefulWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
-  final ManifestService manifest = ManifestService();
+
   final NotificationService broadcaster = NotificationService();
 
   final DestinyProgression progression;
@@ -30,7 +29,10 @@ class RankItemWidget extends ConsumerStatefulWidget {
 }
 
 class RankItemWidgetState<T extends RankItemWidget> extends ConsumerState<T>
-    with AutomaticKeepAliveClientMixin, BungieApiConfigConsumerState {
+    with
+        AutomaticKeepAliveClientMixin,
+        BungieApiConfigConsumerState,
+        ManifestConsumerState {
   DestinyProgressionDefinition definition;
   StreamSubscription<NotificationEvent> subscription;
 
@@ -63,7 +65,7 @@ class RankItemWidgetState<T extends RankItemWidget> extends ConsumerState<T>
 
   Future<void> loadDefinitions() async {
     definition =
-        await widget.manifest.getDefinition<DestinyProgressionDefinition>(hash);
+        await manifest.getDefinition<DestinyProgressionDefinition>(hash);
     progressTotal = definition.steps.fold(0, (v, s) => v + s.progressTotal);
     if (mounted) {
       setState(() {});

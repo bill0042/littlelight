@@ -3,14 +3,13 @@ import 'package:bungie_api/models/destiny_presentation_node_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/littlelight_data/littlelight_data.consumer.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/models/game_data.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/widgets/presentation_nodes/presentation_node_list.widget.dart';
 import 'package:little_light/widgets/presentation_nodes/presentation_node_tabs.widget.dart';
 
 class PresentationNodeBodyWidget extends ConsumerStatefulWidget {
-  final ManifestService manifest = ManifestService();
   final ProfileService profile = ProfileService();
   final PresentationNodeItemBuilder itemBuilder;
   final PresentationNodeTileBuilder tileBuilder;
@@ -30,8 +29,8 @@ class PresentationNodeBodyWidget extends ConsumerStatefulWidget {
 }
 
 class PresentationNodeBodyWidgetState<T extends PresentationNodeBodyWidget>
-    extends ConsumerState<PresentationNodeBodyWidget> 
-    with LittleLightDataConsumerState{
+    extends ConsumerState<PresentationNodeBodyWidget>
+    with LittleLightDataConsumerState, ManifestConsumerState {
   DestinyPresentationNodeDefinition definition;
   GameData gameData;
 
@@ -44,8 +43,8 @@ class PresentationNodeBodyWidgetState<T extends PresentationNodeBodyWidget>
   }
 
   loadDefinition() async {
-    definition = await widget.manifest
-        .getDefinition<DestinyPresentationNodeDefinition>(
+    definition =
+        await manifest.getDefinition<DestinyPresentationNodeDefinition>(
             widget.presentationNodeHash);
     gameData = await littlelightData.getGameData();
     if (mounted) {

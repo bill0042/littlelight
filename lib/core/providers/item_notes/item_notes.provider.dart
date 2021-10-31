@@ -25,7 +25,6 @@ class ItemNotesService {
   Map<String, ItemNotesTag> _tags;
 
   LittleLightApi get _littleLightApi => _ref.read(littleLightApiProvider);
-  
 
   reset() {
     _notes = null;

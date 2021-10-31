@@ -1,21 +1,20 @@
 import 'package:bungie_api/models/destiny_character_component.dart';
 import 'package:bungie_api/models/destiny_character_progression_component.dart';
+import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_progression.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/services/profile/destiny_settings.service.dart';
-import 'package:little_light/widgets/common/queued_network_image.widget.dart';
-import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
-
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
+import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:shimmer/shimmer.dart';
 
 class TabHeaderWidget extends ConsumerStatefulWidget {
   final DestinyCharacterComponent character;
-  final ManifestService manifest = ManifestService();
+
   final ProfileService profile = ProfileService();
   @override
   TabHeaderWidget(this.character, {Key key}) : super(key: key);
@@ -25,7 +24,7 @@ class TabHeaderWidget extends ConsumerStatefulWidget {
 }
 
 class TabHeaderWidgetState extends ConsumerState<TabHeaderWidget>
-    with BungieApiConfigConsumerState {
+    with BungieApiConfigConsumerState, ManifestConsumerState {
   DestinyInventoryItemDefinition emblemDefinition;
 
   DestinyCharacterProgressionComponent progression;
@@ -41,8 +40,8 @@ class TabHeaderWidgetState extends ConsumerState<TabHeaderWidget>
   }
 
   getDefinitions() async {
-    emblemDefinition = await widget.manifest
-        .getDefinition<DestinyInventoryItemDefinition>(
+    emblemDefinition =
+        await manifest.getDefinition<DestinyInventoryItemDefinition>(
             widget.character.emblemHash);
     if (mounted) {
       setState(() {});

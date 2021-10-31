@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
 
-class DevToolsScreen extends StatelessWidget {
+class DevToolsScreen extends ConsumerWidget with ManifestConsumerWidget {
   final Map<String, TextEditingController> fieldControllers = Map();
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -33,7 +34,7 @@ class DevToolsScreen extends StatelessWidget {
                         context,
                         "Clear Data",
                         () async {
-                          await ManifestService().reset();
+                          await manifest(ref).reset();
                           await StorageService.language().purge();
                           await StorageService.membership().purge();
                           await StorageService.account().purge();

@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:little_light/core/providers/bungie_api/enums/destiny_item_category.enum.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/screens/search.screen.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/item_filters/pseudo_item_type_filter.dart';
@@ -30,7 +30,6 @@ import 'package:little_light/widgets/search/search.controller.dart';
 
 class EquipmentScreen extends ConsumerStatefulWidget {
   final profile = ProfileService();
-  final manifest = ManifestService();
   final NotificationService broadcaster = NotificationService();
 
   final List<int> itemTypes = [
@@ -47,7 +46,8 @@ class EquipmentScreenState extends ConsumerState<EquipmentScreen>
     with
         TickerProviderStateMixin,
         AutomaticKeepAliveClientMixin,
-        UserSettingsConsumerState {
+        UserSettingsConsumerState,
+        ManifestConsumerState {
   int currentGroup = DestinyItemCategory.Weapon;
   Map<int, double> scrollPositions = Map();
 

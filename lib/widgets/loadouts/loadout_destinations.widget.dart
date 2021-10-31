@@ -124,21 +124,15 @@ class LoadoutDestinationsWidgetState
     switch (destination.action) {
       case InventoryAction.Equip:
         {
-          inventory.transferLoadout(
-              widget.loadout,
-              destination.characterId,
-              true,
-              destination?.characterId != null ? freeSlots : 0);
+          inventory.transferLoadout(widget.loadout, destination.characterId,
+              true, destination?.characterId != null ? freeSlots : 0);
           Navigator.pop(context);
           break;
         }
       case InventoryAction.Transfer:
         {
-          inventory.transferLoadout(
-              widget.loadout,
-              destination.characterId,
-              false,
-              destination?.characterId != null ? freeSlots : 0);
+          inventory.transferLoadout(widget.loadout, destination.characterId,
+              false, destination?.characterId != null ? freeSlots : 0);
           Navigator.pop(context);
           break;
         }

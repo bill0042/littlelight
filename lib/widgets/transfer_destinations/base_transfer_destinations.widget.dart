@@ -34,7 +34,8 @@ class BaseTransferDestinationsWidget extends BaseDestinyStatefulItemWidget {
 }
 
 class BaseTransferDestinationState<T extends BaseTransferDestinationsWidget>
-    extends BaseDestinyItemState<T> with UserSettingsConsumerState, InventoryConsumerState {
+    extends BaseDestinyItemState<T>
+    with UserSettingsConsumerState, InventoryConsumerState {
   @override
   Widget build(BuildContext context) {
     if (item == null) {

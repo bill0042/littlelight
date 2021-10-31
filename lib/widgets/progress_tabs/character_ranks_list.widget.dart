@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:little_light/core/providers/littlelight_data/littlelight_data.consumer.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/widgets/item_list/character_info.widget.dart';
@@ -17,7 +16,7 @@ import 'package:little_light/widgets/progress_tabs/rank_item.widget.dart';
 class CharacterRanksListWidget extends ConsumerStatefulWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
-  final ManifestService manifest = ManifestService();
+
   final NotificationService broadcaster = NotificationService();
 
   CharacterRanksListWidget({Key key, this.characterId}) : super(key: key);

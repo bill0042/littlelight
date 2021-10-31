@@ -6,17 +6,19 @@ import 'package:bungie_api/enums/destiny_class.dart';
 import 'package:bungie_api/models/destiny_color.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 
-class AnimatedCharacterBackgroundWidget extends StatefulWidget {
+class AnimatedCharacterBackgroundWidget extends ConsumerStatefulWidget {
   final TabController tabController;
   final NotificationService broadcaster = NotificationService();
   AnimatedCharacterBackgroundWidget({
     this.tabController,
     Key key,
+    
   }) : super(key: key);
 
   @override
@@ -32,8 +34,8 @@ class _CharacterInfo {
 }
 
 class _AnimatedCharacterBackgroundWidgetState
-    extends State<AnimatedCharacterBackgroundWidget>
-    with SingleTickerProviderStateMixin {
+    extends ConsumerState<AnimatedCharacterBackgroundWidget>
+    with SingleTickerProviderStateMixin, ManifestConsumerState {
   List<_CharacterInfo> characters;
   AnimationController _controller;
   ColorTween tween;
@@ -67,7 +69,7 @@ class _AnimatedCharacterBackgroundWidgetState
       var equipment = ProfileService().getCharacterEquipment(c.characterId);
       var subclass =
           equipment.firstWhere((i) => i.bucketHash == InventoryBucket.subclass);
-      var subclassDef = await ManifestService()
+      var subclassDef = await manifest
           .getDefinition<DestinyInventoryItemDefinition>(subclass.itemHash);
 
       characters.add(_CharacterInfo(

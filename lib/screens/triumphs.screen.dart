@@ -16,7 +16,8 @@ class TriumphsScreen extends ConsumerStatefulWidget {
   _TriumphsScreenState createState() => _TriumphsScreenState();
 }
 
-class _TriumphsScreenState extends ConsumerState<TriumphsScreen> with BungieApiConfigConsumerState{
+class _TriumphsScreenState extends ConsumerState<TriumphsScreen>
+    with BungieApiConfigConsumerState {
   DestinySettingsService settings = DestinySettingsService();
 
   @override

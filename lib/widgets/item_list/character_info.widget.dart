@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'dart:math' as math;
 
 import 'package:bungie_api/models/destiny_character_component.dart';
@@ -13,13 +12,12 @@ import 'package:bungie_api/models/destiny_sandbox_perk_definition.dart';
 import 'package:bungie_api/models/destiny_stat_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/destiny_settings.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
-
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
@@ -29,7 +27,6 @@ import 'package:shimmer/shimmer.dart';
 import 'package:speech_bubble/speech_bubble.dart';
 
 class CharacterInfoWidget extends ConsumerStatefulWidget {
-  final ManifestService manifest = ManifestService();
   final ProfileService profile = ProfileService();
   final String characterId;
   final NotificationService broadcaster = NotificationService();
@@ -43,7 +40,8 @@ class CharacterInfoWidget extends ConsumerStatefulWidget {
 }
 
 class CharacterInfoWidgetState<T extends CharacterInfoWidget>
-    extends ConsumerState<T> with UserSettingsConsumerState {
+    extends ConsumerState<T>
+    with UserSettingsConsumerState, ManifestConsumerState {
   DestinyClassDefinition classDef;
   DestinyRaceDefinition raceDef;
   DestinyCharacterComponent character;
@@ -72,12 +70,12 @@ class CharacterInfoWidgetState<T extends CharacterInfoWidget>
   }
 
   loadDefinitions() async {
-    classDef = await widget.manifest
+    classDef = await manifest
         .getDefinition<DestinyClassDefinition>(character.classHash);
-    raceDef = await widget.manifest
-        .getDefinition<DestinyRaceDefinition>(character.raceHash);
-    legendProgressionDefinition = await widget.manifest
-        .getDefinition<DestinyProgressionDefinition>(
+    raceDef =
+        await manifest.getDefinition<DestinyRaceDefinition>(character.raceHash);
+    legendProgressionDefinition =
+        await manifest.getDefinition<DestinyProgressionDefinition>(
             DestinySettingsService().seasonalRankProgressionHash);
     if (mounted) {
       setState(() {});

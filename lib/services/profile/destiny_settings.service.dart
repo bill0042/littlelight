@@ -2,10 +2,11 @@ import 'package:bungie_api/models/core_settings_configuration.dart';
 import 'package:bungie_api/models/destiny_season_definition.dart';
 import 'package:bungie_api/models/destiny_season_pass_definition.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api.provider.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.provider.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 
 class DestinySettingsService {
+  Manifest get manifest => globalManifestProvider;
   static final DestinySettingsService _singleton =
       DestinySettingsService._internal();
   DateTime lastUpdated;
@@ -26,8 +27,8 @@ class DestinySettingsService {
         await StorageService.global().getJson(StorageKeys.bungieCommonSettings);
     var settings = CoreSettingsConfiguration.fromJson(json ?? {});
     var seasonHash = settings?.destiny2CoreSettings?.currentSeasonHash;
-    var seasonDef = await ManifestService()
-        .getDefinition<DestinySeasonDefinition>(seasonHash);
+    var seasonDef =
+        await manifest.getDefinition<DestinySeasonDefinition>(seasonHash);
     var seasonEnd = seasonDef != null
         ? DateTime.parse(seasonDef?.endDate)
         : DateTime.fromMillisecondsSinceEpoch(0);
@@ -36,13 +37,13 @@ class DestinySettingsService {
       print("loaded settings from web");
       settings = await _api.getCommonSettings();
       seasonHash = settings?.destiny2CoreSettings?.currentSeasonHash;
-      seasonDef = await ManifestService()
-          .getDefinition<DestinySeasonDefinition>(seasonHash);
+      seasonDef =
+          await manifest.getDefinition<DestinySeasonDefinition>(seasonHash);
       await StorageService.global()
           .setJson(StorageKeys.bungieCommonSettings, settings.toJson());
     }
     _currentSettings = settings;
-    _currentSeasonPassDef = await ManifestService()
+    _currentSeasonPassDef = await manifest
         .getDefinition<DestinySeasonPassDefinition>(seasonDef.seasonPassHash);
   }
 

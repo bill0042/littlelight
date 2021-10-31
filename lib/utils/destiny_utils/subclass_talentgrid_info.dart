@@ -5,8 +5,10 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_talent_grid_component.dart';
 import 'package:bungie_api/models/destiny_talent_grid_definition.dart';
 import 'package:bungie_api/models/destiny_talent_node_category.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.provider.dart';
 import 'package:little_light/services/profile/profile.service.dart';
+
+Manifest get _manifest => globalManifestProvider;
 
 class SubclassTalentGridInfo {
   DamageType damageType;
@@ -72,10 +74,10 @@ const Map<String, int> _subclassMainPerks = {
 
 Future<SubclassTalentGridInfo> getSubclassTalentGridInfo(
     DestinyItemComponent item) async {
-  var def = await ManifestService()
+  var def = await _manifest
       .getDefinition<DestinyInventoryItemDefinition>(item.itemHash);
   var talentGrid = ProfileService().getTalentGrid(item?.itemInstanceId);
-  var talentGridDef = await ManifestService()
+  var talentGridDef = await _manifest
       .getDefinition<DestinyTalentGridDefinition>(talentGrid.talentGridHash);
   var talentgridCategory =
       extractTalentGridNodeCategory(talentGridDef, talentGrid);

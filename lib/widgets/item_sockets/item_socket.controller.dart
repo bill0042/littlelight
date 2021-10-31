@@ -3,16 +3,18 @@ import 'package:bungie_api/enums/socket_plug_sources.dart';
 import 'package:bungie_api/models/destiny_energy_capacity_entry.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
+import 'package:bungie_api/models/destiny_item_plug_base.dart';
 import 'package:bungie_api/models/destiny_item_socket_category_definition.dart';
 import 'package:bungie_api/models/destiny_item_socket_state.dart';
 import 'package:bungie_api/models/destiny_plug_set_definition.dart';
-import 'package:bungie_api/models/destiny_item_plug_base.dart';
 import 'package:flutter/widgets.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.provider.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 
 class ItemSocketController extends ChangeNotifier {
+  Manifest get manifest => globalManifestProvider;
+
   final DestinyItemComponent item;
   final DestinyInventoryItemDefinition definition;
   List<DestinyItemSocketState> socketStates;
@@ -97,7 +99,6 @@ class ItemSocketController extends ChangeNotifier {
 
   Future<void> _loadPlugDefinitions() async {
     Set<int> plugHashes = Set();
-    var manifest = ManifestService();
     if (reusablePlugs != null) {
       plugHashes = socketStates
           .expand((socket) {

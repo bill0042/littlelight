@@ -3,12 +3,13 @@ import 'dart:math';
 import 'package:bungie_api/models/destiny_objective_definition.dart';
 import 'package:bungie_api/models/destiny_objective_progress.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 
-class ObjectiveWidget extends StatefulWidget {
+class ObjectiveWidget extends ConsumerStatefulWidget {
   final DestinyObjectiveDefinition definition;
   final Color color;
   final bool forceComplete;
@@ -34,7 +35,8 @@ class ObjectiveWidget extends StatefulWidget {
   }
 }
 
-class ObjectiveWidgetState extends State<ObjectiveWidget> {
+class ObjectiveWidgetState extends ConsumerState<ObjectiveWidget>
+    with ManifestConsumerState {
   DestinyObjectiveDefinition _definition;
   DestinyObjectiveDefinition get definition => widget.definition ?? _definition;
 
@@ -52,9 +54,8 @@ class ObjectiveWidgetState extends State<ObjectiveWidget> {
 
   void loadDefinitions() async {
     if (widget.definition == null) {
-      _definition = await ManifestService()
-          .getDefinition<DestinyObjectiveDefinition>(
-              widget.objective.objectiveHash);
+      _definition = await manifest.getDefinition<DestinyObjectiveDefinition>(
+          widget.objective.objectiveHash);
       if (mounted) setState(() {});
     }
   }

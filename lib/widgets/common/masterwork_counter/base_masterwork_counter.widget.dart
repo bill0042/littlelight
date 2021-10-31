@@ -40,8 +40,8 @@ class BaseMasterworkCounterWidgetState<T extends BaseMasterworkCounterWidget>
       for (var objective in objectives) {
         if (objective.visible) {
           masterworkObjective = objective;
-          masterworkObjectiveDefinition = await widget.manifest
-              .getDefinition<DestinyObjectiveDefinition>(
+          masterworkObjectiveDefinition =
+              await manifest.getDefinition<DestinyObjectiveDefinition>(
                   objective.objectiveHash);
         }
       }

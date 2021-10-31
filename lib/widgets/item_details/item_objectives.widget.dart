@@ -6,6 +6,7 @@ import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:bungie_api/models/destiny_objective_definition.dart';
 import 'package:bungie_api/models/destiny_objective_progress.dart';
 import 'package:flutter/material.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/objective_tracking/objective_tracking.consumer.dart';
 import 'package:little_light/models/tracked_objective.dart';
 import 'package:little_light/services/notification/notification.service.dart';
@@ -39,7 +40,7 @@ class ItemObjectivesWidget extends BaseDestinyStatefulItemWidget {
 
 class ItemObjectivesWidgetState
     extends BaseDestinyItemState<ItemObjectivesWidget>
-    with ObjectiveTrackingConsumerState {
+    with ObjectiveTrackingConsumerState, ManifestConsumerState {
   Map<int, DestinyObjectiveDefinition> objectiveDefinitions;
   List<DestinyObjectiveProgress> itemObjectives;
   StreamSubscription<NotificationEvent> subscription;
@@ -93,8 +94,8 @@ class ItemObjectivesWidgetState
 
   loadDefinitions() async {
     updateProgress();
-    objectiveDefinitions = await widget.manifest
-        .getDefinitions<DestinyObjectiveDefinition>(
+    objectiveDefinitions =
+        await manifest.getDefinitions<DestinyObjectiveDefinition>(
             definition?.objectives?.objectiveHashes);
     if (mounted) {
       setState(() {});

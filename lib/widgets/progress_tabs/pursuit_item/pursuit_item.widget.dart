@@ -9,9 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:little_light/core/providers/item_notes/item_notes.consumer.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/selection/selection.service.dart';
@@ -27,7 +27,7 @@ import 'package:little_light/widgets/item_tags/item_tag.widget.dart';
 class PursuitItemWidget extends ConsumerStatefulWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
-  final ManifestService manifest = ManifestService();
+
   final NotificationService broadcaster = NotificationService();
   final Widget trailing;
   final DestinyItemComponent item;
@@ -58,7 +58,10 @@ class PursuitItemWidget extends ConsumerStatefulWidget {
 
 class PursuitItemWidgetState<T extends PursuitItemWidget>
     extends ConsumerState<T>
-    with UserSettingsConsumerState, ItemNotesConsumerState {
+    with
+        UserSettingsConsumerState,
+        ItemNotesConsumerState,
+        ManifestConsumerState {
   DestinyInventoryItemDefinition definition;
   Map<int, DestinyObjectiveDefinition> objectiveDefinitions;
   List<DestinyObjectiveProgress> itemObjectives;
@@ -100,11 +103,11 @@ class PursuitItemWidgetState<T extends PursuitItemWidget>
   }
 
   Future<void> loadDefinitions() async {
-    definition = await widget.manifest
-        .getDefinition<DestinyInventoryItemDefinition>(hash);
+    definition =
+        await manifest.getDefinition<DestinyInventoryItemDefinition>(hash);
     if ((itemObjectives?.length ?? 0) > 0) {
-      objectiveDefinitions = await widget.manifest
-          .getDefinitions<DestinyObjectiveDefinition>(
+      objectiveDefinitions =
+          await manifest.getDefinitions<DestinyObjectiveDefinition>(
               itemObjectives?.map((o) => o.objectiveHash));
     }
     if (mounted) {

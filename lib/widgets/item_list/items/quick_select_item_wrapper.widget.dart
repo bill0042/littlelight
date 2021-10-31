@@ -29,7 +29,8 @@ class QuickSelectItemWrapperWidget extends InventoryItemWrapperWidget {
 }
 
 class QuickSelectItemWrapperWidgetState<T extends QuickSelectItemWrapperWidget>
-    extends InventoryItemWrapperWidgetState<QuickSelectItemWrapperWidget> with BungieApiConfigConsumerState{
+    extends InventoryItemWrapperWidgetState<QuickSelectItemWrapperWidget>
+    with BungieApiConfigConsumerState {
   @override
   Widget build(BuildContext context) {
     return buildItem(context);

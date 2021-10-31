@@ -53,8 +53,8 @@ class ScreenshotMasterworkCounterState extends BaseMasterworkCounterWidgetState<
       width: widget.pixelSize * 24,
       height: widget.pixelSize * 24,
       child: QueuedNetworkImage(
-          imageUrl: apiConfig.bungieUrl(
-              masterworkObjectiveDefinition.displayProperties.icon)),
+          imageUrl: apiConfig
+              .bungieUrl(masterworkObjectiveDefinition.displayProperties.icon)),
     );
   }
 

@@ -7,16 +7,16 @@ import 'package:bungie_api/models/destiny_presentation_node_definition.dart';
 import 'package:bungie_api/models/destiny_presentation_node_metric_child_entry.dart';
 import 'package:bungie_api/models/destiny_presentation_node_record_child_entry.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 
 typedef PresentationNodeTileBuilder = StaggeredTile Function(
     CollectionListItem item);
 typedef PresentationNodeItemBuilder = Widget Function(
     CollectionListItem item, int depth, bool isCategorySet);
 
-class PresentationNodeListWidget extends StatefulWidget {
-  final ManifestService manifest = ManifestService();
+class PresentationNodeListWidget extends ConsumerStatefulWidget {
   final int presentationNodeHash;
   final PresentationNodeTileBuilder tileBuilder;
   final PresentationNodeItemBuilder itemBuilder;
@@ -37,7 +37,8 @@ class PresentationNodeListWidget extends StatefulWidget {
 }
 
 class PresentationNodeListWidgetState
-    extends State<PresentationNodeListWidget> {
+    extends ConsumerState<PresentationNodeListWidget>
+    with ManifestConsumerState {
   DestinyPresentationNodeDefinition definition;
   Map<int, DestinyPresentationNodeDefinition> _presentationNodeDefinitions;
 
@@ -52,13 +53,13 @@ class PresentationNodeListWidgetState
   }
 
   void buildIndex() async {
-    definition = await widget.manifest
-        .getDefinition<DestinyPresentationNodeDefinition>(
+    definition =
+        await manifest.getDefinition<DestinyPresentationNodeDefinition>(
             widget.presentationNodeHash);
     if (presentationNodes.length > 0) {
       List<int> hashes =
           presentationNodes.map((node) => node.presentationNodeHash).toList();
-      _presentationNodeDefinitions = await widget.manifest
+      _presentationNodeDefinitions = await manifest
           .getDefinitions<DestinyPresentationNodeDefinition>(hashes);
     }
     listIndex = [];

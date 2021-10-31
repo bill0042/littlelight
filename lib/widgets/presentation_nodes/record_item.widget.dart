@@ -1,27 +1,25 @@
 import 'dart:math';
 
+import 'package:bungie_api/enums/destiny_record_state.dart';
 import 'package:bungie_api/models/destiny_lore_definition.dart';
 import 'package:bungie_api/models/destiny_objective_definition.dart';
 import 'package:bungie_api/models/destiny_objective_progress.dart';
 import 'package:bungie_api/models/destiny_record_component.dart';
 import 'package:bungie_api/models/destiny_record_definition.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/objective_tracking/objective_tracking.consumer.dart';
 import 'package:little_light/models/tracked_objective.dart';
-import 'package:little_light/widgets/common/queued_network_image.widget.dart';
-import 'package:flutter/material.dart';
 import 'package:little_light/screens/record_detail.screen.dart';
-
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/widgets/common/objective.widget.dart';
-import 'package:bungie_api/enums/destiny_record_state.dart';
+import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 
 class RecordItemWidget extends ConsumerStatefulWidget {
-  final ManifestService manifest = ManifestService();
   final int hash;
   RecordItemWidget({Key key, this.hash}) : super(key: key);
 
@@ -36,7 +34,8 @@ class RecordItemWidgetState extends ConsumerState<RecordItemWidget>
         AutomaticKeepAliveClientMixin,
         ObjectiveTrackingConsumerState,
         BungieApiConfigConsumerState,
-        BungieAuthConsumerState {
+        BungieAuthConsumerState,
+        ManifestConsumerState {
   bool get isLogged => auth.isLogged;
   DestinyRecordDefinition _definition;
   Map<int, DestinyObjectiveDefinition> objectiveDefinitions;
@@ -44,7 +43,7 @@ class RecordItemWidgetState extends ConsumerState<RecordItemWidget>
   bool isTracking = false;
 
   DestinyRecordDefinition get definition {
-    return widget.manifest
+    return manifest
             .getDefinitionFromCache<DestinyRecordDefinition>(widget.hash) ??
         _definition;
   }
@@ -69,7 +68,6 @@ class RecordItemWidgetState extends ConsumerState<RecordItemWidget>
   }
 
   loadDefinitions() async {
-    var manifest = ManifestService();
     if (this.definition == null) {
       _definition =
           await manifest.getDefinition<DestinyRecordDefinition>(widget.hash);

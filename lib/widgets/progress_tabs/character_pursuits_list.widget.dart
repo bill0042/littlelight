@@ -6,13 +6,12 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
+import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
+import 'package:little_light/models/bucket_display_options.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
-import 'package:little_light/models/bucket_display_options.dart';
-
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/utils/media_query_helper.dart';
@@ -25,7 +24,7 @@ import 'package:little_light/widgets/progress_tabs/pursuit_item/small_pursuit_it
 class CharacterPursuitsListWidget extends ConsumerStatefulWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
-  final ManifestService manifest = ManifestService();
+
   final NotificationService broadcaster = NotificationService();
 
   CharacterPursuitsListWidget({Key key, this.characterId}) : super(key: key);
@@ -54,7 +53,10 @@ class _PursuitListItem {
 
 class _CharacterPursuitsListWidgetState
     extends ConsumerState<CharacterPursuitsListWidget>
-    with AutomaticKeepAliveClientMixin, UserSettingsConsumerState {
+    with
+        AutomaticKeepAliveClientMixin,
+        UserSettingsConsumerState,
+        ManifestConsumerState {
   List<_PursuitListItem> items;
   StreamSubscription<NotificationEvent> subscription;
   bool fullyLoaded = false;
@@ -83,7 +85,7 @@ class _CharacterPursuitsListWidgetState
         .where((i) => i.bucketHash == InventoryBucket.pursuits)
         .toList();
     var pursuitHashes = pursuits.map((i) => i.itemHash);
-    var defs = await widget.manifest
+    var defs = await manifest
         .getDefinitions<DestinyInventoryItemDefinition>(pursuitHashes);
     pursuits = (await InventoryUtils.sortDestinyItems(
             pursuits.map((p) => ItemWithOwner(p, null)),

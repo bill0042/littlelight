@@ -3,7 +3,6 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 
 abstract class BaseDestinyStatelessItemWidget extends ConsumerWidget {
@@ -12,7 +11,6 @@ abstract class BaseDestinyStatelessItemWidget extends ConsumerWidget {
   final DestinyItemInstanceComponent instanceInfo;
   final String characterId;
   final ProfileService profile = ProfileService();
-  final ManifestService manifest = ManifestService();
 
   BaseDestinyStatelessItemWidget(
       {this.item,

@@ -30,7 +30,8 @@ class SupporterCharacterWidget extends ConsumerStatefulWidget {
   }
 }
 
-class SupporterCharacterWidgetState extends ConsumerState<SupporterCharacterWidget>
+class SupporterCharacterWidgetState
+    extends ConsumerState<SupporterCharacterWidget>
     with AutomaticKeepAliveClientMixin, BungieApiConsumer {
   DestinyCharacterComponent lastPlayed;
   UserInfoCard userInfo;

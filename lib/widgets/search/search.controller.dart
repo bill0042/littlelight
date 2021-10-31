@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:flutter/widgets.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.provider.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.provider.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/models/item_sort_parameter.dart';
@@ -46,6 +46,7 @@ List<BaseItemFilter> _replaceDefaultFilters(
 
 class SearchController extends ChangeNotifier {
   static UserSettingsService get userSettings => globalUserSettingsProvider;
+  static Manifest get manifest => globalManifestProvider;
 
   List<ItemWithOwner> _unfilteredList;
   List<ItemWithOwner> _prefilteredList;
@@ -249,9 +250,8 @@ class SearchController extends ChangeNotifier {
         .map((item) => item?.item?.itemHash)
         .where((i) => i != null)
         .toSet();
-    var _defs = await ManifestService()
-        .getDefinitions<DestinyInventoryItemDefinition>(
-            hashes?.where((element) => element != null));
+    var _defs = await manifest.getDefinitions<DestinyInventoryItemDefinition>(
+        hashes?.where((element) => element != null));
     return _defs;
   }
 
@@ -266,9 +266,8 @@ class SearchController extends ChangeNotifier {
         hashes.addAll(plug?.map((p) => p.plugItemHash) ?? []);
       });
     });
-    var _defs = await ManifestService()
-        .getDefinitions<DestinyInventoryItemDefinition>(
-            hashes?.where((element) => element != null));
+    var _defs = await manifest.getDefinitions<DestinyInventoryItemDefinition>(
+        hashes?.where((element) => element != null));
     return _defs;
   }
 }

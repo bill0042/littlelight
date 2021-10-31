@@ -11,10 +11,10 @@ import 'package:bungie_api/models/destiny_vendor_sale_item_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/profile/vendors.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
@@ -44,7 +44,7 @@ class PurchasableItemWidget extends ConsumerStatefulWidget {
 }
 
 class PurchasableItemWidgetState extends ConsumerState<PurchasableItemWidget>
-    with WishlistsConsumerState {
+    with WishlistsConsumerState, ManifestConsumerState {
   DestinyInventoryItemDefinition definition;
   List<DestinyItemSocketState> sockets;
   DestinyItemInstanceComponent instanceInfo;
@@ -58,7 +58,7 @@ class PurchasableItemWidgetState extends ConsumerState<PurchasableItemWidget>
   }
 
   void loadDefinitions() async {
-    definition = await ManifestService()
+    definition = await manifest
         .getDefinition<DestinyInventoryItemDefinition>(widget.item.itemHash);
     sockets = await VendorsService().getSaleItemSockets(
         widget.characterId, widget.vendorHash, widget?.item?.vendorItemIndex);

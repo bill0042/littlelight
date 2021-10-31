@@ -4,10 +4,10 @@ import 'package:bungie_api/models/destiny_inventory_bucket_definition.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
 import 'package:little_light/core/providers/inventory/transfer_destination.dart';
-import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/selection/selection.service.dart';
 import 'package:little_light/utils/item_with_owner.dart';
@@ -16,7 +16,7 @@ import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
 class MultiselectManagementBlockWidget extends ConsumerWidget
-    with InventoryConsumerWidget {
+    with InventoryConsumerWidget, ManifestConsumerWidget {
   final List<ItemWithOwner> items;
   MultiselectManagementBlockWidget({Key key, this.items})
       : super(
@@ -29,20 +29,20 @@ class MultiselectManagementBlockWidget extends ConsumerWidget
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          transferDestinations.length > 0
+          transferDestinations(ref).length > 0
               ? Expanded(
                   child: buildEquippingBlock(
                   context,
                   ref,
                   title: "Transfer",
-                  destinations: transferDestinations,
+                  destinations: transferDestinations(ref),
                   align: Alignment.centerLeft,
                 ))
               : null,
-          equipDestinations.length > 0
+          equipDestinations(ref).length > 0
               ? buildEquippingBlock(context, ref,
                   title: "Equip",
-                  destinations: equipDestinations,
+                  destinations: equipDestinations(ref),
                   align: Alignment.centerRight)
               : null
         ].where((value) => value != null).toList(),
@@ -143,12 +143,12 @@ class MultiselectManagementBlockWidget extends ConsumerWidget
     }
   }
 
-  List<TransferDestination> get equipDestinations {
+  List<TransferDestination> equipDestinations(WidgetRef ref) {
     var characters = ProfileService().getCharacters();
     return characters
         .where((c) {
           return items.any((i) {
-            var def = ManifestService()
+            var def = manifest(ref)
                 .getDefinitionFromCache<DestinyInventoryItemDefinition>(
                     i?.item?.itemHash);
             if (def?.equippable == false) return false;
@@ -170,7 +170,7 @@ class MultiselectManagementBlockWidget extends ConsumerWidget
         .toList();
   }
 
-  List<TransferDestination> get transferDestinations {
+  List<TransferDestination> transferDestinations(WidgetRef ref) {
     var hasTransferrables = false;
     var hasVaultables = false;
     var hasPullables = false;
@@ -181,10 +181,10 @@ class MultiselectManagementBlockWidget extends ConsumerWidget
     Set<String> destinationCharacterIds = Set();
 
     for (var i in items) {
-      var def = ManifestService()
+      var def = manifest(ref)
           .getDefinitionFromCache<DestinyInventoryItemDefinition>(
               i.item.itemHash);
-      var bucketDef = ManifestService()
+      var bucketDef = manifest(ref)
           .getDefinitionFromCache<DestinyInventoryBucketDefinition>(
               def?.inventory?.bucketTypeHash);
       var isOnPostmaster = i.item.bucketHash == InventoryBucket.lostItems;

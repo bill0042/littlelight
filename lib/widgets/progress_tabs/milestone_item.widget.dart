@@ -13,7 +13,7 @@ import 'package:bungie_api/models/destiny_objective_progress.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
@@ -27,7 +27,7 @@ import 'package:little_light/widgets/icon_fonts/littlelight_icons.dart';
 class MilestoneItemWidget extends ConsumerStatefulWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
-  final ManifestService manifest = ManifestService();
+
   final NotificationService broadcaster = NotificationService();
 
   final DestinyMilestone milestone;
@@ -38,8 +38,12 @@ class MilestoneItemWidget extends ConsumerStatefulWidget {
   MilestoneItemWidgetState createState() => MilestoneItemWidgetState();
 }
 
-class MilestoneItemWidgetState<T extends MilestoneItemWidget> extends ConsumerState<T>
-    with AutomaticKeepAliveClientMixin, BungieApiConfigConsumerState {
+class MilestoneItemWidgetState<T extends MilestoneItemWidget>
+    extends ConsumerState<T>
+    with
+        AutomaticKeepAliveClientMixin,
+        BungieApiConfigConsumerState,
+        ManifestConsumerState {
   DestinyMilestoneDefinition definition;
   StreamSubscription<NotificationEvent> subscription;
   DestinyMilestone milestone;
@@ -70,7 +74,7 @@ class MilestoneItemWidgetState<T extends MilestoneItemWidget> extends ConsumerSt
   }
 
   Future<void> loadDefinitions() async {
-    definition = await widget.manifest
+    definition = await manifest
         .getDefinition<DestinyMilestoneDefinition>(milestone.milestoneHash);
     if (mounted) {
       setState(() {});
@@ -138,8 +142,8 @@ class MilestoneItemWidgetState<T extends MilestoneItemWidget> extends ConsumerSt
                   height: 64,
                   child: QueuedNetworkImage(
                       fit: BoxFit.cover,
-                      imageUrl: apiConfig.bungieUrl(
-                          definition.displayProperties.icon)))
+                      imageUrl: apiConfig
+                          .bungieUrl(definition.displayProperties.icon)))
               : Container(),
           Expanded(
               child: Column(
@@ -403,8 +407,8 @@ class MilestoneItemWidgetState<T extends MilestoneItemWidget> extends ConsumerSt
                                   width: 24,
                                   height: 24,
                                   child: QueuedNetworkImage(
-                                    imageUrl: apiConfig.bungieUrl(
-                                        def.displayProperties?.icon),
+                                    imageUrl: apiConfig
+                                        .bungieUrl(def.displayProperties?.icon),
                                   )),
                               Container(
                                 width: 4,

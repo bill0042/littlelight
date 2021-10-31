@@ -10,16 +10,16 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
 import 'package:little_light/core/providers/inventory/transfer_destination.dart';
 import 'package:little_light/core/providers/littlelight_data/littlelight_data.consumer.dart';
 import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/models/game_data.dart';
 import 'package:little_light/models/loadout.dart';
 import 'package:little_light/screens/edit_loadout.screen.dart';
-import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/utils/item_sorters/power_level_sorter.dart';
@@ -34,7 +34,6 @@ import 'package:shimmer/shimmer.dart';
 class CharacterOptionsSheet extends ConsumerStatefulWidget {
   final DestinyCharacterComponent character;
   final ProfileService profile = ProfileService();
-  final ManifestService manifest = ManifestService();
 
   CharacterOptionsSheet({Key key, this.character}) : super(key: key);
 
@@ -45,7 +44,12 @@ class CharacterOptionsSheet extends ConsumerStatefulWidget {
 }
 
 class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
-    with UserSettingsConsumerState, LoadoutsConsumerState, LittleLightDataConsumerState, InventoryConsumerState {
+    with
+        UserSettingsConsumerState,
+        LoadoutsConsumerState,
+        LittleLightDataConsumerState,
+        InventoryConsumerState,
+        ManifestConsumerState {
   Map<int, DestinyItemComponent> maxLightLoadout;
   Map<int, DestinyItemComponent> underAverageSlots;
   double maxLight;
@@ -278,7 +282,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
                       ?.primaryStat
                       ?.value ??
                   0;
-              var def = await widget.manifest
+              var def = await manifest
                   .getDefinition<DestinyInventoryItemDefinition>(item.itemHash);
               if (power > equippedPower) {
                 loadout.addEquippedItem(item, def);
@@ -358,12 +362,11 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
                         ),
                         character: widget.character,
                         loadouts: loadouts,
-                        onSelect: (loadout) => inventory
-                            .transferLoadout(
-                                loadout,
-                                widget.character.characterId,
-                                false,
-                                freeSlots)));
+                        onSelect: (loadout) => inventory.transferLoadout(
+                            loadout,
+                            widget.character.characterId,
+                            false,
+                            freeSlots)));
               },
             )),
             Container(width: 4),
@@ -388,12 +391,11 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
                         ),
                         character: widget.character,
                         loadouts: loadouts,
-                        onSelect: (loadout) => inventory
-                            .transferLoadout(
-                                loadout,
-                                widget.character.characterId,
-                                true,
-                                freeSlots)));
+                        onSelect: (loadout) => inventory.transferLoadout(
+                            loadout,
+                            widget.character.characterId,
+                            true,
+                            freeSlots)));
               },
             )),
           ]))
@@ -535,7 +537,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
         widget.profile.getCharacterEquipment(widget.character.characterId);
     var equipped = equipment.where((i) => slots.contains(i.bucketHash));
     for (var item in equipped) {
-      var def = await widget.manifest
+      var def = await manifest
           .getDefinition<DestinyInventoryItemDefinition>(item.itemHash);
       if ((def.itemType == DestinyItemType.Weapon ||
               def.itemType == DestinyItemType.Subclass) &&
@@ -551,7 +553,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
         widget.profile.getCharacterInventory(widget.character.characterId);
     var unequipped = inventory.where((i) => slots.contains(i.bucketHash));
     for (var item in unequipped) {
-      var def = await widget.manifest
+      var def = await manifest
           .getDefinition<DestinyInventoryItemDefinition>(item.itemHash);
       if (def.itemType == DestinyItemType.Weapon && loadoutWeapons) {
         itemIndex.addUnequippedItem(item, def);
@@ -593,7 +595,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
       var random = math.Random();
       var index = random.nextInt(allItems.length);
       var item = allItems[index];
-      var itemDef = await widget.manifest
+      var itemDef = await manifest
           .getDefinition<DestinyInventoryItemDefinition>(item.itemHash);
       var itemBucket = itemDef.inventory.bucketTypeHash;
       var tierType = itemDef.inventory.tierType;
@@ -613,7 +615,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
 
     for (var j in slots.values) {
       var item = allItems.firstWhere((i) => i.itemInstanceId == j);
-      var itemDef = await widget.manifest
+      var itemDef = await manifest
           .getDefinition<DestinyInventoryItemDefinition>(item.itemHash);
       randomLoadout.addEquippedItem(item, itemDef);
     }
@@ -651,7 +653,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
     Map<int, DestinyItemComponent> maxLightLoadout = Map();
     Map<int, DestinyItemComponent> maxLightExotics = Map();
     for (var item in instancedItems) {
-      var def = await widget.manifest
+      var def = await manifest
           .getDefinition<DestinyInventoryItemDefinition>(item.itemHash);
       if (maxLightLoadout.containsKey(def?.inventory?.bucketTypeHash) ||
           !availableSlots.contains(def?.inventory?.bucketTypeHash) ||
@@ -725,7 +727,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
     for (var item in maxLightLoadout.values) {
       var instanceInfo = ProfileService().getInstanceInfo(item.itemInstanceId);
       var power = instanceInfo?.primaryStat?.value ?? 0;
-      var def = await widget.manifest
+      var def = await manifest
           .getDefinition<DestinyInventoryItemDefinition>(item.itemHash);
       if (power < maxLight?.floor()) {
         underAverageSlots[def.inventory.bucketTypeHash] = item;

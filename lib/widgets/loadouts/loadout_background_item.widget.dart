@@ -3,14 +3,12 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
-
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/shimmer_helper.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 
 class LoadoutBackgroundItemWidget extends ConsumerStatefulWidget {
-  final ManifestService manifest = ManifestService();
   final ProfileService profile = ProfileService();
   final int hash;
   LoadoutBackgroundItemWidget({Key key, this.hash}) : super(key: key);
@@ -23,7 +21,7 @@ class LoadoutBackgroundItemWidget extends ConsumerStatefulWidget {
 
 class LoadoutBackgroundItemWidgetState
     extends ConsumerState<LoadoutBackgroundItemWidget>
-    with BungieApiConfigConsumerState {
+    with BungieApiConfigConsumerState, ManifestConsumerState {
   DestinyInventoryItemDefinition definition;
 
   @override
@@ -33,9 +31,9 @@ class LoadoutBackgroundItemWidgetState
   }
 
   void loadDefinitions() async {
-    var collectible = await widget.manifest
-        .getDefinition<DestinyCollectibleDefinition>(widget.hash);
-    definition = await widget.manifest
+    var collectible =
+        await manifest.getDefinition<DestinyCollectibleDefinition>(widget.hash);
+    definition = await manifest
         .getDefinition<DestinyInventoryItemDefinition>(collectible?.itemHash);
     setState(() {});
   }

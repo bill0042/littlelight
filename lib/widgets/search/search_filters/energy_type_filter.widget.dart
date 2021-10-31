@@ -2,7 +2,7 @@ import 'package:bungie_api/enums/destiny_energy_type.dart';
 import 'package:bungie_api/models/destiny_energy_type_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/utils/item_filters/energy_type_filter.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
@@ -17,9 +17,8 @@ class EnergyTypeFilterWidget extends BaseSearchFilterWidget<EnergyTypeFilter> {
 }
 
 class _EnergyTypeFilterWidgetState extends BaseSearchFilterWidgetState<
-    EnergyTypeFilterWidget,
-    EnergyTypeFilter,
-    DestinyEnergyTypeDefinition> with BungieApiConfigConsumerState {
+        EnergyTypeFilterWidget, EnergyTypeFilter, DestinyEnergyTypeDefinition>
+    with BungieApiConfigConsumerState, ManifestConsumerState {
   Map<int, DestinyEnergyTypeDefinition> _definitions;
 
   @override
@@ -32,7 +31,7 @@ class _EnergyTypeFilterWidgetState extends BaseSearchFilterWidgetState<
 
   @override
   onUpdate() async {
-    _definitions = await ManifestService()
+    _definitions = await manifest
         .getDefinitions<DestinyEnergyTypeDefinition>(filter.availableValues);
     super.onUpdate();
   }

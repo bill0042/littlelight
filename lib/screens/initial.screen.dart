@@ -13,13 +13,12 @@ import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dar
 import 'package:little_light/core/providers/env/env.consumer.dart';
 import 'package:little_light/core/providers/littlelight_api/littlelight_api.consumer.dart';
 import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/objective_tracking/objective_tracking.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
 import 'package:little_light/exceptions/exception_handler.dart';
 import 'package:little_light/screens/main.screen.dart';
-
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/destiny_settings.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
@@ -32,7 +31,6 @@ import 'package:little_light/widgets/initial_page/select_platform.widget.dart';
 import 'package:little_light/widgets/layouts/floating_content_layout.dart';
 
 class InitialScreen extends ConsumerStatefulWidget {
-  final ManifestService manifest = ManifestService();
   final ProfileService profile = ProfileService();
   final String authCode;
 
@@ -51,7 +49,8 @@ class InitialScreenState extends FloatingContentState<InitialScreen>
         ObjectiveTrackingConsumerState,
         LittleLightApiConsumerState,
         BungieApiConsumer,
-        BungieAuthConsumerState {
+        BungieAuthConsumerState,
+        ManifestConsumerState {
   @override
   void initState() {
     super.initState();
@@ -70,7 +69,7 @@ class InitialScreenState extends FloatingContentState<InitialScreen>
     await littleLightApi.reset();
     await loadoutsService.reset();
     await objectiveTracking.reset();
-    await ManifestService().reset();
+    await manifest.reset();
     if (authCode != null) {
       authCode(widget.authCode);
       return;
@@ -89,8 +88,7 @@ class InitialScreenState extends FloatingContentState<InitialScreen>
   }
 
   showSelectLanguage() async {
-    List<String> availableLanguages =
-        await widget.manifest.getAvailableLanguages();
+    List<String> availableLanguages = await manifest.getAvailableLanguages();
     SelectLanguageWidget childWidget = SelectLanguageWidget(
       availableLanguages: availableLanguages,
       onChange: (language) {
@@ -105,7 +103,7 @@ class InitialScreenState extends FloatingContentState<InitialScreen>
 
   checkManifest() async {
     try {
-      bool needsUpdate = await widget.manifest.needsUpdate();
+      bool needsUpdate = await manifest.needsUpdate();
       if (needsUpdate) {
         showDownloadManifest();
       } else {
@@ -240,8 +238,7 @@ class InitialScreenState extends FloatingContentState<InitialScreen>
 
   showSelectMembership() async {
     this.changeContent(null, null);
-    UserMembershipData membershipData =
-        await bungieApi.getMemberships();
+    UserMembershipData membershipData = await bungieApi.getMemberships();
 
     if (membershipData?.destinyMemberships?.length == 1) {
       await this.auth.saveMembership(

@@ -1,17 +1,18 @@
+import 'package:bungie_api/enums/vendor_item_status.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_unlock_definition.dart';
 import 'package:bungie_api/models/destiny_vendor_definition.dart';
 import 'package:bungie_api/models/destiny_vendor_sale_item_component.dart';
-import 'package:bungie_api/enums/vendor_item_status.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
-class ItemVendorInfoWidget extends StatefulWidget {
+class ItemVendorInfoWidget extends ConsumerStatefulWidget {
   final DestinyInventoryItemDefinition definition;
   final DestinyVendorSaleItemComponent sale;
   final int vendorHash;
@@ -25,7 +26,8 @@ class ItemVendorInfoWidget extends StatefulWidget {
   }
 }
 
-class ItemVendorInfoState extends State<ItemVendorInfoWidget> {
+class ItemVendorInfoState extends ConsumerState<ItemVendorInfoWidget>
+    with ManifestConsumerState {
   DestinyVendorDefinition vendorDefinition;
 
   @override
@@ -35,7 +37,7 @@ class ItemVendorInfoState extends State<ItemVendorInfoWidget> {
   }
 
   loadDefinition() async {
-    vendorDefinition = await ManifestService()
+    vendorDefinition = await manifest
         .getDefinition<DestinyVendorDefinition>(widget.vendorHash);
     setState(() {});
   }

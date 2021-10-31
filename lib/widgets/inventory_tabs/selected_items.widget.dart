@@ -5,8 +5,8 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/selection/selection.service.dart';
 import 'package:little_light/utils/item_with_owner.dart';
@@ -29,7 +29,7 @@ class SelectedItemsWidget extends ConsumerStatefulWidget {
 }
 
 class SelectedItemsWidgetState extends ConsumerState<SelectedItemsWidget>
-    with InventoryConsumerState {
+    with InventoryConsumerState, ManifestConsumerState {
   StreamSubscription<List<ItemWithOwner>> subscription;
   List<ItemWithOwner> items;
 
@@ -111,8 +111,8 @@ class SelectedItemsWidgetState extends ConsumerState<SelectedItemsWidget>
           var item = items.single;
           var instanceInfo =
               ProfileService().getInstanceInfo(item?.item?.itemInstanceId);
-          var def = await ManifestService()
-              .getDefinition<DestinyInventoryItemDefinition>(
+          var def =
+              await manifest.getDefinition<DestinyInventoryItemDefinition>(
                   item?.item?.itemHash);
           Navigator.push(
             context,

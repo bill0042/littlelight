@@ -8,13 +8,13 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
 import 'package:little_light/core/providers/inventory/transfer_destination.dart';
+import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
 import 'package:little_light/screens/quick_transfer.screen.dart';
-import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/selection/selection.service.dart';
@@ -41,7 +41,6 @@ import 'package:uuid/uuid.dart';
 enum ContentDensity { MINIMAL, MEDIUM, FULL }
 
 class InventoryItemWrapperWidget extends ConsumerStatefulWidget {
-  final ManifestService manifest = ManifestService();
   final ProfileService profile = ProfileService();
   final DestinyItemComponent item;
   final String characterId;
@@ -58,7 +57,11 @@ class InventoryItemWrapperWidget extends ConsumerStatefulWidget {
 }
 
 class InventoryItemWrapperWidgetState<T extends InventoryItemWrapperWidget>
-    extends ConsumerState<T> with UserSettingsConsumerState, InventoryConsumerState {
+    extends ConsumerState<T>
+    with
+        UserSettingsConsumerState,
+        InventoryConsumerState,
+        ManifestConsumerState {
   DestinyInventoryItemDefinition definition;
   String uniqueId;
   bool selected = false;
@@ -75,8 +78,8 @@ class InventoryItemWrapperWidgetState<T extends InventoryItemWrapperWidget>
   @override
   void initState() {
     uniqueId = Uuid().v4();
-    this.definition = widget.manifest
-        .getDefinitionFromCache<DestinyInventoryItemDefinition>(
+    this.definition =
+        manifest.getDefinitionFromCache<DestinyInventoryItemDefinition>(
             widget?.item?.itemHash);
 
     super.initState();
@@ -117,7 +120,7 @@ class InventoryItemWrapperWidgetState<T extends InventoryItemWrapperWidget>
     if (widget.item == null) {
       return false;
     }
-    return widget.manifest
+    return manifest
         .isLoaded<DestinyInventoryItemDefinition>(widget.item.itemHash);
   }
 
@@ -140,7 +143,7 @@ class InventoryItemWrapperWidgetState<T extends InventoryItemWrapperWidget>
         return;
       }
     }
-    definition = await widget.manifest
+    definition = await manifest
         .getDefinition<DestinyInventoryItemDefinition>(widget.item.itemHash);
     if (mounted) {
       setState(() {});
@@ -207,7 +210,7 @@ class InventoryItemWrapperWidgetState<T extends InventoryItemWrapperWidget>
   }
 
   void onEmptyTap(BuildContext context) async {
-    var bucketDef = await widget.manifest
+    var bucketDef = await manifest
         .getDefinition<DestinyInventoryBucketDefinition>(widget.bucketHash);
     var character = widget.profile.getCharacter(widget.characterId);
     ItemWithOwner item = await Navigator.push(
@@ -221,8 +224,8 @@ class InventoryItemWrapperWidgetState<T extends InventoryItemWrapperWidget>
       ),
     );
     if (item != null) {
-      inventory.transfer(item.item, item.ownerId,
-          ItemDestination.Character, widget.characterId);
+      inventory.transfer(item.item, item.ownerId, ItemDestination.Character,
+          widget.characterId);
     }
   }
 

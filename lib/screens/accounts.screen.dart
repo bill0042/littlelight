@@ -136,8 +136,8 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen>
                 height: 48,
                 child: QueuedNetworkImage(
                   fit: BoxFit.cover,
-                  imageUrl: apiConfig.bungieUrl(
-                      membership?.bungieNetUser?.profilePicturePath),
+                  imageUrl: apiConfig
+                      .bungieUrl(membership?.bungieNetUser?.profilePicturePath),
                 )),
             !isCurrent
                 ? Positioned(

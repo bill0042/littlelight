@@ -73,12 +73,10 @@ class ManagementBlockWidget extends BaseDestinyStatelessItemWidget
                 : null,
             equipDestinations(ref).length > 0
                 ? Expanded(
-                    child: buildEquippingBlock(
-                        context,
-                        ref, 
-                        title:"Equip",
-                        destinations:equipDestinations(ref),
-                        align:unequipDestinations.length > 0
+                    child: buildEquippingBlock(context, ref,
+                        title: "Equip",
+                        destinations: equipDestinations(ref),
+                        align: unequipDestinations.length > 0
                             ? Alignment.centerRight
                             : Alignment.centerLeft))
                 : null
