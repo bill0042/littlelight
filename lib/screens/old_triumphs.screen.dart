@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:little_light/core/providers/destiny_settings/destiny_settings.consumer.dart';
 import 'package:little_light/screens/presentation_node.screen.dart';
 import 'package:little_light/screens/triumph_search.screen.dart';
-import 'package:little_light/services/profile/destiny_settings.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/selected_page_persistence.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
@@ -15,8 +15,8 @@ class OldTriumphsScreen extends PresentationNodeScreen {
   PresentationNodeScreenState createState() => TriumphsScreenState();
 }
 
-class TriumphsScreenState
-    extends PresentationNodeScreenState<OldTriumphsScreen> {
+class TriumphsScreenState extends PresentationNodeScreenState<OldTriumphsScreen>
+    with DestinySettingsConsumerState {
   @override
   void initState() {
     super.initState();
@@ -26,14 +26,13 @@ class TriumphsScreenState
 
   @override
   Widget buildBody(BuildContext context) {
-    var settings = DestinySettingsService();
     return PresentationNodeTabsWidget(
       presentationNodeHashes: [
-        settings.triumphsRootNode,
-        settings.sealsRootNode,
+        destinySettings.triumphsRootNode,
+        destinySettings.sealsRootNode,
         511607103,
-        settings.medalsRootNode,
-        settings.loreRootNode,
+        destinySettings.medalsRootNode,
+        destinySettings.loreRootNode,
         3215903653,
         1881970629
       ],

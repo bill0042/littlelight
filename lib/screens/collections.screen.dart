@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dart';
+import 'package:little_light/core/providers/destiny_settings/destiny_settings.consumer.dart';
 import 'package:little_light/screens/collectible_search.screen.dart';
 import 'package:little_light/screens/presentation_node.screen.dart';
-import 'package:little_light/services/profile/destiny_settings.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/utils/selected_page_persistence.dart';
@@ -22,7 +22,7 @@ class CollectionsScreen extends PresentationNodeScreen {
 
 class CollectionsScreenState
     extends PresentationNodeScreenState<CollectionsScreen>
-    with BungieAuthConsumerState {
+    with BungieAuthConsumerState, DestinySettingsConsumerState {
   Map<int, List<ItemWithOwner>> itemsByHash;
   @override
   void initState() {
@@ -90,11 +90,10 @@ class CollectionsScreenState
 
   @override
   Widget buildBody(BuildContext context) {
-    var settings = DestinySettingsService();
     return PresentationNodeTabsWidget(
       presentationNodeHashes: [
-        settings.collectionsRootNode,
-        settings.badgesRootNode
+        destinySettings.collectionsRootNode,
+        destinySettings.badgesRootNode
       ],
       depth: 0,
       itemBuilder: this.itemBuilder,

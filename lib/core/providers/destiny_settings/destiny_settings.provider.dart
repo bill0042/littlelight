@@ -1,19 +1,24 @@
 import 'package:bungie_api/models/core_settings_configuration.dart';
 import 'package:bungie_api/models/destiny_season_definition.dart';
 import 'package:bungie_api/models/destiny_season_pass_definition.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api.provider.dart';
+import 'package:little_light/core/providers/global_container/global.container.dart';
 import 'package:little_light/core/providers/manifest/manifest.provider.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 
-class DestinySettingsService {
-  Manifest get manifest => globalManifestProvider;
-  static final DestinySettingsService _singleton =
-      DestinySettingsService._internal();
+final destinySettingsProvider = Provider<DestinySettings>((ref) => DestinySettings._(ref));
+
+get globalDestinySettingsProvider => globalContainer.read(destinySettingsProvider);
+
+class DestinySettings {
+  ProviderRef _ref;
+
+  Manifest get manifest => _ref.read(manifestProvider);
+
   DateTime lastUpdated;
-  factory DestinySettingsService() {
-    return _singleton;
-  }
-  DestinySettingsService._internal();
+
+  DestinySettings._(this._ref);
   final _api = globalBungieApiProvider;
 
   CoreSettingsConfiguration _currentSettings;

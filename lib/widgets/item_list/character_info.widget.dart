@@ -13,12 +13,12 @@ import 'package:bungie_api/models/destiny_stat_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
+import 'package:little_light/core/providers/destiny_settings/destiny_settings.consumer.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/notification/events/notification.event.dart';
 import 'package:little_light/core/providers/notification/notifications.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 
-import 'package:little_light/services/profile/destiny_settings.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
@@ -45,7 +45,8 @@ class CharacterInfoWidgetState<T extends CharacterInfoWidget>
     with
         UserSettingsConsumerState,
         ManifestConsumerState,
-        NotificationsConsumerState {
+        NotificationsConsumerState,
+        DestinySettingsConsumerState {
   DestinyClassDefinition classDef;
   DestinyRaceDefinition raceDef;
   DestinyCharacterComponent character;
@@ -80,7 +81,7 @@ class CharacterInfoWidgetState<T extends CharacterInfoWidget>
         await manifest.getDefinition<DestinyRaceDefinition>(character.raceHash);
     legendProgressionDefinition =
         await manifest.getDefinition<DestinyProgressionDefinition>(
-            DestinySettingsService().seasonalRankProgressionHash);
+            destinySettings.seasonalRankProgressionHash);
     if (mounted) {
       setState(() {});
     }
@@ -303,13 +304,12 @@ class CharacterInfoWidgetState<T extends CharacterInfoWidget>
   }
 
   Widget expInfo(BuildContext context, DestinyCharacterComponent character) {
-    var settings = DestinySettingsService();
     var progression =
         widget.profile.getCharacterProgression(character.characterId);
     DestinyProgression levelProg =
-        progression.progressions["${settings.seasonalRankProgressionHash}"];
+        progression.progressions["${destinySettings.seasonalRankProgressionHash}"];
     DestinyProgression overLevelProg = progression
-        .progressions["${settings.seasonalPrestigeRankProgressionHash}"];
+        .progressions["${destinySettings.seasonalPrestigeRankProgressionHash}"];
 
     int seasonRank = (levelProg?.level ?? 0) + (overLevelProg?.level ?? 0);
     DestinyProgression expProg =
@@ -354,7 +354,7 @@ class CharacterInfoWidgetState<T extends CharacterInfoWidget>
 
   DestinyProgression get legendProgression {
     var overlevelHash =
-        DestinySettingsService().seasonalPrestigeRankProgressionHash;
+        destinySettings.seasonalPrestigeRankProgressionHash;
     return widget.profile
         .getCharacterProgression(character.characterId)
         .progressions["$overlevelHash"];

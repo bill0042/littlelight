@@ -5,8 +5,8 @@ import 'package:bungie_api/models/destiny_progression.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
+import 'package:little_light/core/providers/destiny_settings/destiny_settings.consumer.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
-import 'package:little_light/services/profile/destiny_settings.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
@@ -24,7 +24,7 @@ class TabHeaderWidget extends ConsumerStatefulWidget {
 }
 
 class TabHeaderWidgetState extends ConsumerState<TabHeaderWidget>
-    with BungieApiConfigConsumerState, ManifestConsumerState {
+    with BungieApiConfigConsumerState, ManifestConsumerState, DestinySettingsConsumerState {
   DestinyInventoryItemDefinition emblemDefinition;
 
   DestinyCharacterProgressionComponent progression;
@@ -109,11 +109,10 @@ class TabHeaderWidgetState extends ConsumerState<TabHeaderWidget>
   }
 
   Widget powerBar(BuildContext context) {
-    var settings = DestinySettingsService();
     DestinyProgression levelProg =
-        progression.progressions["${settings.seasonalRankProgressionHash}"];
+        progression.progressions["${destinySettings.seasonalRankProgressionHash}"];
     DestinyProgression overLevelProg = progression
-        .progressions["${settings.seasonalPrestigeRankProgressionHash}"];
+        .progressions["${destinySettings.seasonalPrestigeRankProgressionHash}"];
     Color fg = Colors.cyan.shade300;
     Color bg = Color.lerp(Colors.black, fg, .6);
     Color shine = Colors.cyan.shade100;

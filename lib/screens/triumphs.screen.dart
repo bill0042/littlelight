@@ -2,8 +2,7 @@ import 'package:bungie_api/models/destiny_presentation_node_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
-
-import 'package:little_light/services/profile/destiny_settings.service.dart';
+import 'package:little_light/core/providers/destiny_settings/destiny_settings.consumer.dart';
 import 'package:little_light/utils/media_query_helper.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
@@ -17,9 +16,7 @@ class TriumphsScreen extends ConsumerStatefulWidget {
 }
 
 class _TriumphsScreenState extends ConsumerState<TriumphsScreen>
-    with BungieApiConfigConsumerState {
-  DestinySettingsService settings = DestinySettingsService();
-
+    with BungieApiConfigConsumerState, DestinySettingsConsumerState {
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: appBar(context), body: body(context));
@@ -34,24 +31,24 @@ class _TriumphsScreenState extends ConsumerState<TriumphsScreen>
           },
         ),
         title: ManifestText<DestinyPresentationNodeDefinition>(
-            settings.triumphsRootNode),
+            destinySettings.triumphsRootNode),
       );
 
   Widget body(BuildContext context) => SingleChildScrollView(
       padding: EdgeInsets.all(8),
       child: Column(children: [
         TriumphCategoriesGridWidget(
-          nodeHash: settings.triumphsRootNode,
+          nodeHash: destinySettings.triumphsRootNode,
           columns: MediaQueryHelper(context)
               .responsiveValue<int>(3, tablet: 4, laptop: 5, desktop: 8),
         ),
         SealsGridWidget(
-          nodeHash: settings.sealsRootNode,
+          nodeHash: destinySettings.sealsRootNode,
           rows: 1,
           columns: MediaQueryHelper(context)
               .responsiveValue<int>(4, tablet: 6, laptop: 8, desktop: 10),
         ),
-        buildRootItem(context, settings.loreRootNode)
+        buildRootItem(context, destinySettings.loreRootNode)
       ]));
 
   Widget buildRootItem(BuildContext context, int nodeHash) {

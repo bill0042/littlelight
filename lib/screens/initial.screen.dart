@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api.consumer.dart';
 import 'package:little_light/core/providers/bungie_api/exceptions/bungie_api.exception.dart';
 import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dart';
+import 'package:little_light/core/providers/destiny_settings/destiny_settings.consumer.dart';
 import 'package:little_light/core/providers/env/env.consumer.dart';
 import 'package:little_light/core/providers/littlelight_api/littlelight_api.consumer.dart';
 import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
@@ -19,7 +20,6 @@ import 'package:little_light/core/providers/user_settings/user_settings.consumer
 import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
 import 'package:little_light/exceptions/exception_handler.dart';
 import 'package:little_light/screens/main.screen.dart';
-import 'package:little_light/services/profile/destiny_settings.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
@@ -50,7 +50,8 @@ class InitialScreenState extends FloatingContentState<InitialScreen>
         LittleLightApiConsumerState,
         BungieApiConsumer,
         BungieAuthConsumerState,
-        ManifestConsumerState {
+        ManifestConsumerState,
+        DestinySettingsConsumerState {
   @override
   void initState() {
     super.initState();
@@ -269,7 +270,7 @@ class InitialScreenState extends FloatingContentState<InitialScreen>
   goForward() async {
     await userSettings.init();
     try {
-      await DestinySettingsService().init();
+      await destinySettings.init();
     } catch (e) {}
     await wishlistsService.init();
     Navigator.pushReplacement(
