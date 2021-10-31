@@ -20,12 +20,13 @@ import 'package:bungie_api/models/destiny_profile_response.dart';
 import 'package:bungie_api/models/destiny_record_component.dart';
 import 'package:bungie_api/models/destiny_stat.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api.provider.dart';
+import 'package:little_light/core/providers/notification/events/notification.event.dart';
+import 'package:little_light/core/providers/notification/notifications.provider.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.provider.dart';
 
 import 'package:bungie_api/enums/destiny_component_type.dart';
 import 'package:bungie_api/enums/destiny_scope.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/models/character_sort_parameter.dart';
 
@@ -94,7 +95,7 @@ class ProfileComponentGroups {
 }
 
 class ProfileService {
-  final NotificationService _broadcaster = NotificationService();
+  NotificationsManager notifications = globalNotificationsProvider;
   static final ProfileService _singleton = ProfileService._internal();
 
   UserSettingsService userSettings = globalUserSettingsProvider;
@@ -123,22 +124,22 @@ class ProfileService {
   Future<DestinyProfileResponse> fetchProfileData(
       {List<DestinyComponentType> components, bool skipUpdate = false}) async {
     if (!skipUpdate)
-      _broadcaster.push(NotificationEvent(NotificationType.requestedUpdate));
+      notifications.push(NotificationEvent(NotificationType.requestedUpdate));
     try {
       DestinyProfileResponse res =
           await _updateProfileData(components ?? updateComponents);
       this._lastLoadedFrom = LastLoadedFrom.server;
       if (!skipUpdate)
-        _broadcaster.push(NotificationEvent(NotificationType.receivedUpdate));
+        notifications.push(NotificationEvent(NotificationType.receivedUpdate));
       this._cacheProfile(_profile);
       return res;
     } catch (e) {
       print(e);
       if (!skipUpdate)
-        _broadcaster.push(NotificationEvent(NotificationType.updateError));
+        notifications.push(NotificationEvent(NotificationType.updateError));
       if (!skipUpdate) await Future.delayed(Duration(seconds: 2));
       if (!skipUpdate)
-        _broadcaster.push(NotificationEvent(NotificationType.receivedUpdate));
+        notifications.push(NotificationEvent(NotificationType.receivedUpdate));
     }
     return _profile;
   }

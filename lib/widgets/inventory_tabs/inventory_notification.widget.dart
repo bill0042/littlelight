@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/notification/notification.service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/notification/events/notification.event.dart';
+import 'package:little_light/core/providers/notification/notifications.consumer.dart';
+
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
 import 'package:little_light/widgets/common/item_icon/item_icon.widget.dart';
@@ -9,8 +12,7 @@ import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:shimmer/shimmer.dart';
 
-class InventoryNotificationWidget extends StatefulWidget {
-  final service = NotificationService();
+class InventoryNotificationWidget extends ConsumerStatefulWidget {
   final double barHeight;
   final EdgeInsets notificationMargin;
 
@@ -27,7 +29,8 @@ class InventoryNotificationWidget extends StatefulWidget {
 }
 
 class InventoryNotificationWidgetState
-    extends State<InventoryNotificationWidget> {
+    extends ConsumerState<InventoryNotificationWidget>
+    with NotificationsConsumerState {
   NotificationEvent _latestEvent;
   bool get _busy =>
       _latestEvent != null &&
@@ -43,12 +46,12 @@ class InventoryNotificationWidgetState
   void initState() {
     super.initState();
 
-    subscription = widget.service.listen((event) {
+    subscription = notifications.listen((event) {
       handleNotification(event);
     });
 
-    if (widget.service.latestNotification != null) {
-      handleNotification(widget.service.latestNotification);
+    if (notifications.latestNotification != null) {
+      handleNotification(notifications.latestNotification);
     }
   }
 

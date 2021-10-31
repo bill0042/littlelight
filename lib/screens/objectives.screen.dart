@@ -5,10 +5,12 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:little_light/core/providers/notification/events/notification.event.dart';
+import 'package:little_light/core/providers/notification/notifications.consumer.dart';
 import 'package:little_light/core/providers/objective_tracking/objective_tracking.consumer.dart';
 import 'package:little_light/models/tracked_objective.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
-import 'package:little_light/services/notification/notification.service.dart';
+
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/media_query_helper.dart';
 import 'package:little_light/widgets/common/refresh_button.widget.dart';
@@ -23,7 +25,7 @@ class ObjectivesScreen extends ConsumerStatefulWidget {
 }
 
 class ObjectivesScreenState extends ConsumerState<ObjectivesScreen>
-    with ObjectiveTrackingConsumerState {
+    with ObjectiveTrackingConsumerState, NotificationsConsumerState {
   List<TrackedObjective> objectives;
   Map<TrackedObjective, DestinyItemComponent> items;
 
@@ -40,7 +42,7 @@ class ObjectivesScreenState extends ConsumerState<ObjectivesScreen>
     super.initState();
     loadObjectives();
     ProfileService().updateComponents = ProfileComponentGroups.everything;
-    subscription = NotificationService().listen((event) {
+    subscription = notifications.listen((event) {
       if (event.type == NotificationType.receivedUpdate ||
           event.type == NotificationType.localUpdate) {
         loadObjectives();

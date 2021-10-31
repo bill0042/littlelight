@@ -12,11 +12,13 @@ import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_ha
 import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
 import 'package:little_light/core/providers/inventory/transfer_destination.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
+import 'package:little_light/core/providers/notification/events/notification.event.dart';
+import 'package:little_light/core/providers/notification/notifications.consumer.dart';
 import 'package:little_light/core/providers/selection/selection_manager.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
 import 'package:little_light/screens/quick_transfer.screen.dart';
-import 'package:little_light/services/notification/notification.service.dart';
+
 import 'package:little_light/services/profile/profile.service.dart';
 
 import 'package:little_light/utils/item_with_owner.dart';
@@ -63,7 +65,8 @@ class InventoryItemWrapperWidgetState<T extends InventoryItemWrapperWidget>
         UserSettingsConsumerState,
         InventoryConsumerState,
         ManifestConsumerState,
-        SelectionConsumerState {
+        SelectionConsumerState,
+        NotificationsConsumerState {
   DestinyInventoryItemDefinition definition;
   String uniqueId;
   bool selected = false;
@@ -101,7 +104,7 @@ class InventoryItemWrapperWidgetState<T extends InventoryItemWrapperWidget>
         setState(() {});
       }
     });
-    stateSubscription = NotificationService().listen((event) {
+    stateSubscription = notifications.listen((event) {
       if (!mounted) return;
       if (event.type == NotificationType.itemStateUpdate &&
           event.item.itemHash == widget.item?.itemHash &&

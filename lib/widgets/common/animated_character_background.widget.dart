@@ -9,16 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
-import 'package:little_light/services/notification/notification.service.dart';
+import 'package:little_light/core/providers/notification/events/notification.event.dart';
+import 'package:little_light/core/providers/notification/notifications.consumer.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 
 class AnimatedCharacterBackgroundWidget extends ConsumerStatefulWidget {
   final TabController tabController;
-  final NotificationService broadcaster = NotificationService();
   AnimatedCharacterBackgroundWidget({
     this.tabController,
     Key key,
-    
   }) : super(key: key);
 
   @override
@@ -35,7 +34,10 @@ class _CharacterInfo {
 
 class _AnimatedCharacterBackgroundWidgetState
     extends ConsumerState<AnimatedCharacterBackgroundWidget>
-    with SingleTickerProviderStateMixin, ManifestConsumerState {
+    with
+        SingleTickerProviderStateMixin,
+        ManifestConsumerState,
+        NotificationsConsumerState {
   List<_CharacterInfo> characters;
   AnimationController _controller;
   ColorTween tween;
@@ -52,7 +54,7 @@ class _AnimatedCharacterBackgroundWidgetState
       vsync: this,
     );
     _controller.forward();
-    subscription = widget.broadcaster.listen((event) {
+    subscription = notifications.listen((event) {
       if (!mounted) return;
       if (event.type == NotificationType.receivedUpdate ||
           event.type == NotificationType.localUpdate) {

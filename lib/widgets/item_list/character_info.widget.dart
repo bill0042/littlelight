@@ -14,8 +14,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
+import 'package:little_light/core/providers/notification/events/notification.event.dart';
+import 'package:little_light/core/providers/notification/notifications.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
-import 'package:little_light/services/notification/notification.service.dart';
+
 import 'package:little_light/services/profile/destiny_settings.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
@@ -29,7 +31,6 @@ import 'package:speech_bubble/speech_bubble.dart';
 class CharacterInfoWidget extends ConsumerStatefulWidget {
   final ProfileService profile = ProfileService();
   final String characterId;
-  final NotificationService broadcaster = NotificationService();
 
   CharacterInfoWidget({this.characterId, Key key}) : super(key: key);
 
@@ -41,7 +42,10 @@ class CharacterInfoWidget extends ConsumerStatefulWidget {
 
 class CharacterInfoWidgetState<T extends CharacterInfoWidget>
     extends ConsumerState<T>
-    with UserSettingsConsumerState, ManifestConsumerState {
+    with
+        UserSettingsConsumerState,
+        ManifestConsumerState,
+        NotificationsConsumerState {
   DestinyClassDefinition classDef;
   DestinyRaceDefinition raceDef;
   DestinyCharacterComponent character;
@@ -55,7 +59,7 @@ class CharacterInfoWidgetState<T extends CharacterInfoWidget>
 
     character = widget.profile.getCharacter(widget.characterId);
     loadDefinitions();
-    subscription = widget.broadcaster.listen((event) {
+    subscription = notifications.listen((event) {
       if (event.type == NotificationType.receivedUpdate && mounted) {
         character = widget.profile.getCharacter(widget.characterId);
         setState(() {});

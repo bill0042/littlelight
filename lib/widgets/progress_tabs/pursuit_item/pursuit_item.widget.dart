@@ -10,10 +10,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:little_light/core/providers/item_notes/item_notes.consumer.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
+import 'package:little_light/core/providers/notification/events/notification.event.dart';
+import 'package:little_light/core/providers/notification/notifications.consumer.dart';
 import 'package:little_light/core/providers/selection/selection_manager.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
-import 'package:little_light/services/notification/notification.service.dart';
+
 import 'package:little_light/services/profile/profile.service.dart';
 
 import 'package:little_light/utils/destiny_data.dart';
@@ -29,7 +31,7 @@ class PursuitItemWidget extends ConsumerStatefulWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
 
-  final NotificationService broadcaster = NotificationService();
+  
   final Widget trailing;
   final DestinyItemComponent item;
   final Function onTap;
@@ -63,7 +65,7 @@ class PursuitItemWidgetState<T extends PursuitItemWidget>
         UserSettingsConsumerState,
         ItemNotesConsumerState,
         ManifestConsumerState,
-        SelectionConsumerState {
+        SelectionConsumerState, NotificationsConsumerState {
   DestinyInventoryItemDefinition definition;
   Map<int, DestinyObjectiveDefinition> objectiveDefinitions;
   List<DestinyObjectiveProgress> itemObjectives;
@@ -86,7 +88,7 @@ class PursuitItemWidgetState<T extends PursuitItemWidget>
     super.initState();
     updateProgress();
     loadDefinitions();
-    subscription = widget.broadcaster.listen((event) {
+    subscription = notifications.listen((event) {
       if (event.type == NotificationType.receivedUpdate && mounted) {
         updateProgress();
       }

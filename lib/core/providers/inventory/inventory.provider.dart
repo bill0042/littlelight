@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:bungie_api/enums/bucket_category.dart';
+import 'package:bungie_api/enums/bucket_scope.dart';
 import 'package:bungie_api/enums/destiny_class.dart';
 import 'package:bungie_api/enums/destiny_item_type.dart';
 import 'package:bungie_api/enums/item_state.dart';
@@ -12,16 +14,15 @@ import 'package:bungie_api/models/destiny_inventory_bucket_definition.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
-import 'package:bungie_api/enums/bucket_scope.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api.provider.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/core/providers/global_container/global.container.dart';
-import 'package:little_light/models/loadout.dart';
 import 'package:little_light/core/providers/manifest/manifest.provider.dart';
-import 'package:little_light/services/notification/notification.service.dart';
+import 'package:little_light/core/providers/notification/events/notification.event.dart';
+import 'package:little_light/core/providers/notification/notifications.provider.dart';
+import 'package:little_light/models/loadout.dart';
 import 'package:little_light/services/profile/profile.service.dart';
-import 'package:bungie_api/enums/bucket_category.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 
 import 'transfer_destination.dart';
@@ -35,23 +36,23 @@ class Inventory {
   ProviderRef _ref;
 
   BungieApi get api => _ref.read(bungieApiProvider);
-  final profile = ProfileService();
+  NotificationsManager get notifications => _ref.read(notificationsProvider);
   Manifest get manifest => _ref.read(manifestProvider);
-  final _broadcaster = NotificationService();
 
+  final profile = ProfileService();
   Inventory._(this._ref);
 
   transfer(DestinyItemComponent item, String sourceCharacterId,
       ItemDestination destination,
       [String destinationCharacterId]) async {
-    _broadcaster.push(NotificationEvent(NotificationType.requestedTransfer,
+    notifications.push(NotificationEvent(NotificationType.requestedTransfer,
         item: item, characterId: destinationCharacterId));
     profile.pauseAutomaticUpdater = true;
     try {
       await _transfer(item, sourceCharacterId, destination,
           destinationCharacterId: destinationCharacterId);
     } catch (e) {
-      _broadcaster.push(NotificationEvent(NotificationType.transferError,
+      notifications.push(NotificationEvent(NotificationType.transferError,
           item: item, characterId: destinationCharacterId));
       await Future.delayed(Duration(seconds: 3));
     }
@@ -63,18 +64,18 @@ class Inventory {
   equip(DestinyItemComponent item, String sourceCharacterId,
       String destinationCharacterId) async {
     profile.pauseAutomaticUpdater = true;
-    _broadcaster.push(NotificationEvent(NotificationType.requestedTransfer,
+    notifications.push(NotificationEvent(NotificationType.requestedTransfer,
         item: item, characterId: destinationCharacterId));
     try {
       await _transfer(item, sourceCharacterId, ItemDestination.Character,
           destinationCharacterId: destinationCharacterId);
 
-      _broadcaster.push(NotificationEvent(NotificationType.requestedEquip,
+      notifications.push(NotificationEvent(NotificationType.requestedEquip,
           item: item, characterId: destinationCharacterId));
 
       await _equip(item, destinationCharacterId);
     } catch (e) {
-      _broadcaster.push(NotificationEvent(NotificationType.equipError,
+      notifications.push(NotificationEvent(NotificationType.equipError,
           item: item, characterId: destinationCharacterId));
       await Future.delayed(Duration(seconds: 2));
     }
@@ -110,7 +111,7 @@ class Inventory {
           ownerId == destinationCharacterId &&
           item.item.bucketHash != InventoryBucket.lostItems) continue;
       if (def.nonTransferrable) continue;
-      _broadcaster.push(NotificationEvent(NotificationType.requestedTransfer,
+      notifications.push(NotificationEvent(NotificationType.requestedTransfer,
           item: item.item, characterId: destinationCharacterId));
       try {
         await _transfer(item.item, ownerId, destination,
@@ -118,7 +119,7 @@ class Inventory {
             idsToAvoid: idsToAvoid,
             hashesToAvoid: hashesToAvoid);
       } catch (e) {
-        _broadcaster.push(NotificationEvent(NotificationType.transferError,
+        notifications.push(NotificationEvent(NotificationType.transferError,
             item: item.item, characterId: destinationCharacterId));
         await Future.delayed(Duration(seconds: 3));
       }
@@ -162,7 +163,7 @@ class Inventory {
     await transferMultiple(itemsToTransfer, ItemDestination.Character,
         destinationCharacterId, true);
 
-    _broadcaster.push(NotificationEvent(NotificationType.requestedEquip,
+    notifications.push(NotificationEvent(NotificationType.requestedEquip,
         characterId: destinationCharacterId));
 
     await _equipMultiple(
@@ -220,7 +221,7 @@ class Inventory {
 
       ItemDestination destination =
           character == null ? ItemDestination.Vault : ItemDestination.Character;
-      _broadcaster.push(NotificationEvent(NotificationType.requestedTransfer,
+      notifications.push(NotificationEvent(NotificationType.requestedTransfer,
           item: item, characterId: characterId));
 
       try {
@@ -232,7 +233,7 @@ class Inventory {
     }
 
     if (andEquip && itemsToEquip.length > 0) {
-      _broadcaster.push(NotificationEvent(NotificationType.requestedEquip,
+      notifications.push(NotificationEvent(NotificationType.requestedEquip,
           characterId: characterId));
       try {
         await _equipMultiple(itemsToEquip, characterId);
@@ -249,7 +250,7 @@ class Inventory {
 
       ItemDestination destination =
           character == null ? ItemDestination.Vault : ItemDestination.Character;
-      _broadcaster.push(NotificationEvent(NotificationType.requestedTransfer,
+      notifications.push(NotificationEvent(NotificationType.requestedTransfer,
           item: item, characterId: characterId));
       try {
         await _transfer(item, ownerId, destination,
@@ -615,7 +616,7 @@ class Inventory {
     var itemsToRemove = min(count - freeSlots, items.length);
     for (var i = 0; i < itemsToRemove; i++) {
       try {
-        _broadcaster.push(NotificationEvent(NotificationType.requestedVaulting,
+        notifications.push(NotificationEvent(NotificationType.requestedVaulting,
             item: items[i], characterId: characterId));
         await _transfer(items[i], characterId, ItemDestination.Vault);
       } catch (e) {
@@ -731,12 +732,12 @@ class Inventory {
             i.itemInstanceId == item.item.itemInstanceId,
         orElse: () => null);
     profileItem.state = item?.item?.state;
-    _broadcaster.push(
+    notifications.push(
         NotificationEvent(NotificationType.itemStateUpdate, item: item.item));
     await api.changeLockState(item?.item?.itemInstanceId, ownerId, locked);
   }
 
   fireLocalUpdate() {
-    _broadcaster.push(NotificationEvent(NotificationType.localUpdate));
+    notifications.push(NotificationEvent(NotificationType.localUpdate));
   }
 }

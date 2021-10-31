@@ -1,13 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:little_light/services/notification/notification.service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/notification/events/notification.event.dart';
+import 'package:little_light/core/providers/notification/notifications.consumer.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 
 typedef ExtractTextFromData = String Function(dynamic data);
 
-class RefreshButtonWidget extends StatefulWidget {
-  final NotificationService notifications = NotificationService();
+class RefreshButtonWidget extends ConsumerStatefulWidget {
   final ProfileService profile = ProfileService();
   final EdgeInsets padding;
   RefreshButtonWidget({Key key, this.padding}) : super(key: key);
@@ -18,8 +19,8 @@ class RefreshButtonWidget extends StatefulWidget {
   }
 }
 
-class RefreshButtonWidgetState extends State<RefreshButtonWidget>
-    with TickerProviderStateMixin {
+class RefreshButtonWidgetState extends ConsumerState<RefreshButtonWidget>
+    with TickerProviderStateMixin, NotificationsConsumerState {
   AnimationController rotationController;
   StreamSubscription<NotificationEvent> subscription;
 
@@ -28,7 +29,7 @@ class RefreshButtonWidgetState extends State<RefreshButtonWidget>
     super.initState();
     rotationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500));
-    subscription = widget.notifications.listen((event) {
+    subscription = notifications.listen((event) {
       handleNotification(event);
     });
   }

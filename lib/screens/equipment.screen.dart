@@ -6,9 +6,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:little_light/core/providers/bungie_api/enums/destiny_item_category.enum.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
+import 'package:little_light/core/providers/notification/events/notification.event.dart';
+import 'package:little_light/core/providers/notification/notifications.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/screens/search.screen.dart';
-import 'package:little_light/services/notification/notification.service.dart';
+
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/item_filters/pseudo_item_type_filter.dart';
 import 'package:little_light/utils/media_query_helper.dart';
@@ -30,7 +32,6 @@ import 'package:little_light/widgets/search/search.controller.dart';
 
 class EquipmentScreen extends ConsumerStatefulWidget {
   final profile = ProfileService();
-  final NotificationService broadcaster = NotificationService();
 
   final List<int> itemTypes = [
     DestinyItemCategory.Weapon,
@@ -47,7 +48,8 @@ class EquipmentScreenState extends ConsumerState<EquipmentScreen>
         TickerProviderStateMixin,
         AutomaticKeepAliveClientMixin,
         UserSettingsConsumerState,
-        ManifestConsumerState {
+        ManifestConsumerState,
+        NotificationsConsumerState {
   int currentGroup = DestinyItemCategory.Weapon;
   Map<int, double> scrollPositions = Map();
 
@@ -80,7 +82,7 @@ class EquipmentScreenState extends ConsumerState<EquipmentScreen>
       scrollPositions[type] = 0;
     });
 
-    subscription = widget.broadcaster.listen((event) {
+    subscription = notifications.listen((event) {
       if (!mounted) return;
       if (event.type == NotificationType.receivedUpdate) {
         setState(() {});

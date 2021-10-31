@@ -11,7 +11,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:little_light/core/providers/selection/selection_manager.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
-import 'package:little_light/services/notification/notification.service.dart';
+
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/utils/media_query_helper.dart';
@@ -44,7 +44,7 @@ class DuplicatedItemListWidget extends ConsumerStatefulWidget {
   final ProfileService profile = ProfileService();
   final SearchController searchController;
   DuplicatedItemListWidget({Key key, this.searchController}) : super(key: key);
-  final NotificationService broadcaster = NotificationService();
+  
 
   @override
   DuplicatedItemListWidgetState createState() =>

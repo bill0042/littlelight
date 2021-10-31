@@ -9,9 +9,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
+import 'package:little_light/core/providers/notification/events/notification.event.dart';
+import 'package:little_light/core/providers/notification/notifications.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/models/bucket_display_options.dart';
-import 'package:little_light/services/notification/notification.service.dart';
+
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/utils/item_with_owner.dart';
@@ -41,7 +43,6 @@ class ItemListWidget extends ConsumerStatefulWidget {
   final String characterId;
 
   final ProfileService profile = ProfileService();
-  final NotificationService broadcaster = NotificationService();
   final EdgeInsets padding;
   final List<int> bucketHashes;
   final Map<int, double> scrollPositions;
@@ -73,7 +74,8 @@ class ItemListWidgetState extends ConsumerState<ItemListWidget>
     with
         AutomaticKeepAliveClientMixin,
         UserSettingsConsumerState,
-        ManifestConsumerState {
+        ManifestConsumerState,
+        NotificationsConsumerState {
   Map<int, DestinyInventoryBucketDefinition> bucketDefs;
   List<ListBucket> buckets;
   StreamSubscription<NotificationEvent> subscription;
@@ -88,7 +90,7 @@ class ItemListWidgetState extends ConsumerState<ItemListWidget>
   void initState() {
     super.initState();
     buildIndex();
-    subscription = widget.broadcaster.listen((event) {
+    subscription = notifications.listen((event) {
       if (event.type == NotificationType.receivedUpdate ||
           event.type == NotificationType.localUpdate) {
         buildIndex();

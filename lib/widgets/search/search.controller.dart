@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:flutter/widgets.dart';
+import 'package:little_light/core/providers/notification/events/notification.event.dart';
+import 'package:little_light/core/providers/notification/notifications.provider.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.provider.dart';
 import 'package:little_light/core/providers/manifest/manifest.provider.dart';
-import 'package:little_light/services/notification/notification.service.dart';
+
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/models/item_sort_parameter.dart';
 
@@ -47,6 +49,7 @@ List<BaseItemFilter> _replaceDefaultFilters(
 class SearchController extends ChangeNotifier {
   static UserSettingsService get userSettings => globalUserSettingsProvider;
   static Manifest get manifest => globalManifestProvider;
+  static NotificationsManager get notifications => globalNotificationsProvider;
 
   List<ItemWithOwner> _unfilteredList;
   List<ItemWithOwner> _prefilteredList;
@@ -162,7 +165,7 @@ class SearchController extends ChangeNotifier {
 
   _init() {
     _reload();
-    _subscription = NotificationService().listen((event) {
+    _subscription = notifications.listen((event) {
       if (event.type == NotificationType.receivedUpdate) {
         _reload();
       }

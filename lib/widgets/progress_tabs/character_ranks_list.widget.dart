@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:little_light/core/providers/littlelight_data/littlelight_data.consumer.dart';
-import 'package:little_light/services/notification/notification.service.dart';
+import 'package:little_light/core/providers/notification/events/notification.event.dart';
+import 'package:little_light/core/providers/notification/notifications.consumer.dart';
+
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/widgets/item_list/character_info.widget.dart';
 import 'package:little_light/widgets/progress_tabs/faction_rank_item.widget.dart';
@@ -17,8 +19,6 @@ class CharacterRanksListWidget extends ConsumerStatefulWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
 
-  final NotificationService broadcaster = NotificationService();
-
   CharacterRanksListWidget({Key key, this.characterId}) : super(key: key);
 
   _CharacterRanksListWidgetState createState() =>
@@ -27,7 +27,10 @@ class CharacterRanksListWidget extends ConsumerStatefulWidget {
 
 class _CharacterRanksListWidgetState
     extends ConsumerState<CharacterRanksListWidget>
-    with AutomaticKeepAliveClientMixin, LittleLightDataConsumerState {
+    with
+        AutomaticKeepAliveClientMixin,
+        LittleLightDataConsumerState,
+        NotificationsConsumerState {
   List<DestinyProgression> ranks;
   List<DestinyFactionProgression> progressions;
   StreamSubscription<NotificationEvent> subscription;
@@ -37,7 +40,7 @@ class _CharacterRanksListWidgetState
   void initState() {
     super.initState();
     getRanks();
-    subscription = widget.broadcaster.listen((event) {
+    subscription = notifications.listen((event) {
       if (event.type == NotificationType.receivedUpdate ||
           event.type == NotificationType.localUpdate && mounted) {
         getRanks();

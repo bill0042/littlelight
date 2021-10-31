@@ -14,7 +14,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
-import 'package:little_light/services/notification/notification.service.dart';
+import 'package:little_light/core/providers/notification/events/notification.event.dart';
+import 'package:little_light/core/providers/notification/notifications.consumer.dart';
+
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
 import 'package:little_light/widgets/common/generic_progress_bar.widget.dart';
@@ -27,8 +29,6 @@ import 'package:little_light/widgets/icon_fonts/littlelight_icons.dart';
 class MilestoneItemWidget extends ConsumerStatefulWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
-
-  final NotificationService broadcaster = NotificationService();
 
   final DestinyMilestone milestone;
 
@@ -43,7 +43,8 @@ class MilestoneItemWidgetState<T extends MilestoneItemWidget>
     with
         AutomaticKeepAliveClientMixin,
         BungieApiConfigConsumerState,
-        ManifestConsumerState {
+        ManifestConsumerState,
+        NotificationsConsumerState {
   DestinyMilestoneDefinition definition;
   StreamSubscription<NotificationEvent> subscription;
   DestinyMilestone milestone;
@@ -57,7 +58,7 @@ class MilestoneItemWidgetState<T extends MilestoneItemWidget>
 
     milestone = widget.milestone;
     loadDefinitions();
-    subscription = widget.broadcaster.listen((event) {
+    subscription = notifications.listen((event) {
       if (event.type == NotificationType.receivedUpdate && mounted) {
         milestone = widget.profile
             .getCharacterProgression(widget.characterId)

@@ -4,7 +4,7 @@ import 'package:bungie_api/models/destiny_milestone_activity_phase.dart';
 import 'package:bungie_api/models/destiny_milestone_challenge_activity.dart';
 
 import 'package:flutter/material.dart';
-import 'package:little_light/services/notification/notification.service.dart';
+
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
@@ -18,7 +18,7 @@ class MilestoneRaidItemWidget extends MilestoneItemWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
 
-  final NotificationService broadcaster = NotificationService();
+  
 
   final DestinyMilestone milestone;
 

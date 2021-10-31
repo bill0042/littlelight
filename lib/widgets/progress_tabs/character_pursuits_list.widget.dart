@@ -8,9 +8,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
+import 'package:little_light/core/providers/notification/events/notification.event.dart';
+import 'package:little_light/core/providers/notification/notifications.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/models/bucket_display_options.dart';
-import 'package:little_light/services/notification/notification.service.dart';
+
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/utils/item_with_owner.dart';
@@ -24,8 +26,6 @@ import 'package:little_light/widgets/progress_tabs/pursuit_item/small_pursuit_it
 class CharacterPursuitsListWidget extends ConsumerStatefulWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
-
-  final NotificationService broadcaster = NotificationService();
 
   CharacterPursuitsListWidget({Key key, this.characterId}) : super(key: key);
 
@@ -56,7 +56,8 @@ class _CharacterPursuitsListWidgetState
     with
         AutomaticKeepAliveClientMixin,
         UserSettingsConsumerState,
-        ManifestConsumerState {
+        ManifestConsumerState,
+        NotificationsConsumerState {
   List<_PursuitListItem> items;
   StreamSubscription<NotificationEvent> subscription;
   bool fullyLoaded = false;
@@ -65,7 +66,7 @@ class _CharacterPursuitsListWidgetState
   void initState() {
     super.initState();
     getPursuits();
-    subscription = widget.broadcaster.listen((event) {
+    subscription = notifications.listen((event) {
       if (event.type == NotificationType.receivedUpdate ||
           event.type == NotificationType.localUpdate && mounted) {
         getPursuits();

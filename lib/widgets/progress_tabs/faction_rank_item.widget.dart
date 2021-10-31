@@ -9,7 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
-import 'package:little_light/services/notification/notification.service.dart';
+import 'package:little_light/core/providers/notification/events/notification.event.dart';
+import 'package:little_light/core/providers/notification/notifications.consumer.dart';
+
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
@@ -18,8 +20,6 @@ import 'package:little_light/widgets/flutter/filled_diamond_progress_indicator.d
 class FactionRankItemWidget extends ConsumerStatefulWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
-
-  final NotificationService broadcaster = NotificationService();
 
   final DestinyFactionProgression progression;
 
@@ -34,7 +34,8 @@ class FactionRankItemWidgetState<T extends FactionRankItemWidget>
     with
         AutomaticKeepAliveClientMixin,
         BungieApiConfigConsumerState,
-        ManifestConsumerState {
+        ManifestConsumerState,
+        NotificationsConsumerState {
   DestinyProgressionDefinition definition;
   DestinyFactionDefinition factionDefinition;
   DestinyVendorDefinition vendorDefinition;
@@ -48,7 +49,7 @@ class FactionRankItemWidgetState<T extends FactionRankItemWidget>
 
     progression = widget.progression;
     loadDefinitions();
-    subscription = widget.broadcaster.listen((event) {
+    subscription = notifications.listen((event) {
       if (event.type == NotificationType.receivedUpdate && mounted) {
         progression = widget.profile
             .getCharacterProgression(widget.characterId)
