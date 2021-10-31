@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
+import 'package:little_light/core/providers/vendors/vendors.consumer.dart';
 import 'package:little_light/services/profile/profile.service.dart';
-import 'package:little_light/services/profile/vendors.service.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
@@ -31,7 +31,7 @@ class VendorDetailsScreen extends ConsumerStatefulWidget {
 }
 
 class VendorDetailsScreenState extends ConsumerState<VendorDetailsScreen>
-    with BungieApiConfigConsumerState, ManifestConsumerState {
+    with BungieApiConfigConsumerState, ManifestConsumerState, VendorsConsumerState {
   DestinyInventoryItemDefinition emblemDefinition;
   DestinyVendorDefinition definition;
   List<DestinyVendorCategory> _categories;
@@ -47,8 +47,7 @@ class VendorDetailsScreenState extends ConsumerState<VendorDetailsScreen>
   Future<void> loadDefinitions() async {
     definition = await manifest
         .getDefinition<DestinyVendorDefinition>(widget.vendor.vendorHash);
-    var _service = VendorsService();
-    _categories = await _service.getVendorCategories(
+    _categories = await vendors.getVendorCategories(
         widget.characterId, widget.vendor.vendorHash);
     _categories = _categories.where((c) => shouldCategoryBeVisible(c)).toList();
     _categories.sort((a, b) {
@@ -64,7 +63,7 @@ class VendorDetailsScreenState extends ConsumerState<VendorDetailsScreen>
       if (compare != 0) return compare;
       return defA.sortOrder.index.compareTo(defB.sortOrder.index);
     });
-    _sales = await _service.getVendorSales(
+    _sales = await vendors.getVendorSales(
         widget.characterId, widget.vendor.vendorHash);
     if (mounted) {
       setState(() {});

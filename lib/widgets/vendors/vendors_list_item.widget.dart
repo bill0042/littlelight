@@ -14,10 +14,10 @@ import 'package:little_light/core/providers/bungie_api/bungie_api_config.consume
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/notification/events/notification.event.dart';
 import 'package:little_light/core/providers/notification/notifications.consumer.dart';
+import 'package:little_light/core/providers/vendors/vendors.consumer.dart';
 import 'package:little_light/screens/vendor_details.screen.dart';
 
 import 'package:little_light/services/profile/profile.service.dart';
-import 'package:little_light/services/profile/vendors.service.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
@@ -26,7 +26,6 @@ class VendorsListItemWidget extends ConsumerStatefulWidget {
   final String characterId;
   final ProfileService profile = ProfileService();
 
-  
   final DestinyVendorComponent vendor;
 
   VendorsListItemWidget({Key key, this.characterId, this.vendor})
@@ -40,7 +39,9 @@ class VendorsListItemWidgetState<T extends VendorsListItemWidget>
     with
         AutomaticKeepAliveClientMixin,
         BungieApiConfigConsumerState,
-        ManifestConsumerState, NotificationsConsumerState {
+        ManifestConsumerState,
+        NotificationsConsumerState,
+        VendorsConsumerState {
   DestinyVendorDefinition definition;
   StreamSubscription<NotificationEvent> subscription;
   List<DestinyVendorCategory> _categories;
@@ -66,10 +67,9 @@ class VendorsListItemWidgetState<T extends VendorsListItemWidget>
   Future<void> loadDefinitions() async {
     definition = await manifest
         .getDefinition<DestinyVendorDefinition>(widget.vendor.vendorHash);
-    var _service = VendorsService();
-    _categories = await _service.getVendorCategories(
+    _categories = await vendors.getVendorCategories(
         widget.characterId, widget.vendor.vendorHash);
-    _sales = await _service.getVendorSales(
+    _sales = await vendors.getVendorSales(
         widget.characterId, widget.vendor.vendorHash);
     if (mounted) {
       setState(() {});

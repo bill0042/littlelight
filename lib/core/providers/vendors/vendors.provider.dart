@@ -9,6 +9,7 @@ import 'package:bungie_api/models/destiny_vendor_component.dart';
 import 'package:bungie_api/models/destiny_vendor_group.dart';
 import 'package:bungie_api/models/destiny_vendor_sale_item_component.dart';
 import 'package:bungie_api/models/destiny_vendors_response.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api.provider.dart';
 
 import 'package:little_light/services/storage/storage.service.dart';
@@ -22,14 +23,14 @@ const _vendorComponents = [
   DestinyComponentType.VendorSales,
 ];
 
-class VendorsService {
-  static final VendorsService _singleton = VendorsService._internal();
+final vendorsProvider = Provider<Vendors>((ref) => Vendors._(ref));
+
+class Vendors {
+  ProviderRef _ref;
+  Vendors._(this._ref);
+  BungieApi get _api => _ref.read(bungieApiProvider);
+
   DateTime lastUpdated;
-  factory VendorsService() {
-    return _singleton;
-  }
-  VendorsService._internal();
-  final _api = globalBungieApiProvider;
 
   Map<String, DestinyVendorsResponse> _vendors = {};
 

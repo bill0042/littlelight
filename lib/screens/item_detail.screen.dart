@@ -15,8 +15,8 @@ import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
 import 'package:little_light/core/providers/item_notes/item_notes.consumer.dart';
 import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
+import 'package:little_light/core/providers/vendors/vendors.consumer.dart';
 import 'package:little_light/models/loadout.dart';
-import 'package:little_light/services/profile/vendors.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/utils/item_with_owner.dart';
@@ -90,7 +90,8 @@ class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen>
         ItemNotesConsumerState,
         InventoryConsumerState,
         BungieAuthConsumerState,
-        ManifestConsumerState {
+        ManifestConsumerState,
+        VendorsConsumerState {
   int selectedPerk;
   Map<int, int> selectedPerks = Map();
   ItemSocketController socketController;
@@ -110,7 +111,7 @@ class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen>
 
   initSocketController() async {
     if (widget.vendorItem != null) {
-      final reusable = await VendorsService().getSaleItemReusablePerks(
+      final reusable = await vendors.getSaleItemReusablePerks(
           characterId, widget.vendorHash, widget.vendorItem?.vendorItemIndex);
       socketController = ItemSocketController(
           definition: widget.definition,

@@ -12,11 +12,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
+import 'package:little_light/core/providers/vendors/vendors.consumer.dart';
 import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/profile/profile.service.dart';
-import 'package:little_light/services/profile/vendors.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/item_icon/item_icon.widget.dart';
 import 'package:little_light/widgets/common/item_name_bar/item_name_bar.widget.dart';
@@ -44,7 +44,7 @@ class PurchasableItemWidget extends ConsumerStatefulWidget {
 }
 
 class PurchasableItemWidgetState extends ConsumerState<PurchasableItemWidget>
-    with WishlistsConsumerState, ManifestConsumerState {
+    with WishlistsConsumerState, ManifestConsumerState, VendorsConsumerState {
   DestinyInventoryItemDefinition definition;
   List<DestinyItemSocketState> sockets;
   DestinyItemInstanceComponent instanceInfo;
@@ -60,11 +60,11 @@ class PurchasableItemWidgetState extends ConsumerState<PurchasableItemWidget>
   void loadDefinitions() async {
     definition = await manifest
         .getDefinition<DestinyInventoryItemDefinition>(widget.item.itemHash);
-    sockets = await VendorsService().getSaleItemSockets(
+    sockets = await vendors.getSaleItemSockets(
         widget.characterId, widget.vendorHash, widget?.item?.vendorItemIndex);
-    instanceInfo = await VendorsService().getSaleItemInstanceInfo(
+    instanceInfo = await vendors.getSaleItemInstanceInfo(
         widget.characterId, widget.vendorHash, widget?.item?.vendorItemIndex);
-    reusablePlugs = await VendorsService().getSaleItemReusablePerks(
+    reusablePlugs = await vendors.getSaleItemReusablePerks(
         widget.characterId, widget.vendorHash, widget?.item?.vendorItemIndex);
 
     isUnlocked = ProfileService().isCollectibleUnlocked(
