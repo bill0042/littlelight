@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
+import 'package:little_light/core/providers/selection/selection_manager.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
 import 'package:little_light/services/profile/profile.service.dart';
-import 'package:little_light/services/selection/selection.service.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/utils/media_query_helper.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
@@ -18,8 +18,6 @@ import 'package:little_light/widgets/inventory_tabs/multiselect_management_block
 import 'package:little_light/widgets/item_list/items/quick_select_item_wrapper.widget.dart';
 
 class SelectedItemsWidget extends ConsumerStatefulWidget {
-  final service = SelectionService();
-
   SelectedItemsWidget({Key key}) : super(key: key);
 
   @override
@@ -29,7 +27,7 @@ class SelectedItemsWidget extends ConsumerStatefulWidget {
 }
 
 class SelectedItemsWidgetState extends ConsumerState<SelectedItemsWidget>
-    with InventoryConsumerState, ManifestConsumerState {
+    with InventoryConsumerState, ManifestConsumerState, SelectionConsumerState {
   StreamSubscription<List<ItemWithOwner>> subscription;
   List<ItemWithOwner> items;
 
@@ -37,9 +35,9 @@ class SelectedItemsWidgetState extends ConsumerState<SelectedItemsWidget>
   void initState() {
     super.initState();
 
-    this.items = widget.service.items;
+    this.items = selection.items;
 
-    subscription = widget.service.broadcaster.listen((selected) {
+    subscription = selection.broadcaster.listen((selected) {
       this.items = selected;
       setState(() {});
     });
@@ -53,7 +51,7 @@ class SelectedItemsWidgetState extends ConsumerState<SelectedItemsWidget>
 
   @override
   Widget build(BuildContext context) {
-    if (widget.service.items.length == 0) {
+    if (selection.items.length == 0) {
       return Container();
     }
     return Container(
@@ -174,7 +172,7 @@ class SelectedItemsWidgetState extends ConsumerState<SelectedItemsWidget>
                   ]),
                 ),
                 onTap: () {
-                  widget.service.clear();
+                  selection.clear();
                 }))
       ]),
     );
@@ -221,7 +219,7 @@ class SelectedItemsWidgetState extends ConsumerState<SelectedItemsWidget>
                                   color: Colors.transparent,
                                   child: InkWell(
                                     onTap: () {
-                                      widget.service.removeItem(i);
+                                      selection.removeItem(i);
                                     },
                                   ))
                             ])))))

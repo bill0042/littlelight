@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/selection/selection.service.dart';
+
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:little_light/widgets/item_list/items/armor/armor_inventory_item.widget.dart';
@@ -141,12 +141,12 @@ class SearchItemWrapperWidgetState<T extends SearchItemWrapperWidget>
 
   @override
   void onLongPress(context) {
-    SelectionService().activateMultiSelect();
-    SelectionService().addItem(ItemWithOwner(widget.item, widget.characterId));
+    selection.activateMultiSelect();
+    selection.addItem(ItemWithOwner(widget.item, widget.characterId));
     setState(() {});
 
     StreamSubscription<List<ItemWithOwner>> sub;
-    sub = SelectionService().broadcaster.listen((selectedItems) {
+    sub = selection.broadcaster.listen((selectedItems) {
       if (!mounted) {
         sub.cancel();
         return;

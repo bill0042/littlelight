@@ -10,11 +10,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:little_light/core/providers/item_notes/item_notes.consumer.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
+import 'package:little_light/core/providers/selection/selection_manager.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
-import 'package:little_light/services/selection/selection.service.dart';
+
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/widgets/common/corner_badge.decoration.dart';
@@ -61,7 +62,8 @@ class PursuitItemWidgetState<T extends PursuitItemWidget>
     with
         UserSettingsConsumerState,
         ItemNotesConsumerState,
-        ManifestConsumerState {
+        ManifestConsumerState,
+        SelectionConsumerState {
   DestinyInventoryItemDefinition definition;
   Map<int, DestinyObjectiveDefinition> objectiveDefinitions;
   List<DestinyObjectiveProgress> itemObjectives;
@@ -77,8 +79,7 @@ class PursuitItemWidgetState<T extends PursuitItemWidget>
 
   bool get selected =>
       widget.selectable &&
-      SelectionService()
-          .isSelected(ItemWithOwner(widget.item, widget.characterId));
+      selection.isSelected(ItemWithOwner(widget.item, widget.characterId));
 
   @override
   void initState() {
@@ -90,7 +91,7 @@ class PursuitItemWidgetState<T extends PursuitItemWidget>
         updateProgress();
       }
     });
-    selectionSub = SelectionService().broadcaster.listen((event) {
+    selectionSub = selection.broadcaster.listen((event) {
       if (mounted) setState(() {});
     });
   }
@@ -178,10 +179,9 @@ class PursuitItemWidgetState<T extends PursuitItemWidget>
   onTap(BuildContext context) {
     if (widget.selectable && userSettings.tapToSelect) {
       if (selected) {
-        SelectionService().clear();
+        selection.clear();
       } else {
-        SelectionService()
-            .setItem(ItemWithOwner(widget.item, widget.characterId));
+        selection.setItem(ItemWithOwner(widget.item, widget.characterId));
       }
     } else {
       Navigator.push(
@@ -214,10 +214,9 @@ class PursuitItemWidgetState<T extends PursuitItemWidget>
     }
     if (widget.selectable) {
       if (selected) {
-        SelectionService().clear();
+        selection.clear();
       } else {
-        SelectionService()
-            .setItem(ItemWithOwner(widget.item, widget.characterId));
+        selection.setItem(ItemWithOwner(widget.item, widget.characterId));
       }
       return;
     }

@@ -8,15 +8,15 @@ import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_ha
 import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
 import 'package:little_light/core/providers/inventory/transfer_destination.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
+import 'package:little_light/core/providers/selection/selection_manager.consumer.dart';
 import 'package:little_light/services/profile/profile.service.dart';
-import 'package:little_light/services/selection/selection.service.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/widgets/common/equip_on_character.button.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
 class MultiselectManagementBlockWidget extends ConsumerWidget
-    with InventoryConsumerWidget, ManifestConsumerWidget {
+    with InventoryConsumerWidget, ManifestConsumerWidget, SelectionConsumerWidget {
   final List<ItemWithOwner> items;
   MultiselectManagementBlockWidget({Key key, this.items})
       : super(
@@ -122,7 +122,7 @@ class MultiselectManagementBlockWidget extends ConsumerWidget
         {
           inventory(ref)
               .equipMultiple(List.from(items), destination.characterId);
-          SelectionService().clear();
+          selection(ref).clear();
           break;
         }
       case InventoryAction.Unequip:
@@ -133,7 +133,7 @@ class MultiselectManagementBlockWidget extends ConsumerWidget
         {
           inventory(ref).transferMultiple(
               List.from(items), destination.type, destination.characterId);
-          SelectionService().clear();
+          selection(ref).clear();
           break;
         }
       case InventoryAction.Pull:

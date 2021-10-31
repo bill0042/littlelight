@@ -1,13 +1,13 @@
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 
-class SelectionService {
-  static final SelectionService _singleton = SelectionService._internal();
-  factory SelectionService() {
-    return _singleton;
-  }
-  SelectionService._internal();
+final selectionManagerProvider =
+    Provider<SelectionManager>((ref) => SelectionManager._());
+
+class SelectionManager {
+  SelectionManager._();
 
   List<ItemWithOwner> _selectedItems = [];
 

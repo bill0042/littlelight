@@ -8,10 +8,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
+import 'package:little_light/core/providers/selection/selection_manager.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
 
 import 'package:little_light/services/profile/profile.service.dart';
-import 'package:little_light/services/selection/selection.service.dart';
+
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 
@@ -38,7 +39,8 @@ class CollectibleItemWidgetState extends ConsumerState<CollectibleItemWidget>
     with
         BungieApiConfigConsumerState,
         BungieAuthConsumerState,
-        ManifestConsumerState {
+        ManifestConsumerState,
+        SelectionConsumerState {
   DestinyCollectibleDefinition _definition;
   DestinyInventoryItemDefinition _itemDefinition;
   DestinyCollectibleDefinition get definition {
@@ -58,7 +60,7 @@ class CollectibleItemWidgetState extends ConsumerState<CollectibleItemWidget>
 
   bool get selected => items != null
       ? items.every((i) {
-          return SelectionService().isSelected(i);
+          return selection.isSelected(i);
         })
       : false;
 
@@ -67,7 +69,7 @@ class CollectibleItemWidgetState extends ConsumerState<CollectibleItemWidget>
     super.initState();
     loadDefinition();
     StreamSubscription<List<ItemWithOwner>> sub;
-    sub = SelectionService().broadcaster.listen((selectedItems) {
+    sub = selection.broadcaster.listen((selectedItems) {
       if (!mounted) {
         sub.cancel();
         return;
@@ -201,7 +203,7 @@ class CollectibleItemWidgetState extends ConsumerState<CollectibleItemWidget>
     if (definition.itemHash == null) {
       return;
     }
-    if (SelectionService().multiselectActivated) {
+    if (selection.multiselectActivated) {
       onLongPress(context);
       return;
     }
@@ -222,15 +224,15 @@ class CollectibleItemWidgetState extends ConsumerState<CollectibleItemWidget>
   void onLongPress(BuildContext context) {
     if ((items?.length ?? 0) == 0) return;
     if (!selected) {
-      SelectionService().activateMultiSelect();
+      selection.activateMultiSelect();
       for (var item in this.items) {
-        if (!SelectionService().isSelected(item)) {
-          SelectionService().addItem(ItemWithOwner(item.item, item.ownerId));
+        if (!selection.isSelected(item)) {
+          selection.addItem(ItemWithOwner(item.item, item.ownerId));
         }
       }
     } else {
       for (var item in this.items) {
-        SelectionService().removeItem(ItemWithOwner(item.item, item.ownerId));
+        selection.removeItem(ItemWithOwner(item.item, item.ownerId));
       }
     }
 

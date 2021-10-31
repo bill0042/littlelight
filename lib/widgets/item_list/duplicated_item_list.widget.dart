@@ -8,12 +8,11 @@ import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:little_light/core/providers/selection/selection_manager.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
-import 'package:little_light/services/selection/selection.service.dart';
-
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/utils/media_query_helper.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
@@ -189,7 +188,7 @@ class DuplicatedItemListWidgetState
   bool get wantKeepAlive => true;
 }
 
-class _DefinitionItemWrapper extends StatefulWidget {
+class _DefinitionItemWrapper extends ConsumerStatefulWidget {
   final int hash;
   final List<ItemWithOwner> items;
   _DefinitionItemWrapper(this.hash, this.items);
@@ -199,9 +198,10 @@ class _DefinitionItemWrapper extends StatefulWidget {
   }
 }
 
-class _DefinitionItemWrapperState extends State<_DefinitionItemWrapper> {
+class _DefinitionItemWrapperState extends ConsumerState<_DefinitionItemWrapper>
+    with SelectionConsumerState {
   bool get selected => widget.items.every((i) {
-        return SelectionService().isSelected(i);
+        return selection.isSelected(i);
       });
 
   @override
@@ -209,7 +209,7 @@ class _DefinitionItemWrapperState extends State<_DefinitionItemWrapper> {
     super.initState();
 
     StreamSubscription<List<ItemWithOwner>> sub;
-    sub = SelectionService().broadcaster.listen((selectedItems) {
+    sub = selection.broadcaster.listen((selectedItems) {
       if (!mounted) {
         sub.cancel();
         return;
@@ -256,13 +256,13 @@ class _DefinitionItemWrapperState extends State<_DefinitionItemWrapper> {
   void onTap(context) {
     if (selected) {
       for (var item in widget.items) {
-        SelectionService().removeItem(item);
+        selection.removeItem(item);
       }
     } else {
-      SelectionService().activateMultiSelect();
+      selection.activateMultiSelect();
       for (var item in widget.items) {
-        if (!SelectionService().isSelected(item)) {
-          SelectionService().addItem(item);
+        if (!selection.isSelected(item)) {
+          selection.addItem(item);
         }
       }
     }
@@ -284,10 +284,10 @@ class _ItemInstanceWrapper extends ConsumerStatefulWidget {
 }
 
 class _ItemInstanceWrapperState extends ConsumerState<_ItemInstanceWrapper>
-    with UserSettingsConsumerState {
+    with UserSettingsConsumerState, SelectionConsumerState {
   DestinyItemInstanceComponent instance;
-  bool get selected => SelectionService()
-      .isSelected(ItemWithOwner(widget.item, widget.characterId));
+  bool get selected =>
+      selection.isSelected(ItemWithOwner(widget.item, widget.characterId));
 
   @override
   void initState() {
@@ -296,7 +296,7 @@ class _ItemInstanceWrapperState extends ConsumerState<_ItemInstanceWrapper>
     instance = ProfileService().getInstanceInfo(widget.item.itemInstanceId);
 
     StreamSubscription<List<ItemWithOwner>> sub;
-    sub = SelectionService().broadcaster.listen((selectedItems) {
+    sub = selection.broadcaster.listen((selectedItems) {
       if (!mounted) {
         sub.cancel();
         return;
@@ -337,16 +337,15 @@ class _ItemInstanceWrapperState extends ConsumerState<_ItemInstanceWrapper>
   }
 
   void onTap(context) {
-    if (SelectionService().multiselectActivated) {
+    if (selection.multiselectActivated) {
       onLongPress(context);
       return;
     }
     if (userSettings.tapToSelect) {
-      SelectionService()
-          .setItem(ItemWithOwner(widget.item, widget.characterId));
+      selection.setItem(ItemWithOwner(widget.item, widget.characterId));
       return;
     }
-    SelectionService().clear();
+    selection.clear();
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -363,8 +362,8 @@ class _ItemInstanceWrapperState extends ConsumerState<_ItemInstanceWrapper>
 
   void onLongPress(context) {
     if (widget.definition.nonTransferrable) return;
-    SelectionService().activateMultiSelect();
-    SelectionService().addItem(ItemWithOwner(widget.item, widget.characterId));
+    selection.activateMultiSelect();
+    selection.addItem(ItemWithOwner(widget.item, widget.characterId));
     setState(() {});
   }
 }
