@@ -16,15 +16,13 @@ import 'package:little_light/core/providers/notification/events/notification.eve
 import 'package:little_light/core/providers/notification/notifications.consumer.dart';
 import 'package:little_light/core/providers/vendors/vendors.consumer.dart';
 import 'package:little_light/screens/vendor_details.screen.dart';
-
-import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 
 class VendorsListItemWidget extends ConsumerStatefulWidget {
   final String characterId;
-  final ProfileService profile = ProfileService();
+  
 
   final DestinyVendorComponent vendor;
 

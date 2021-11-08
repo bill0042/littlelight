@@ -2,6 +2,7 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/widgets/common/item_icon/engram_icon.widget.dart';
 import 'package:little_light/widgets/item_list/items/base/minimal_base_inventory_item.widget.dart';
 import 'package:little_light/widgets/item_list/items/base/minimal_info_label.mixin.dart';
@@ -19,7 +20,7 @@ class MinimalEngramInventoryItemWidget extends MinimalBaseInventoryItemWidget
             uniqueId: uniqueId, characterId: characterId, key: key);
 
   @override
-  Widget itemIconHero(BuildContext context) {
+  Widget itemIconHero(BuildContext context, WidgetRef ref) {
     return Hero(
       tag: "item_icon_${item.itemInstanceId}_${item.itemHash}",
       child: EngramIconWidget(item, definition, instanceInfo),
@@ -27,7 +28,7 @@ class MinimalEngramInventoryItemWidget extends MinimalBaseInventoryItemWidget
   }
 
   @override
-  Widget primaryStatWidget(BuildContext context) {
+  Widget primaryStatWidget(BuildContext context, WidgetRef ref) {
     return Container();
   }
 }

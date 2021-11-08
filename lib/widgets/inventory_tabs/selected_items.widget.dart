@@ -8,7 +8,7 @@ import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/selection/selection_manager.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/utils/media_query_helper.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
@@ -27,7 +27,11 @@ class SelectedItemsWidget extends ConsumerStatefulWidget {
 }
 
 class SelectedItemsWidgetState extends ConsumerState<SelectedItemsWidget>
-    with InventoryConsumerState, ManifestConsumerState, SelectionConsumerState {
+    with
+        InventoryConsumerState,
+        ManifestConsumerState,
+        SelectionConsumerState,
+        ProfileConsumerState {
   StreamSubscription<List<ItemWithOwner>> subscription;
   List<ItemWithOwner> items;
 
@@ -108,7 +112,7 @@ class SelectedItemsWidgetState extends ConsumerState<SelectedItemsWidget>
         onPressed: () async {
           var item = items.single;
           var instanceInfo =
-              ProfileService().getInstanceInfo(item?.item?.itemInstanceId);
+              profile.getInstanceInfo(item?.item?.itemInstanceId);
           var def =
               await manifest.getDefinition<DestinyInventoryItemDefinition>(
                   item?.item?.itemHash);

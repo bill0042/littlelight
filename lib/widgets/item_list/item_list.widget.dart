@@ -14,7 +14,7 @@ import 'package:little_light/core/providers/notification/notifications.consumer.
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/models/bucket_display_options.dart';
 
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/utils/media_query_helper.dart';
@@ -42,7 +42,6 @@ const _suppressEmptySpaces = [
 class ItemListWidget extends ConsumerStatefulWidget {
   final String characterId;
 
-  final ProfileService profile = ProfileService();
   final EdgeInsets padding;
   final List<int> bucketHashes;
   final Map<int, double> scrollPositions;
@@ -75,7 +74,8 @@ class ItemListWidgetState extends ConsumerState<ItemListWidget>
         AutomaticKeepAliveClientMixin,
         UserSettingsConsumerState,
         ManifestConsumerState,
-        NotificationsConsumerState {
+        NotificationsConsumerState,
+        ProfileConsumerState {
   Map<int, DestinyInventoryBucketDefinition> bucketDefs;
   List<ListBucket> buckets;
   StreamSubscription<NotificationEvent> subscription;
@@ -107,11 +107,10 @@ class ItemListWidgetState extends ConsumerState<ItemListWidget>
   buildIndex() async {
     if (!mounted) return;
     List<DestinyItemComponent> equipment =
-        widget.profile.getCharacterEquipment(widget.characterId);
+        profile.getCharacterEquipment(widget.characterId);
     List<DestinyItemComponent> characterInventory =
-        widget.profile.getCharacterInventory(widget.characterId);
-    List<DestinyItemComponent> profileInventory =
-        widget.profile.getProfileInventory();
+        profile.getCharacterInventory(widget.characterId);
+    List<DestinyItemComponent> profileInventory = profile.getProfileInventory();
     this.bucketDefs = await manifest
         .getDefinitions<DestinyInventoryBucketDefinition>(widget.bucketHashes);
     this.buckets = [];

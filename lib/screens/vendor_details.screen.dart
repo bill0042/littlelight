@@ -12,14 +12,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/vendors/vendors.consumer.dart';
-import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:little_light/widgets/vendors/purchasable_item.widget.dart';
 
 class VendorDetailsScreen extends ConsumerStatefulWidget {
-  final ProfileService profile = ProfileService();
+  
   final String characterId;
   final DestinyVendorComponent vendor;
 

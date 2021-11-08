@@ -6,7 +6,7 @@ import 'package:bungie_api/models/destiny_item_talent_grid_component.dart';
 import 'package:bungie_api/models/destiny_talent_grid_definition.dart';
 import 'package:bungie_api/models/destiny_talent_node_category.dart';
 import 'package:little_light/core/providers/manifest/manifest.provider.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.provider.dart';
 
 Manifest get _manifest => globalManifestProvider;
 
@@ -76,7 +76,7 @@ Future<SubclassTalentGridInfo> getSubclassTalentGridInfo(
     DestinyItemComponent item) async {
   var def = await _manifest
       .getDefinition<DestinyInventoryItemDefinition>(item.itemHash);
-  var talentGrid = ProfileService().getTalentGrid(item?.itemInstanceId);
+  var talentGrid = globalProfileProvider.getTalentGrid(item?.itemInstanceId);
   var talentGridDef = await _manifest
       .getDefinition<DestinyTalentGridDefinition>(talentGrid.talentGridHash);
   var talentgridCategory =

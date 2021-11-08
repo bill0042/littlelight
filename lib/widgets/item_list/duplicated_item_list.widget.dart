@@ -12,7 +12,7 @@ import 'package:little_light/core/providers/selection/selection_manager.consumer
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
 
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/utils/media_query_helper.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
@@ -41,10 +41,8 @@ class DuplicatedListItem {
 }
 
 class DuplicatedItemListWidget extends ConsumerStatefulWidget {
-  final ProfileService profile = ProfileService();
   final SearchController searchController;
   DuplicatedItemListWidget({Key key, this.searchController}) : super(key: key);
-  
 
   @override
   DuplicatedItemListWidgetState createState() =>
@@ -284,7 +282,10 @@ class _ItemInstanceWrapper extends ConsumerStatefulWidget {
 }
 
 class _ItemInstanceWrapperState extends ConsumerState<_ItemInstanceWrapper>
-    with UserSettingsConsumerState, SelectionConsumerState {
+    with
+        UserSettingsConsumerState,
+        SelectionConsumerState,
+        ProfileConsumerState {
   DestinyItemInstanceComponent instance;
   bool get selected =>
       selection.isSelected(ItemWithOwner(widget.item, widget.characterId));
@@ -293,7 +294,7 @@ class _ItemInstanceWrapperState extends ConsumerState<_ItemInstanceWrapper>
   void initState() {
     super.initState();
 
-    instance = ProfileService().getInstanceInfo(widget.item.itemInstanceId);
+    instance = profile.getInstanceInfo(widget.item.itemInstanceId);
 
     StreamSubscription<List<ItemWithOwner>> sub;
     sub = selection.broadcaster.listen((selectedItems) {

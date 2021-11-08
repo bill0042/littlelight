@@ -12,7 +12,7 @@ import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dar
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/objective_tracking/objective_tracking.consumer.dart';
 import 'package:little_light/models/tracked_objective.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
@@ -32,7 +32,8 @@ class MetricItemWidgetState extends ConsumerState<MetricItemWidget>
         ObjectiveTrackingConsumerState,
         BungieApiConfigConsumerState,
         BungieAuthConsumerState,
-        ManifestConsumerState {
+        ManifestConsumerState,
+        ProfileConsumerState {
   DestinyMetricDefinition _definition;
   bool isLogged = false;
   Map<int, DestinyObjectiveDefinition> objectiveDefinitions;
@@ -46,7 +47,7 @@ class MetricItemWidgetState extends ConsumerState<MetricItemWidget>
   }
 
   DestinyMetricComponent get metric {
-    return ProfileService().getMetric(definition?.hash);
+    return profile.getMetric(definition?.hash);
   }
 
   @override

@@ -12,24 +12,24 @@ import 'package:little_light/widgets/item_list/items/subclass/subclass_image.wid
 import 'package:tinycolor/tinycolor.dart';
 
 mixin SubclassPropertiesMixin on InventoryItemMixin {
-  DestinyItemTalentGridComponent get talentGrid;
+  DestinyItemTalentGridComponent talentGrid(WidgetRef ref);
 
   @override
-  Widget positionedIcon(BuildContext context) {
+  Widget positionedIcon(BuildContext context, WidgetRef ref) {
     return Positioned(
         top: 0,
         left: 0,
         width: iconSize + padding * 2,
         height: iconSize + padding * 2,
-        child: itemIconHero(context));
+        child: itemIconHero(context, ref));
   }
 
-  Widget itemIcon(BuildContext context) {
+  Widget itemIcon(BuildContext context, WidgetRef ref) {
     return SubclassIconWidget(item, definition, instanceInfo);
   }
 
   @override
-  Widget positionedNameBar(BuildContext context) {
+  Widget positionedNameBar(BuildContext context, WidgetRef ref) {
     Color damageTypeColor =
         DestinyData.getDamageTypeColor(definition.talentGrid.hudDamageType);
     BoxDecoration decoration = BoxDecoration(
@@ -60,8 +60,8 @@ mixin SubclassPropertiesMixin on InventoryItemMixin {
                           fontWeight: FontWeight.bold)),
                   talentGrid != null
                       ? DefinitionProviderWidget<DestinyTalentGridDefinition>(
-                          talentGrid.talentGridHash, (def) {
-                          var text = extractTalentGridName(def);
+                          talentGrid(ref).talentGridHash, (def) {
+                          var text = extractTalentGridName(ref, def);
                           if (text.length > 0) {
                             return Text(text,
                                 style: TextStyle(
@@ -80,8 +80,9 @@ mixin SubclassPropertiesMixin on InventoryItemMixin {
   }
 
   DestinyTalentNodeCategory extractTalentGridNodeCategory(
+    WidgetRef ref,
       DestinyTalentGridDefinition talentGridDef) {
-    Iterable<int> activatedNodes = talentGrid?.nodes
+    Iterable<int> activatedNodes = talentGrid(ref)?.nodes
         ?.where((node) => node.isActivated)
         ?.map((node) => node.nodeIndex);
     Iterable<DestinyTalentNodeCategory> selectedSkills =
@@ -100,14 +101,15 @@ mixin SubclassPropertiesMixin on InventoryItemMixin {
   }
 
   String extractTalentGridName(
+      WidgetRef ref,
       DestinyTalentGridDefinition talentGridDefinition) {
     DestinyTalentNodeCategory cat =
-        extractTalentGridNodeCategory(talentGridDefinition);
+        extractTalentGridNodeCategory(ref, talentGridDefinition);
     return cat?.displayProperties?.name ?? "";
   }
 
   @override
-  Widget categoryName(BuildContext context) {
+  Widget categoryName(BuildContext context, WidgetRef ref) {
     return null;
   }
 

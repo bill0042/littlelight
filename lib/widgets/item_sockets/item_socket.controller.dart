@@ -9,11 +9,12 @@ import 'package:bungie_api/models/destiny_item_socket_state.dart';
 import 'package:bungie_api/models/destiny_plug_set_definition.dart';
 import 'package:flutter/widgets.dart';
 import 'package:little_light/core/providers/manifest/manifest.provider.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.provider.dart';
 import 'package:little_light/utils/destiny_data.dart';
 
 class ItemSocketController extends ChangeNotifier {
   Manifest get manifest => globalManifestProvider;
+  Profile get profile => globalProfileProvider;
 
   final DestinyItemComponent item;
   final DestinyInventoryItemDefinition definition;
@@ -90,9 +91,9 @@ class ItemSocketController extends ChangeNotifier {
   _initDefaults() {
     var entries = definition?.sockets?.socketEntries;
     socketStates =
-        socketStates ?? ProfileService().getItemSockets(item?.itemInstanceId);
+        socketStates ?? profile.getItemSockets(item?.itemInstanceId);
     reusablePlugs = reusablePlugs ??
-        ProfileService().getItemReusablePlugs(item?.itemInstanceId);
+        profile.getItemReusablePlugs(item?.itemInstanceId);
     _selectedSockets = List<int>.filled(entries?.length ?? 0, null);
     _randomizedSelectedSockets = List<int>.filled(entries?.length ?? 0, null);
   }
@@ -191,7 +192,6 @@ class ItemSocketController extends ChangeNotifier {
           (entry.plugSources.contains(SocketPlugSources.CharacterPlugSet)) ||
               (entry.plugSources.contains(SocketPlugSources.ProfilePlugSet));
       if (isPlugSet) {
-        var profile = ProfileService();
         var plugSet = profile.getPlugSets(entry.reusablePlugSetHash);
         hashes.addAll(plugSet.map((p) => p.plugItemHash).where((p) {
           if (_armorTierIndex == null) return true;

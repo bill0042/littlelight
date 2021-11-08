@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 
-class DevToolsScreen extends ConsumerWidget with ManifestConsumerWidget {
+class DevToolsScreen extends ConsumerWidget with ManifestConsumerWidget, ProfileConsumerWidget {
   final Map<String, TextEditingController> fieldControllers = Map();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,8 +27,8 @@ class DevToolsScreen extends ConsumerWidget with ManifestConsumerWidget {
                     children: [
                       buildTextField(context, "membershipId"),
                       buildButton(context, "Reload", () async {
-                        await ProfileService().fetchProfileData();
-                        print(ProfileService().getCharacters());
+                        await profile(ref).fetchProfileData();
+                        print(profile(ref).getCharacters());
                       }),
                       buildButton(
                         context,

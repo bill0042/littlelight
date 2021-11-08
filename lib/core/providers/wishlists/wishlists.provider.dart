@@ -4,10 +4,10 @@ import 'package:bungie_api/models/destiny_item_socket_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:little_light/core/providers/global_container/global.container.dart';
+import 'package:little_light/core/providers/profile/profile.provider.dart';
 import 'package:little_light/models/wish_list.dart';
 import 'package:little_light/core/providers/wishlists/parsers/dim_wishlist.parser.dart';
 import 'package:little_light/core/providers/wishlists/parsers/littlelight_wishlist.parser.dart';
-import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 
 final wishlistProvider = Provider<WishlistsProviderService>(
@@ -17,10 +17,12 @@ WishlistsProviderService get globalWishlistService =>
     globalContainer.read(wishlistProvider);
 
 class WishlistsProviderService {
-  StorageService storage = StorageService.global();
-  ProviderRef ref;
+  ProviderRef _ref;
+  Profile get profile => _ref.read(profileProvider);
 
-  WishlistsProviderService._(this.ref);
+  StorageService storage = StorageService.global();
+
+  WishlistsProviderService._(this._ref);
 
   Map<int, WishlistItem> _items = Map();
 
@@ -199,8 +201,8 @@ class WishlistsProviderService {
 
   Set<String> getWishlistBuildNotes(DestinyItemComponent item) {
     if (item == null) return null;
-    var reusable = ProfileService().getItemReusablePlugs(item.itemInstanceId);
-    var sockets = ProfileService().getItemSockets(item.itemInstanceId);
+    var reusable = profile.getItemReusablePlugs(item.itemInstanceId);
+    var sockets = profile.getItemSockets(item.itemInstanceId);
     Set<int> availablePlugs = Set();
     reusable?.values?.forEach((plugs) =>
         plugs.forEach((plug) => availablePlugs.add(plug.plugItemHash)));

@@ -19,7 +19,7 @@ import 'package:little_light/core/providers/notification/events/notification.eve
 import 'package:little_light/core/providers/notification/notifications.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
@@ -29,7 +29,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:speech_bubble/speech_bubble.dart';
 
 class CharacterInfoWidget extends ConsumerStatefulWidget {
-  final ProfileService profile = ProfileService();
+  
   final String characterId;
 
   CharacterInfoWidget({this.characterId, Key key}) : super(key: key);
@@ -46,7 +46,8 @@ class CharacterInfoWidgetState<T extends CharacterInfoWidget>
         UserSettingsConsumerState,
         ManifestConsumerState,
         NotificationsConsumerState,
-        DestinySettingsConsumerState {
+        DestinySettingsConsumerState,
+        ProfileConsumerState {
   DestinyClassDefinition classDef;
   DestinyRaceDefinition raceDef;
   DestinyCharacterComponent character;
@@ -58,11 +59,11 @@ class CharacterInfoWidgetState<T extends CharacterInfoWidget>
   void initState() {
     super.initState();
 
-    character = widget.profile.getCharacter(widget.characterId);
+    character = profile.getCharacter(widget.characterId);
     loadDefinitions();
     subscription = notifications.listen((event) {
       if (event.type == NotificationType.receivedUpdate && mounted) {
-        character = widget.profile.getCharacter(widget.characterId);
+        character = profile.getCharacter(widget.characterId);
         setState(() {});
       }
     });
@@ -119,7 +120,7 @@ class CharacterInfoWidgetState<T extends CharacterInfoWidget>
   }
 
   Widget currencyInfo(BuildContext context) {
-    var currencies = widget.profile.getProfileCurrencies();
+    var currencies = profile.getProfileCurrencies();
     if (currencies == null) {
       return Container();
     }
@@ -183,12 +184,12 @@ class CharacterInfoWidgetState<T extends CharacterInfoWidget>
   }
 
   int get artifactLevel {
-    var item = widget.profile
+    var item = profile
         .getCharacterEquipment(widget.characterId)
         .firstWhere((item) => item.bucketHash == InventoryBucket.artifact,
             orElse: () => null);
     if (item == null) return 0;
-    var instanceInfo = widget.profile.getInstanceInfo(item?.itemInstanceId);
+    var instanceInfo = profile.getInstanceInfo(item?.itemInstanceId);
     return instanceInfo?.primaryStat?.value ?? 0;
   }
 
@@ -305,7 +306,7 @@ class CharacterInfoWidgetState<T extends CharacterInfoWidget>
 
   Widget expInfo(BuildContext context, DestinyCharacterComponent character) {
     var progression =
-        widget.profile.getCharacterProgression(character.characterId);
+        profile.getCharacterProgression(character.characterId);
     DestinyProgression levelProg =
         progression.progressions["${destinySettings.seasonalRankProgressionHash}"];
     DestinyProgression overLevelProg = progression
@@ -355,7 +356,7 @@ class CharacterInfoWidgetState<T extends CharacterInfoWidget>
   DestinyProgression get legendProgression {
     var overlevelHash =
         destinySettings.seasonalPrestigeRankProgressionHash;
-    return widget.profile
+    return profile
         .getCharacterProgression(character.characterId)
         .progressions["$overlevelHash"];
   }

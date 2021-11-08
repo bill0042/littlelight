@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/notification/events/notification.event.dart';
 import 'package:little_light/core/providers/notification/notifications.consumer.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 
 typedef ExtractTextFromData = String Function(dynamic data);
 
 class RefreshButtonWidget extends ConsumerStatefulWidget {
-  final ProfileService profile = ProfileService();
   final EdgeInsets padding;
   RefreshButtonWidget({Key key, this.padding}) : super(key: key);
 
@@ -20,7 +19,10 @@ class RefreshButtonWidget extends ConsumerStatefulWidget {
 }
 
 class RefreshButtonWidgetState extends ConsumerState<RefreshButtonWidget>
-    with TickerProviderStateMixin, NotificationsConsumerState {
+    with
+        TickerProviderStateMixin,
+        NotificationsConsumerState,
+        ProfileConsumerState {
   AnimationController rotationController;
   StreamSubscription<NotificationEvent> subscription;
 
@@ -71,7 +73,7 @@ class RefreshButtonWidgetState extends ConsumerState<RefreshButtonWidget>
           enableFeedback: !rotationController.isAnimating,
           onTap: () {
             if (!rotationController.isAnimating) {
-              widget.profile.fetchProfileData();
+              profile.fetchProfileData();
             }
           },
         ));

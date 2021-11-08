@@ -24,33 +24,33 @@ mixin InventoryItemMixin implements BaseDestinyStatelessItemWidget {
     return Stack(
       children: <Widget>[
         background(context, ref),
-        positionedNameBar(context),
-        categoryName(context),
-        primaryStatWidget(context),
-        positionedIcon(context),
-        perksWidget(context),
-        modsWidget(context),
+        positionedNameBar(context, ref),
+        categoryName(context, ref),
+        primaryStatWidget(context, ref),
+        positionedIcon(context, ref),
+        perksWidget(context, ref),
+        modsWidget(context, ref),
       ].where((w) => w != null).toList(),
     );
   }
 
-  Widget positionedIcon(BuildContext context) {
+  Widget positionedIcon(BuildContext context, WidgetRef ref) {
     return Positioned(
         top: padding,
         left: padding,
         width: iconSize,
         height: iconSize,
-        child: itemIconHero(context));
+        child: itemIconHero(context, ref));
   }
 
-  Widget itemIconHero(BuildContext context) {
+  Widget itemIconHero(BuildContext context, WidgetRef ref) {
     return Hero(
       tag: "item_icon_${tag}_$uniqueId",
-      child: itemIcon(context),
+      child: itemIcon(context, ref),
     );
   }
 
-  itemIcon(BuildContext context) {
+  itemIcon(BuildContext context, WidgetRef ref) {
     return ItemIconWidget(
       item,
       definition,
@@ -59,7 +59,7 @@ mixin InventoryItemMixin implements BaseDestinyStatelessItemWidget {
     );
   }
 
-  Widget primaryStatWidget(BuildContext context) {
+  Widget primaryStatWidget(BuildContext context, WidgetRef ref) {
     if ([DestinyItemType.Engram, DestinyItemType.Subclass]
         .contains(definition.itemType)) {
       return Container();
@@ -76,15 +76,15 @@ mixin InventoryItemMixin implements BaseDestinyStatelessItemWidget {
         ));
   }
 
-  Widget perksWidget(BuildContext context) {
+  Widget perksWidget(BuildContext context, WidgetRef ref) {
     return Container();
   }
 
-  Widget modsWidget(BuildContext context) {
+  Widget modsWidget(BuildContext context, WidgetRef ref) {
     return Container();
   }
 
-  Widget categoryName(BuildContext context) {
+  Widget categoryName(BuildContext context, WidgetRef ref) {
     return Positioned(
         left: padding * 2 + iconSize,
         top: padding * 2.5 + titleFontSize,
@@ -94,12 +94,12 @@ mixin InventoryItemMixin implements BaseDestinyStatelessItemWidget {
         ));
   }
 
-  Widget positionedNameBar(BuildContext context) {
-    return Positioned(left: 0, right: 0, child: itemHeroNamebar(context));
+  Widget positionedNameBar(BuildContext context, WidgetRef ref) {
+    return Positioned(left: 0, right: 0, child: itemHeroNamebar(context, ref));
   }
 
-  Widget buildStatTotal(BuildContext context) {
-    var stats = profile.getPrecalculatedStats(item?.itemInstanceId);
+  Widget buildStatTotal(BuildContext context, WidgetRef ref) {
+    var stats = profile(ref).getPrecalculatedStats(item?.itemInstanceId);
     if (stats == null) {
       return Container();
     }
@@ -136,11 +136,11 @@ mixin InventoryItemMixin implements BaseDestinyStatelessItemWidget {
         ));
   }
 
-  Widget itemHeroNamebar(BuildContext context) {
-    return Hero(tag: "item_namebar_${tag}_$uniqueId", child: nameBar(context));
+  Widget itemHeroNamebar(BuildContext context, WidgetRef ref) {
+    return Hero(tag: "item_namebar_${tag}_$uniqueId", child: nameBar(context, ref));
   }
 
-  Widget nameBar(BuildContext context) {
+  Widget nameBar(BuildContext context, WidgetRef ref) {
     return ItemNameBarWidget(item, definition, instanceInfo,
         trailing: Consumer(
             builder: (context, ref, _) => namebarTrailingWidget(context, ref)),
@@ -167,8 +167,8 @@ mixin InventoryItemMixin implements BaseDestinyStatelessItemWidget {
   }
 
   Widget wishlistBackground(BuildContext context, WidgetRef ref) {
-    final reusable = profile.getItemReusablePlugs(item?.itemInstanceId);
-    final sockets = profile.getItemSockets(item?.itemInstanceId);
+    final reusable = profile(ref).getItemReusablePlugs(item?.itemInstanceId);
+    final sockets = profile(ref).getItemSockets(item?.itemInstanceId);
     final wishlist = ref.read(wishlistProvider);
     final tags = wishlist.getWishlistBuildTags(
         itemHash: item?.itemHash, reusablePlugs: reusable, sockets: sockets);
@@ -207,8 +207,8 @@ mixin InventoryItemMixin implements BaseDestinyStatelessItemWidget {
 
   Widget namebarTrailingWidget(BuildContext context, WidgetRef ref) {
     List<Widget> items = [];
-    final reusable = profile.getItemReusablePlugs(item?.itemInstanceId);
-    final sockets = profile.getItemSockets(item?.itemInstanceId);
+    final reusable = profile(ref).getItemReusablePlugs(item?.itemInstanceId);
+    final sockets = profile(ref).getItemSockets(item?.itemInstanceId);
     final wishlist = ref.read(wishlistProvider);
     final wishlistTags = wishlist.getWishlistBuildTags(
         itemHash: item?.itemHash, reusablePlugs: reusable, sockets: sockets);

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:little_light/models/item_sort_parameter.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
 import 'package:little_light/widgets/search/search.controller.dart';
 
-class BaseSearchSorterWidget extends StatefulWidget {
+class BaseSearchSorterWidget extends ConsumerStatefulWidget {
   final SearchController controller;
   final ItemSortParameter sortParameter;
   final Widget handle;
@@ -16,7 +17,7 @@ class BaseSearchSorterWidget extends StatefulWidget {
 }
 
 class BaseSearchSorterWidgetState<T extends BaseSearchSorterWidget>
-    extends State<T> {
+    extends ConsumerState<T> {
   ItemSortParameter get sortParameter => widget.sortParameter;
 
   SearchController get controller => widget.controller;

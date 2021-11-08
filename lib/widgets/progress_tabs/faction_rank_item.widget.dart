@@ -12,14 +12,14 @@ import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/notification/events/notification.event.dart';
 import 'package:little_light/core/providers/notification/notifications.consumer.dart';
 
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/flutter/filled_diamond_progress_indicator.dart';
 
 class FactionRankItemWidget extends ConsumerStatefulWidget {
   final String characterId;
-  final ProfileService profile = ProfileService();
+  
 
   final DestinyFactionProgression progression;
 
@@ -35,7 +35,8 @@ class FactionRankItemWidgetState<T extends FactionRankItemWidget>
         AutomaticKeepAliveClientMixin,
         BungieApiConfigConsumerState,
         ManifestConsumerState,
-        NotificationsConsumerState {
+        NotificationsConsumerState,
+        ProfileConsumerState {
   DestinyProgressionDefinition definition;
   DestinyFactionDefinition factionDefinition;
   DestinyVendorDefinition vendorDefinition;
@@ -51,7 +52,7 @@ class FactionRankItemWidgetState<T extends FactionRankItemWidget>
     loadDefinitions();
     subscription = notifications.listen((event) {
       if (event.type == NotificationType.receivedUpdate && mounted) {
-        progression = widget.profile
+        progression = profile
             .getCharacterProgression(widget.characterId)
             .factions["$hash"];
         setState(() {});

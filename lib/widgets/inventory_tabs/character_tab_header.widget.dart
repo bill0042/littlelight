@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/core/providers/destiny_settings/destiny_settings.consumer.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:shimmer/shimmer.dart';
@@ -15,7 +15,6 @@ import 'package:shimmer/shimmer.dart';
 class TabHeaderWidget extends ConsumerStatefulWidget {
   final DestinyCharacterComponent character;
 
-  final ProfileService profile = ProfileService();
   @override
   TabHeaderWidget(this.character, {Key key}) : super(key: key);
 
@@ -24,7 +23,11 @@ class TabHeaderWidget extends ConsumerStatefulWidget {
 }
 
 class TabHeaderWidgetState extends ConsumerState<TabHeaderWidget>
-    with BungieApiConfigConsumerState, ManifestConsumerState, DestinySettingsConsumerState {
+    with
+        BungieApiConfigConsumerState,
+        ManifestConsumerState,
+        DestinySettingsConsumerState,
+        ProfileConsumerState {
   DestinyInventoryItemDefinition emblemDefinition;
 
   DestinyCharacterProgressionComponent progression;
@@ -32,7 +35,7 @@ class TabHeaderWidgetState extends ConsumerState<TabHeaderWidget>
   void initState() {
     if (widget.character != null) {
       progression =
-          widget.profile.getCharacterProgression(widget.character.characterId);
+          profile.getCharacterProgression(widget.character.characterId);
     }
 
     super.initState();
@@ -109,8 +112,8 @@ class TabHeaderWidgetState extends ConsumerState<TabHeaderWidget>
   }
 
   Widget powerBar(BuildContext context) {
-    DestinyProgression levelProg =
-        progression.progressions["${destinySettings.seasonalRankProgressionHash}"];
+    DestinyProgression levelProg = progression
+        .progressions["${destinySettings.seasonalRankProgressionHash}"];
     DestinyProgression overLevelProg = progression
         .progressions["${destinySettings.seasonalPrestigeRankProgressionHash}"];
     Color fg = Colors.cyan.shade300;

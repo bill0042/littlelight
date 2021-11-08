@@ -1,15 +1,14 @@
 import 'package:bungie_api/models/destiny_character_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
-import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/widgets/inventory_tabs/inventory_notification.widget.dart';
 import 'package:little_light/widgets/inventory_tabs/selected_items.widget.dart';
 import 'package:little_light/widgets/inventory_tabs/tabs_character_menu.widget.dart';
 import 'package:shimmer/shimmer.dart';
 
 class InspectScreen extends ConsumerStatefulWidget {
-  final profile = ProfileService();
 
   final String membershipId;
   final int membershipType;
@@ -22,7 +21,7 @@ class InspectScreen extends ConsumerStatefulWidget {
 }
 
 class InspectScreenState extends ConsumerState<InspectScreen>
-    with TickerProviderStateMixin, UserSettingsConsumerState {
+    with TickerProviderStateMixin, UserSettingsConsumerState, ProfileConsumerState {
   TabController charTabController;
   TabController typeTabController;
 
@@ -107,7 +106,7 @@ class InspectScreenState extends ConsumerState<InspectScreen>
   }
 
   List<DestinyCharacterComponent> get characters {
-    return widget.profile.getCharacters(userSettings.characterOrdering);
+    return profile.getCharacters(userSettings.characterOrdering);
   }
 
   Widget buildLoading(BuildContext context) {

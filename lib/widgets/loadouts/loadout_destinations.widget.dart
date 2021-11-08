@@ -6,14 +6,13 @@ import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
 import 'package:little_light/core/providers/inventory/transfer_destination.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/models/loadout.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/widgets/common/equip_on_character.button.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/option_sheets/free_slots_slider.widget.dart';
 
 class LoadoutDestinationsWidget extends ConsumerStatefulWidget {
-  final ProfileService profile = ProfileService();
   final Loadout loadout;
   LoadoutDestinationsWidget(this.loadout, {Key key}) : super(key: key);
 
@@ -25,7 +24,10 @@ class LoadoutDestinationsWidget extends ConsumerStatefulWidget {
 
 class LoadoutDestinationsWidgetState
     extends ConsumerState<LoadoutDestinationsWidget>
-    with UserSettingsConsumerState, InventoryConsumerState {
+    with
+        UserSettingsConsumerState,
+        InventoryConsumerState,
+        ProfileConsumerState {
   int freeSlots = 0;
 
   @override
@@ -143,7 +145,7 @@ class LoadoutDestinationsWidgetState
   }
 
   List<TransferDestination> get equipDestinations {
-    return widget.profile
+    return profile
         .getCharacters(userSettings.characterOrdering)
         .map((char) => TransferDestination(ItemDestination.Character,
             characterId: char.characterId, action: InventoryAction.Equip))
@@ -151,7 +153,7 @@ class LoadoutDestinationsWidgetState
   }
 
   List<TransferDestination> get transferDestinations {
-    List<TransferDestination> list = widget.profile
+    List<TransferDestination> list = profile
         .getCharacters(userSettings.characterOrdering)
         .map((char) => TransferDestination(ItemDestination.Character,
             characterId: char.characterId))

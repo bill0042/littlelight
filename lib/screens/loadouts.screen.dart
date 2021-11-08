@@ -6,10 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:little_light/core/providers/profile/component_groups.dart';
 import 'package:little_light/models/loadout.dart';
 import 'package:little_light/screens/edit_loadout.screen.dart';
 import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/utils/media_query_helper.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
@@ -23,7 +24,7 @@ class LoadoutsScreen extends ConsumerStatefulWidget {
 }
 
 class LoadoutScreenState extends ConsumerState<LoadoutsScreen>
-    with LoadoutsConsumerState {
+    with LoadoutsConsumerState, ProfileConsumerState {
   final Map<String, LoadoutItemIndex> itemIndexes = Map();
   bool reordering = false;
   bool searchOpen = false;
@@ -34,7 +35,7 @@ class LoadoutScreenState extends ConsumerState<LoadoutsScreen>
   @override
   void initState() {
     super.initState();
-    ProfileService().updateComponents = ProfileComponentGroups.basicProfile;
+    profile.updateComponents = ProfileComponentGroups.basicProfile;
     _searchFieldController.addListener(() {
       filteredLoadouts = filterLoadouts();
       setState(() {});

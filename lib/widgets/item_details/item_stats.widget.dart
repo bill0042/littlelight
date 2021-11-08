@@ -182,7 +182,7 @@ class DestinyStatsWidgetState extends BaseDestinyItemState<ItemStatsWidget>
 
   List<DestinyItemSocketState> get socketStates {
     if (item == null) return null;
-    return widget.profile.getItemSockets(item.itemInstanceId);
+    return profile.getItemSockets(item.itemInstanceId);
   }
 
   @override

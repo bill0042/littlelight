@@ -10,14 +10,14 @@ import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/notification/events/notification.event.dart';
 import 'package:little_light/core/providers/notification/notifications.consumer.dart';
 
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:little_light/widgets/flutter/filled_circular_progress_indicator.dart';
 
 class RankItemWidget extends ConsumerStatefulWidget {
   final String characterId;
-  final ProfileService profile = ProfileService();
+  
 
   final DestinyProgression progression;
 
@@ -32,7 +32,8 @@ class RankItemWidgetState<T extends RankItemWidget> extends ConsumerState<T>
         AutomaticKeepAliveClientMixin,
         BungieApiConfigConsumerState,
         ManifestConsumerState,
-        NotificationsConsumerState {
+        NotificationsConsumerState,
+        ProfileConsumerState {
   DestinyProgressionDefinition definition;
   StreamSubscription<NotificationEvent> subscription;
 
@@ -49,7 +50,7 @@ class RankItemWidgetState<T extends RankItemWidget> extends ConsumerState<T>
     loadDefinitions();
     subscription = notifications.listen((event) {
       if (event.type == NotificationType.receivedUpdate && mounted) {
-        progression = widget.profile
+        progression = profile
             .getCharacterProgression(widget.characterId)
             .progressions["$hash"];
         setState(() {});

@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:bungie_api/enums/destiny_collectible_state.dart';
+import 'package:bungie_api/enums/destiny_component_type.dart';
+import 'package:bungie_api/enums/destiny_scope.dart';
 import 'package:bungie_api/models/destiny_artifact_profile_scoped.dart';
 import 'package:bungie_api/models/destiny_character_activities_component.dart';
 import 'package:bungie_api/models/destiny_character_component.dart';
@@ -19,98 +21,33 @@ import 'package:bungie_api/models/destiny_presentation_node_component.dart';
 import 'package:bungie_api/models/destiny_profile_response.dart';
 import 'package:bungie_api/models/destiny_record_component.dart';
 import 'package:bungie_api/models/destiny_stat.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api.provider.dart';
+import 'package:little_light/core/providers/global_container/global.container.dart';
 import 'package:little_light/core/providers/notification/events/notification.event.dart';
 import 'package:little_light/core/providers/notification/notifications.provider.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.provider.dart';
-
-import 'package:bungie_api/enums/destiny_component_type.dart';
-import 'package:bungie_api/enums/destiny_scope.dart';
-import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/models/character_sort_parameter.dart';
+import 'package:little_light/services/storage/storage.service.dart';
+
+import 'component_groups.dart';
 
 enum LastLoadedFrom { server, cache }
 
-class ProfileComponentGroups {
-  static const List<DestinyComponentType> basicProfile = [
-    DestinyComponentType.Characters,
-    DestinyComponentType.CharacterActivities,
-    DestinyComponentType.CharacterProgressions,
-    DestinyComponentType.CharacterEquipment,
-    DestinyComponentType.CharacterInventories,
-    DestinyComponentType.ProfileInventories,
-    DestinyComponentType.ProfileCurrencies,
-    DestinyComponentType.ProfileProgression,
-    DestinyComponentType.ItemInstances,
-    DestinyComponentType.ItemStats,
-    DestinyComponentType.ItemObjectives,
-    DestinyComponentType.ItemTalentGrids,
-    DestinyComponentType.ItemSockets,
-    DestinyComponentType.ItemPlugStates,
-    DestinyComponentType.ItemPlugObjectives,
-    DestinyComponentType.ItemReusablePlugs,
-  ];
+final profileProvider =
+    Provider<Profile>((ref) => Profile._(ref));
 
-  static const List<DestinyComponentType> inventories = [
-    DestinyComponentType.CharacterEquipment,
-    DestinyComponentType.CharacterInventories,
-    DestinyComponentType.ProfileInventories,
-  ];
+final globalProfileProvider = globalContainer.read(profileProvider);
 
-  static const List<DestinyComponentType> collections = [
-    DestinyComponentType.Collectibles,
-    DestinyComponentType.PresentationNodes,
-  ];
-
-  static const List<DestinyComponentType> triumphs = [
-    DestinyComponentType.Records,
-    DestinyComponentType.Metrics,
-    DestinyComponentType.PresentationNodes,
-  ];
-
-  static const List<DestinyComponentType> everything = [
-    DestinyComponentType.Characters,
-    DestinyComponentType.CharacterActivities,
-    DestinyComponentType.CharacterProgressions,
-    DestinyComponentType.CharacterEquipment,
-    DestinyComponentType.CharacterInventories,
-    DestinyComponentType.ProfileInventories,
-    DestinyComponentType.ProfileCurrencies,
-    DestinyComponentType.ProfileProgression,
-    DestinyComponentType.ItemInstances,
-    DestinyComponentType.ItemStats,
-    DestinyComponentType.ItemObjectives,
-    DestinyComponentType.ItemTalentGrids,
-    DestinyComponentType.ItemSockets,
-    DestinyComponentType.ItemPlugStates,
-    DestinyComponentType.ItemPlugObjectives,
-    DestinyComponentType.ItemReusablePlugs,
-    DestinyComponentType.Collectibles,
-    DestinyComponentType.Records,
-    DestinyComponentType.Metrics,
-    DestinyComponentType.PresentationNodes,
-    DestinyComponentType.Profiles,
-  ];
-}
-
-class ProfileService {
-  NotificationsManager notifications = globalNotificationsProvider;
-  static final ProfileService _singleton = ProfileService._internal();
-
-  UserSettingsService userSettings = globalUserSettingsProvider;
+class Profile {
+  ProviderRef _ref;
+  NotificationsManager get notifications => _ref.read(notificationsProvider);
+  UserSettingsService get userSettings => _ref.read(userSettingsProvider);
 
   DateTime lastUpdated;
-  factory ProfileService() {
-    return _singleton;
-  }
-  ProfileService._internal();
 
-  static const List<int> profileBuckets = [
-    InventoryBucket.modifications,
-    InventoryBucket.shaders,
-    InventoryBucket.consumables
-  ];
+  Profile._(this._ref);
+
   final _api = globalBungieApiProvider;
 
   DestinyProfileResponse _profile;

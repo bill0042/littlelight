@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dart';
 import 'package:little_light/core/providers/destiny_settings/destiny_settings.consumer.dart';
+import 'package:little_light/core/providers/profile/component_groups.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/screens/collectible_search.screen.dart';
 import 'package:little_light/screens/presentation_node.screen.dart';
-import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/utils/selected_page_persistence.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
@@ -22,12 +23,15 @@ class CollectionsScreen extends PresentationNodeScreen {
 
 class CollectionsScreenState
     extends PresentationNodeScreenState<CollectionsScreen>
-    with BungieAuthConsumerState, DestinySettingsConsumerState {
+    with
+        BungieAuthConsumerState,
+        DestinySettingsConsumerState,
+        ProfileConsumerState {
   Map<int, List<ItemWithOwner>> itemsByHash;
   @override
   void initState() {
-    ProfileService().updateComponents = ProfileComponentGroups.collections;
-    ProfileService().fetchProfileData();
+    profile.updateComponents = ProfileComponentGroups.collections;
+    profile.fetchProfileData();
     SelectedPagePersistence.saveLatestScreen(
         SelectedPagePersistence.collections);
     if (auth.isLogged) {
@@ -38,7 +42,6 @@ class CollectionsScreenState
 
   loadItems() async {
     List<ItemWithOwner> allItems = [];
-    ProfileService profile = ProfileService();
     Iterable<String> charIds =
         profile.getCharacters().map((char) => char.characterId);
     charIds.forEach((charId) {

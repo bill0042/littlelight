@@ -2,9 +2,9 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/global_container/global.container.dart';
-import 'package:little_light/models/tracked_objective.dart';
 import 'package:little_light/core/providers/manifest/manifest.provider.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.provider.dart';
+import 'package:little_light/models/tracked_objective.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 
 final objectiveTrackingProvider =
@@ -16,6 +16,7 @@ get globalObjectiveTrackingProvider =>
 class ObjectiveTracking {
   ProviderRef _ref;
   Manifest get manifest => _ref.read(manifestProvider);
+  Profile get profile => _ref.read(profileProvider);
 
   ObjectiveTracking._(this._ref);
   List<TrackedObjective> _trackedObjectives;
@@ -62,7 +63,6 @@ class ObjectiveTracking {
 
   Future<DestinyItemComponent> findObjectiveItem(
       TrackedObjective objective) async {
-    var profile = ProfileService();
     DestinyItemComponent item;
     if (objective.instanceId != null) {
       item = profile.getCharacterInventory(objective.characterId).firstWhere(
@@ -96,7 +96,6 @@ class ObjectiveTracking {
 
   Future<DestinyItemComponent> findObjectivePlugItem(
       TrackedObjective objective) async {
-    var profile = ProfileService();
     var items = profile.getAllItems();
     var item = items.firstWhere((i) => i.itemHash == objective.parentHash,
         orElse: () => null);

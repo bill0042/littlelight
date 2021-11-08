@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/utils/item_with_owner.dart';
@@ -24,8 +24,8 @@ typedef OnRemoveItemFromLoadout = void Function(
 typedef OnAddItemToLoadout = void Function(
     bool equipped, DestinyClass classType);
 
-class LoadoutSlotWidget extends ConsumerWidget with ManifestConsumerWidget {
-  final ProfileService profile = ProfileService();
+class LoadoutSlotWidget extends ConsumerWidget with ManifestConsumerWidget, ProfileConsumerWidget {
+  
   final DestinyInventoryBucketDefinition bucketDefinition;
   final Map<DestinyClass, DestinyItemComponent> equippedClassItems;
   final DestinyItemComponent equippedGenericItem;
@@ -195,7 +195,7 @@ class LoadoutSlotWidget extends ConsumerWidget with ManifestConsumerWidget {
                 var def = await manifest(ref)
                     .getDefinition<DestinyInventoryItemDefinition>(
                         item.itemHash);
-                var instanceInfo = profile.getInstanceInfo(item.itemInstanceId);
+                var instanceInfo = profile(ref).getInstanceInfo(item.itemInstanceId);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -228,7 +228,7 @@ class LoadoutSlotWidget extends ConsumerWidget with ManifestConsumerWidget {
 
   openModal(BuildContext context, WidgetRef ref,
       {DestinyItemComponent item, bool equipped}) {
-    var ownerId = ProfileService().getItemOwner(item.itemInstanceId);
+    var ownerId = profile(ref).getItemOwner(item.itemInstanceId);
     var padding = EdgeInsets.all(8).copyWith(bottom: 4);
     var screenWidth = MediaQuery.of(context).size.width;
     if (screenWidth < 500) {
@@ -271,7 +271,7 @@ class LoadoutSlotWidget extends ConsumerWidget with ManifestConsumerWidget {
                                   var def = await manifest(ref).getDefinition<
                                           DestinyInventoryItemDefinition>(
                                       item.itemHash);
-                                  var instanceInfo = profile
+                                  var instanceInfo = profile(ref)
                                       .getInstanceInfo(item.itemInstanceId);
                                   Navigator.push(
                                     context,

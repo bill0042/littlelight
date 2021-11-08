@@ -36,7 +36,7 @@ class VaultItemListWidgetState extends ItemListWidgetState {
   @override
   buildIndex() async {
     if (!mounted) return;
-    List<DestinyItemComponent> itemsOnVault = widget.profile
+    List<DestinyItemComponent> itemsOnVault = profile
         .getProfileInventory()
         .where((i) => i.bucketHash == InventoryBucket.general)
         .toList();

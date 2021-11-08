@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/models/loadout.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
@@ -29,7 +29,7 @@ class EquipLoadoutScreen extends ConsumerStatefulWidget {
 }
 
 class EquipLoadoutScreenState extends ConsumerState<EquipLoadoutScreen>
-    with BungieApiConfigConsumerState, ManifestConsumerState {
+    with BungieApiConfigConsumerState, ManifestConsumerState, ProfileConsumerState {
   LoadoutItemIndex _itemIndex;
   DestinyInventoryItemDefinition emblemDefinition;
   @override
@@ -193,7 +193,7 @@ class EquipLoadoutScreenState extends ConsumerState<EquipLoadoutScreen>
       return ManifestImageWidget<DestinyInventoryItemDefinition>(1835369552,
           key: Key("item_icon_empty"));
     }
-    var instance = ProfileService().getInstanceInfo(item?.itemInstanceId);
+    var instance = profile.getInstanceInfo(item?.itemInstanceId);
     return DefinitionProviderWidget<DestinyInventoryItemDefinition>(
         item.itemHash,
         (def) => ItemIconWidget.builder(

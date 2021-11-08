@@ -3,6 +3,7 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:bungie_api/models/destiny_item_talent_grid_component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/widgets/item_list/items/base/base_inventory_item.widget.dart';
 import 'package:little_light/widgets/item_list/items/subclass/subclass_properties.mixin.dart';
 
@@ -25,11 +26,11 @@ class SubclassInventoryItemWidget extends BaseInventoryItemWidget
         );
 
   @override
-  DestinyItemTalentGridComponent get talentGrid =>
-      profile.getTalentGrid(item.itemInstanceId);
+  DestinyItemTalentGridComponent talentGrid(WidgetRef ref) =>
+      profile(ref).getTalentGrid(item.itemInstanceId);
 
   @override
-  Widget primaryStatWidget(BuildContext context) {
+  Widget primaryStatWidget(BuildContext context, WidgetRef ref) {
     return Container();
   }
 }

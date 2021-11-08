@@ -11,14 +11,15 @@ import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dar
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/notification/events/notification.event.dart';
 import 'package:little_light/core/providers/notification/notifications.consumer.dart';
+import 'package:little_light/core/providers/profile/component_groups.dart';
 
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/objective.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
 class RecordObjectivesWidget extends ConsumerStatefulWidget {
-  final ProfileService profile = ProfileService();
+  
   final DestinyRecordDefinition definition;
 
   RecordObjectivesWidget({Key key, this.definition}) : super(key: key);
@@ -30,7 +31,7 @@ class RecordObjectivesWidget extends ConsumerStatefulWidget {
 }
 
 class RecordObjectivesWidgetState extends ConsumerState<RecordObjectivesWidget>
-    with BungieAuthConsumerState, ManifestConsumerState, NotificationsConsumerState {
+    with BungieAuthConsumerState, ManifestConsumerState, NotificationsConsumerState, ProfileConsumerState {
   bool get isLogged => auth.isLogged;
   Map<int, DestinyObjectiveDefinition> objectiveDefinitions;
   StreamSubscription<NotificationEvent> subscription;
@@ -74,7 +75,7 @@ class RecordObjectivesWidgetState extends ConsumerState<RecordObjectivesWidget>
 
   DestinyRecordComponent get record {
     if (!isLogged) return null;
-    return ProfileService().getRecord(definition.hash, definition.scope);
+    return profile.getRecord(definition.hash, definition.scope);
   }
 
   DestinyRecordState get recordState {
@@ -121,7 +122,7 @@ class RecordObjectivesWidgetState extends ConsumerState<RecordObjectivesWidget>
                 child: Container(
                     padding: EdgeInsets.all(8), child: Icon(Icons.refresh)),
                 onTap: () {
-                  widget.profile.fetchProfileData(
+                  profile.fetchProfileData(
                       components: ProfileComponentGroups.triumphs);
                 })
           ],

@@ -8,10 +8,10 @@ import 'package:little_light/core/providers/bungie_api/enums/destiny_item_catego
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/notification/events/notification.event.dart';
 import 'package:little_light/core/providers/notification/notifications.consumer.dart';
+import 'package:little_light/core/providers/profile/component_groups.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/screens/search.screen.dart';
-
-import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/item_filters/pseudo_item_type_filter.dart';
 import 'package:little_light/utils/media_query_helper.dart';
 import 'package:little_light/utils/selected_page_persistence.dart';
@@ -31,8 +31,6 @@ import 'package:little_light/widgets/inventory_tabs/vault_tab_header.widget.dart
 import 'package:little_light/widgets/search/search.controller.dart';
 
 class EquipmentScreen extends ConsumerStatefulWidget {
-  final profile = ProfileService();
-
   final List<int> itemTypes = [
     DestinyItemCategory.Weapon,
     DestinyItemCategory.Armor,
@@ -49,7 +47,8 @@ class EquipmentScreenState extends ConsumerState<EquipmentScreen>
         AutomaticKeepAliveClientMixin,
         UserSettingsConsumerState,
         ManifestConsumerState,
-        NotificationsConsumerState {
+        NotificationsConsumerState,
+        ProfileConsumerState {
   int currentGroup = DestinyItemCategory.Weapon;
   Map<int, double> scrollPositions = Map();
 
@@ -62,7 +61,7 @@ class EquipmentScreenState extends ConsumerState<EquipmentScreen>
   @override
   void initState() {
     super.initState();
-    ProfileService().updateComponents = ProfileComponentGroups.basicProfile;
+    profile.updateComponents = ProfileComponentGroups.basicProfile;
     SelectedPagePersistence.saveLatestScreen(SelectedPagePersistence.equipment);
 
     typeTabController = typeTabController ??
@@ -296,7 +295,7 @@ class EquipmentScreenState extends ConsumerState<EquipmentScreen>
   }
 
   List<DestinyCharacterComponent> get characters {
-    return widget.profile.getCharacters(userSettings.characterOrdering);
+    return profile.getCharacters(userSettings.characterOrdering);
   }
 
   buildCharacterMenu(BuildContext context) {

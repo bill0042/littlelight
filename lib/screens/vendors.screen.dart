@@ -2,7 +2,7 @@ import 'package:bungie_api/models/destiny_character_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/widgets/common/animated_character_background.widget.dart';
 import 'package:little_light/widgets/flutter/passive_tab_bar_view.dart';
 import 'package:little_light/widgets/inventory_tabs/character_tab_header.widget.dart';
@@ -11,14 +11,15 @@ import 'package:little_light/widgets/inventory_tabs/tabs_character_menu.widget.d
 import 'package:little_light/widgets/vendors/vendors_list.widget.dart';
 
 class VendorsScreen extends ConsumerStatefulWidget {
-  final profile = ProfileService();
-
   @override
   VendorsScreenState createState() => VendorsScreenState();
 }
 
 class VendorsScreenState extends ConsumerState<VendorsScreen>
-    with TickerProviderStateMixin, UserSettingsConsumerState {
+    with
+        TickerProviderStateMixin,
+        UserSettingsConsumerState,
+        ProfileConsumerState {
   TabController charTabController;
 
   get totalCharacterTabs => characters?.length != null ? characters.length : 3;
@@ -122,6 +123,6 @@ class VendorsScreenState extends ConsumerState<VendorsScreen>
   }
 
   List<DestinyCharacterComponent> get characters {
-    return widget.profile.getCharacters(userSettings.characterOrdering);
+    return profile.getCharacters(userSettings.characterOrdering);
   }
 }

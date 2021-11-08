@@ -20,7 +20,7 @@ import 'package:little_light/core/providers/user_settings/user_settings.consumer
 import 'package:little_light/models/game_data.dart';
 import 'package:little_light/models/loadout.dart';
 import 'package:little_light/screens/edit_loadout.screen.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/utils/item_sorters/power_level_sorter.dart';
 import 'package:little_light/utils/item_with_owner.dart';
@@ -33,7 +33,7 @@ import 'package:shimmer/shimmer.dart';
 
 class CharacterOptionsSheet extends ConsumerStatefulWidget {
   final DestinyCharacterComponent character;
-  final ProfileService profile = ProfileService();
+  
 
   CharacterOptionsSheet({Key key, this.character}) : super(key: key);
 
@@ -49,7 +49,8 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
         LoadoutsConsumerState,
         LittleLightDataConsumerState,
         InventoryConsumerState,
-        ManifestConsumerState {
+        ManifestConsumerState,
+        ProfileConsumerState {
   Map<int, DestinyItemComponent> maxLightLoadout;
   Map<int, DestinyItemComponent> underAverageSlots;
   double maxLight;
@@ -89,7 +90,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
 
   void getItemsInPostmaster() {
     var all =
-        widget.profile.getCharacterInventory(widget.character.characterId);
+        profile.getCharacterInventory(widget.character.characterId);
     var inPostmaster =
         all.where((i) => i.bucketHash == InventoryBucket.lostItems).toList();
     itemsInPostmaster = inPostmaster;
@@ -201,7 +202,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
                   children: underAverageSlots
                       .map((k, v) {
                         var instance =
-                            ProfileService().getInstanceInfo(v.itemInstanceId);
+                            profile.getInstanceInfo(v.itemInstanceId);
                         return MapEntry(
                             k,
                             Expanded(
@@ -266,18 +267,18 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
           onTap: () async {
             Navigator.of(context).pop();
             LoadoutItemIndex loadout = LoadoutItemIndex();
-            var equipment = widget.profile
+            var equipment = profile
                 .getCharacterEquipment(widget.character.characterId);
             for (var bucket in maxLightLoadout.keys) {
               var item = maxLightLoadout[bucket];
-              var power = widget.profile
+              var power = profile
                       .getInstanceInfo(item.itemInstanceId)
                       ?.primaryStat
                       ?.value ??
                   0;
               var equipped = equipment.firstWhere((i) => i.bucketHash == bucket,
                   orElse: null);
-              var equippedPower = widget.profile
+              var equippedPower = profile
                       .getInstanceInfo(equipped?.itemInstanceId)
                       ?.primaryStat
                       ?.value ??
@@ -534,7 +535,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
     var slots = LoadoutItemIndex.classBucketHashes +
         LoadoutItemIndex.genericBucketHashes;
     var equipment =
-        widget.profile.getCharacterEquipment(widget.character.characterId);
+        profile.getCharacterEquipment(widget.character.characterId);
     var equipped = equipment.where((i) => slots.contains(i.bucketHash));
     for (var item in equipped) {
       var def = await manifest
@@ -550,7 +551,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
     }
     if (!includeUnequipped) return itemIndex;
     var inventory =
-        widget.profile.getCharacterInventory(widget.character.characterId);
+        profile.getCharacterInventory(widget.character.characterId);
     var unequipped = inventory.where((i) => slots.contains(i.bucketHash));
     for (var item in unequipped) {
       var def = await manifest
@@ -585,7 +586,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
 
   randomizeLoadout(List<int> requiredSlots) async {
     LoadoutItemIndex randomLoadout = LoadoutItemIndex();
-    var allItems = widget.profile
+    var allItems = profile
         .getAllItems()
         .where((i) => i.itemInstanceId != null)
         .toList();
@@ -626,7 +627,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
 
   getMaxLightLoadout() async {
     gameData = await littlelightData.getGameData();
-    var allItems = widget.profile.getAllItems();
+    var allItems = profile.getAllItems();
     var instancedItems =
         allItems.where((i) => i.itemInstanceId != null).toList();
     var sorter = PowerLevelSorter(-1);
@@ -646,7 +647,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
     ];
     var validSlots = weaponSlots + armorSlots;
     var equipment =
-        widget.profile.getCharacterEquipment(widget.character.characterId);
+        profile.getCharacterEquipment(widget.character.characterId);
     var availableSlots = equipment
         .where((i) => validSlots.contains(i.bucketHash))
         .map((i) => i.bucketHash);
@@ -725,7 +726,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
     beyondSoftCap = true;
     beyondPowerfulCap = true;
     for (var item in maxLightLoadout.values) {
-      var instanceInfo = ProfileService().getInstanceInfo(item.itemInstanceId);
+      var instanceInfo = profile.getInstanceInfo(item.itemInstanceId);
       var power = instanceInfo?.primaryStat?.value ?? 0;
       var def = await manifest
           .getDefinition<DestinyInventoryItemDefinition>(item.itemHash);
@@ -751,12 +752,12 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
   }
 
   int get artifactLevel {
-    var item = widget.profile
+    var item = profile
         .getCharacterEquipment(widget.character.characterId)
         .firstWhere((item) => item.bucketHash == InventoryBucket.artifact,
             orElse: () => null);
     if (item == null) return 0;
-    var instanceInfo = widget.profile.getInstanceInfo(item?.itemInstanceId);
+    var instanceInfo = profile.getInstanceInfo(item?.itemInstanceId);
     return instanceInfo?.primaryStat?.value ?? 0;
   }
 
@@ -765,7 +766,7 @@ class CharacterOptionsSheetState extends ConsumerState<CharacterOptionsSheet>
         0,
         (light, item) =>
             light +
-                widget.profile
+                profile
                     .getInstanceInfo(item.itemInstanceId)
                     ?.primaryStat
                     ?.value ??

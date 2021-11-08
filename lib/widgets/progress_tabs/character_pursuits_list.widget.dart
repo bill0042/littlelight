@@ -13,7 +13,7 @@ import 'package:little_light/core/providers/notification/notifications.consumer.
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/models/bucket_display_options.dart';
 
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/utils/media_query_helper.dart';
@@ -25,7 +25,7 @@ import 'package:little_light/widgets/progress_tabs/pursuit_item/small_pursuit_it
 
 class CharacterPursuitsListWidget extends ConsumerStatefulWidget {
   final String characterId;
-  final ProfileService profile = ProfileService();
+  
 
   CharacterPursuitsListWidget({Key key, this.characterId}) : super(key: key);
 
@@ -57,7 +57,8 @@ class _CharacterPursuitsListWidgetState
         AutomaticKeepAliveClientMixin,
         UserSettingsConsumerState,
         ManifestConsumerState,
-        NotificationsConsumerState {
+        NotificationsConsumerState,
+        ProfileConsumerState {
   List<_PursuitListItem> items;
   StreamSubscription<NotificationEvent> subscription;
   bool fullyLoaded = false;
@@ -81,7 +82,7 @@ class _CharacterPursuitsListWidgetState
   }
 
   Future<void> getPursuits() async {
-    var allItems = widget.profile.getCharacterInventory(widget.characterId);
+    var allItems = profile.getCharacterInventory(widget.characterId);
     var pursuits = allItems
         .where((i) => i.bucketHash == InventoryBucket.pursuits)
         .toList();

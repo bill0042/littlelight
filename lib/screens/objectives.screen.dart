@@ -8,10 +8,11 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:little_light/core/providers/notification/events/notification.event.dart';
 import 'package:little_light/core/providers/notification/notifications.consumer.dart';
 import 'package:little_light/core/providers/objective_tracking/objective_tracking.consumer.dart';
+import 'package:little_light/core/providers/profile/component_groups.dart';
 import 'package:little_light/models/tracked_objective.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
 
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/utils/media_query_helper.dart';
 import 'package:little_light/widgets/common/refresh_button.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
@@ -19,13 +20,15 @@ import 'package:little_light/widgets/presentation_nodes/record_item.widget.dart'
 import 'package:little_light/widgets/progress_tabs/pursuit_item/tracked_pursuit_item.widget.dart';
 
 class ObjectivesScreen extends ConsumerStatefulWidget {
-  final ProfileService profile = ProfileService();
   @override
   ObjectivesScreenState createState() => ObjectivesScreenState();
 }
 
 class ObjectivesScreenState extends ConsumerState<ObjectivesScreen>
-    with ObjectiveTrackingConsumerState, NotificationsConsumerState {
+    with
+        ObjectiveTrackingConsumerState,
+        NotificationsConsumerState,
+        ProfileConsumerState {
   List<TrackedObjective> objectives;
   Map<TrackedObjective, DestinyItemComponent> items;
 
@@ -41,7 +44,7 @@ class ObjectivesScreenState extends ConsumerState<ObjectivesScreen>
   void initState() {
     super.initState();
     loadObjectives();
-    ProfileService().updateComponents = ProfileComponentGroups.everything;
+    profile.updateComponents = ProfileComponentGroups.everything;
     subscription = notifications.listen((event) {
       if (event.type == NotificationType.receivedUpdate ||
           event.type == NotificationType.localUpdate) {

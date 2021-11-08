@@ -2,12 +2,14 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/primary_stat.widget.dart';
 import 'package:little_light/widgets/item_list/items/base/base_inventory_item.widget.dart';
 import 'package:little_light/widgets/item_list/items/base/item_armor_tier.widget.dart';
 
-class ArmorInventoryItemWidget extends BaseInventoryItemWidget {
+class ArmorInventoryItemWidget extends BaseInventoryItemWidget with ProfileConsumerWidget{
   ArmorInventoryItemWidget(
       DestinyItemComponent item,
       DestinyInventoryItemDefinition definition,
@@ -23,10 +25,10 @@ class ArmorInventoryItemWidget extends BaseInventoryItemWidget {
             key: key);
 
   @override
-  Widget primaryStatWidget(BuildContext context) {
+  Widget primaryStatWidget(BuildContext context, WidgetRef ref) {
     var sockets = item?.itemInstanceId == null
         ? null
-        : profile.getItemSockets(item?.itemInstanceId);
+        : profile(ref).getItemSockets(item?.itemInstanceId);
     var socketCategoryHashes =
         definition?.sockets?.socketCategories?.map((s) => s.socketCategoryHash);
     var tierCategoryHash = socketCategoryHashes?.firstWhere(
@@ -69,7 +71,7 @@ class ArmorInventoryItemWidget extends BaseInventoryItemWidget {
   }
 
   @override
-  itemIcon(BuildContext context) {
-    return Stack(children: [super.itemIcon(context), buildStatTotal(context)]);
+  itemIcon(BuildContext context, WidgetRef ref) {
+    return Stack(children: [super.itemIcon(context, ref), buildStatTotal(context, ref)]);
   }
 }

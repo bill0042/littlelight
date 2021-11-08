@@ -9,9 +9,8 @@ import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_ha
 import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
 import 'package:little_light/core/providers/inventory/transfer_destination.dart';
 import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/models/loadout.dart';
-
-import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
@@ -21,11 +20,6 @@ import 'package:little_light/widgets/item_list/character_info.widget.dart';
 import 'package:little_light/widgets/option_sheets/loadout_select_sheet.widget.dart';
 
 class VaultInfoWidget extends CharacterInfoWidget {
-  final ProfileService profile = ProfileService(
-    
-  );
-  
-
   VaultInfoWidget({Key key}) : super(key: key);
 
   @override
@@ -35,7 +29,7 @@ class VaultInfoWidget extends CharacterInfoWidget {
 }
 
 class VaultInfoWidgetState extends CharacterInfoWidgetState<VaultInfoWidget>
-    with LoadoutsConsumerState {
+    with LoadoutsConsumerState, ProfileConsumerState {
   @override
   void initState() {
     super.initState();
@@ -79,7 +73,7 @@ class VaultInfoWidgetState extends CharacterInfoWidgetState<VaultInfoWidget>
 
   Widget characterStatsInfo(
       BuildContext context, DestinyCharacterComponent character) {
-    int itemCount = widget.profile
+    int itemCount = profile
         .getAllItems()
         .where((i) => i.bucketHash == InventoryBucket.general)
         .length;
@@ -107,8 +101,6 @@ class VaultInfoWidgetState extends CharacterInfoWidgetState<VaultInfoWidget>
 }
 
 class VaultOptionsSheet extends ConsumerStatefulWidget {
-  final ProfileService profile = ProfileService();
-
   VaultOptionsSheet({Key key}) : super(key: key);
 
   @override
@@ -118,7 +110,7 @@ class VaultOptionsSheet extends ConsumerStatefulWidget {
 }
 
 class VaultOptionsSheetState extends ConsumerState<VaultOptionsSheet>
-    with LoadoutsConsumerState, InventoryConsumerState {
+    with LoadoutsConsumerState, InventoryConsumerState, ProfileConsumerState {
   final TextStyle buttonStyle =
       TextStyle(fontWeight: FontWeight.bold, fontSize: 12);
 
@@ -203,9 +195,9 @@ class VaultOptionsSheetState extends ConsumerState<VaultOptionsSheet>
   }
 
   transferEverythingFromPostmaster() async {
-    var characters = widget.profile.getCharacters();
+    var characters = profile.getCharacters();
     for (var char in characters) {
-      var all = widget.profile.getCharacterInventory(char.characterId);
+      var all = profile.getCharacterInventory(char.characterId);
       var inPostmaster =
           all.where((i) => i.bucketHash == InventoryBucket.lostItems).toList();
       await inventory.transferMultiple(
@@ -277,7 +269,7 @@ class VaultOptionsSheetState extends ConsumerState<VaultOptionsSheet>
   }
 
   void getItemsInPostmaster() {
-    var all = widget.profile.getAllItems();
+    var all = profile.getAllItems();
     var inPostmaster =
         all.where((i) => i.bucketHash == InventoryBucket.lostItems).toList();
     itemsInPostmaster = inPostmaster;

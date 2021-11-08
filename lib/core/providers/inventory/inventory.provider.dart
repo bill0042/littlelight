@@ -21,8 +21,9 @@ import 'package:little_light/core/providers/global_container/global.container.da
 import 'package:little_light/core/providers/manifest/manifest.provider.dart';
 import 'package:little_light/core/providers/notification/events/notification.event.dart';
 import 'package:little_light/core/providers/notification/notifications.provider.dart';
+import 'package:little_light/core/providers/profile/component_groups.dart';
+import 'package:little_light/core/providers/profile/profile.provider.dart';
 import 'package:little_light/models/loadout.dart';
-import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 
 import 'transfer_destination.dart';
@@ -38,8 +39,8 @@ class Inventory {
   BungieApi get api => _ref.read(bungieApiProvider);
   NotificationsManager get notifications => _ref.read(notificationsProvider);
   Manifest get manifest => _ref.read(manifestProvider);
+  Profile get profile => _ref.read(profileProvider);
 
-  final profile = ProfileService();
   Inventory._(this._ref);
 
   transfer(DestinyItemComponent item, String sourceCharacterId,
@@ -309,7 +310,7 @@ class Inventory {
       stackSize = item.quantity;
     }
     if (sourceCharacterId == ItemWithOwner.OWNER_PROFILE) {
-      sourceCharacterId = ProfileService().getCharacters()?.first?.characterId;
+      sourceCharacterId = profile.getCharacters()?.first?.characterId;
     }
 
     bool needsToUnequip = instanceInfo?.isEquipped ?? false;
@@ -726,7 +727,7 @@ class Inventory {
       item?.item?.state =
           ItemState(item.item.state.value + ItemState.Locked.value);
     }
-    var profileItem = ProfileService().getAllItems().firstWhere(
+    var profileItem = profile.getAllItems().firstWhere(
         (i) =>
             i.itemHash == item.item.itemHash &&
             i.itemInstanceId == item.item.itemInstanceId,

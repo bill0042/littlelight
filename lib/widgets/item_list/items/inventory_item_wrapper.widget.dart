@@ -19,7 +19,7 @@ import 'package:little_light/core/providers/user_settings/user_settings.consumer
 import 'package:little_light/screens/item_detail.screen.dart';
 import 'package:little_light/screens/quick_transfer.screen.dart';
 
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/widgets/item_list/items/armor/armor_inventory_item.widget.dart';
@@ -44,7 +44,6 @@ import 'package:uuid/uuid.dart';
 enum ContentDensity { MINIMAL, MEDIUM, FULL }
 
 class InventoryItemWrapperWidget extends ConsumerStatefulWidget {
-  final ProfileService profile = ProfileService();
   final DestinyItemComponent item;
   final String characterId;
   final ContentDensity density;
@@ -66,7 +65,8 @@ class InventoryItemWrapperWidgetState<T extends InventoryItemWrapperWidget>
         InventoryConsumerState,
         ManifestConsumerState,
         SelectionConsumerState,
-        NotificationsConsumerState {
+        NotificationsConsumerState,
+        ProfileConsumerState {
   DestinyInventoryItemDefinition definition;
   String uniqueId;
   bool selected = false;
@@ -75,7 +75,7 @@ class InventoryItemWrapperWidgetState<T extends InventoryItemWrapperWidget>
   StreamSubscription<NotificationEvent> stateSubscription;
 
   DestinyItemInstanceComponent get instanceInfo {
-    return widget.profile.getInstanceInfo(widget.item.itemInstanceId);
+    return profile.getInstanceInfo(widget.item.itemInstanceId);
   }
 
   static int queueSize = 0;
@@ -217,7 +217,7 @@ class InventoryItemWrapperWidgetState<T extends InventoryItemWrapperWidget>
   void onEmptyTap(BuildContext context) async {
     var bucketDef = await manifest
         .getDefinition<DestinyInventoryBucketDefinition>(widget.bucketHash);
-    var character = widget.profile.getCharacter(widget.characterId);
+    var character = profile.getCharacter(widget.characterId);
     ItemWithOwner item = await Navigator.push(
       context,
       MaterialPageRoute(

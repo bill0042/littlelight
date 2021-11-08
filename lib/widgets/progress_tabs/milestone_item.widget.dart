@@ -17,7 +17,7 @@ import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/notification/events/notification.event.dart';
 import 'package:little_light/core/providers/notification/notifications.consumer.dart';
 
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
 import 'package:little_light/widgets/common/generic_progress_bar.widget.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
@@ -28,7 +28,7 @@ import 'package:little_light/widgets/icon_fonts/littlelight_icons.dart';
 
 class MilestoneItemWidget extends ConsumerStatefulWidget {
   final String characterId;
-  final ProfileService profile = ProfileService();
+  
 
   final DestinyMilestone milestone;
 
@@ -44,7 +44,8 @@ class MilestoneItemWidgetState<T extends MilestoneItemWidget>
         AutomaticKeepAliveClientMixin,
         BungieApiConfigConsumerState,
         ManifestConsumerState,
-        NotificationsConsumerState {
+        NotificationsConsumerState,
+        ProfileConsumerState {
   DestinyMilestoneDefinition definition;
   StreamSubscription<NotificationEvent> subscription;
   DestinyMilestone milestone;
@@ -60,7 +61,7 @@ class MilestoneItemWidgetState<T extends MilestoneItemWidget>
     loadDefinitions();
     subscription = notifications.listen((event) {
       if (event.type == NotificationType.receivedUpdate && mounted) {
-        milestone = widget.profile
+        milestone = profile
             .getCharacterProgression(widget.characterId)
             .milestones["$hash"];
         setState(() {});

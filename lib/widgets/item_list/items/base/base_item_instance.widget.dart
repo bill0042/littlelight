@@ -46,14 +46,14 @@ class BaseItemInstanceWidget extends BaseInventoryItemWidget
   Widget build(BuildContext context, WidgetRef ref) {
     return Stack(children: <Widget>[
       Positioned.fill(
-        child: buildEmblemBackground(context),
+        child: buildEmblemBackground(context, ref),
       ),
       Positioned(
         left: 4,
         top: 4,
         width: 48,
         height: 48,
-        child: buildEmblemIcon(context),
+        child: buildEmblemIcon(context, ref),
       ),
       Positioned(
         left: 4,
@@ -61,7 +61,7 @@ class BaseItemInstanceWidget extends BaseInventoryItemWidget
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           buildTags(context, ref),
           Container(height: 4),
-          modsWidget(context)
+          modsWidget(context, ref)
         ]),
       ),
       Positioned.fill(
@@ -71,18 +71,18 @@ class BaseItemInstanceWidget extends BaseInventoryItemWidget
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            buildCharacterName(context),
-            primaryStatWidget(context),
+            buildCharacterName(context, ref),
+            primaryStatWidget(context, ref),
             definition?.itemType != DestinyItemType.Armor
                 ? Expanded(
                     child: Container(),
                   )
-                : statsWidget(context),
+                : statsWidget(context, ref),
             definition?.itemType == DestinyItemType.Armor
                 ? Expanded(
                     child: Container(),
                   )
-                : perksWidget(context),
+                : perksWidget(context, ref),
           ],
         ),
       )),
@@ -90,8 +90,8 @@ class BaseItemInstanceWidget extends BaseInventoryItemWidget
   }
 
   Widget buildTags(BuildContext context, WidgetRef ref) {
-    final reusable = profile.getItemReusablePlugs(item?.itemInstanceId);
-    final sockets = profile.getItemSockets(item?.itemInstanceId);
+    final reusable = profile(ref).getItemReusablePlugs(item?.itemInstanceId);
+    final sockets = profile(ref).getItemSockets(item?.itemInstanceId);
     final wishlistTags = wishlistsService(ref).getWishlistBuildTags(
         itemHash: item?.itemHash, reusablePlugs: reusable, sockets: sockets);
     List<Widget> upper = [];
@@ -134,15 +134,15 @@ class BaseItemInstanceWidget extends BaseInventoryItemWidget
     // return WishlistBadgeWidget(tags: wishlistTags, size: tagIconSize);
   }
 
-  Widget buildCharacterName(BuildContext context) {
+  Widget buildCharacterName(BuildContext context, WidgetRef ref) {
     if (character != null) {
       return ManifestText<DestinyClassDefinition>(
-        character.classHash,
+        character(ref).classHash,
         uppercase: true,
         style: TextStyle(
             color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
         textExtractor: (def) =>
-            def.genderedClassNamesByGenderHash["${character.genderHash}"],
+            def.genderedClassNamesByGenderHash["${character(ref).genderHash}"],
       );
     }
     if (item.bucketHash == InventoryBucket.general) {
@@ -160,10 +160,10 @@ class BaseItemInstanceWidget extends BaseInventoryItemWidget
             color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12));
   }
 
-  Widget buildEmblemBackground(BuildContext context) {
+  Widget buildEmblemBackground(BuildContext context, WidgetRef ref) {
     if (character != null) {
       return ManifestImageWidget<DestinyInventoryItemDefinition>(
-        character.emblemHash,
+        character(ref).emblemHash,
         fit: BoxFit.cover,
         urlExtractor: (def) => def.secondarySpecial,
       );
@@ -177,10 +177,10 @@ class BaseItemInstanceWidget extends BaseInventoryItemWidget
     return Container();
   }
 
-  Widget buildEmblemIcon(BuildContext context) {
+  Widget buildEmblemIcon(BuildContext context, WidgetRef ref) {
     if (character != null) {
       return ManifestImageWidget<DestinyInventoryItemDefinition>(
-        character.emblemHash,
+        character(ref).emblemHash,
         fit: BoxFit.cover,
         urlExtractor: (def) => def.secondaryOverlay,
       );
@@ -194,26 +194,26 @@ class BaseItemInstanceWidget extends BaseInventoryItemWidget
     return Container();
   }
 
-  DestinyCharacterComponent get character => profile.getCharacter(characterId);
+  DestinyCharacterComponent character(ref) => profile(ref).getCharacter(characterId);
 
   @override
-  Widget primaryStatWidget(BuildContext context) {
+  Widget primaryStatWidget(BuildContext context, WidgetRef ref) {
     return PrimaryStatWidget(
         item: item, definition: definition, instanceInfo: instanceInfo);
   }
 
   @override
-  Widget modsWidget(BuildContext context) {
+  Widget modsWidget(BuildContext context, WidgetRef ref) {
     if (item?.itemInstanceId == null) return Container();
     return ItemModsWidget(
       definition: definition,
-      itemSockets: profile.getItemSockets(item?.itemInstanceId),
+      itemSockets: profile(ref).getItemSockets(item?.itemInstanceId),
       iconSize: 22,
     );
   }
 
   @override
-  Widget perksWidget(BuildContext context) {
+  Widget perksWidget(BuildContext context, WidgetRef ref) {
     var socketCategoryHash = definition.sockets?.socketCategories
         ?.map((sc) => sc.socketCategoryHash)
         ?.firstWhere((h) => DestinyData.socketCategoryPerkHashes.contains(h),
@@ -227,7 +227,7 @@ class BaseItemInstanceWidget extends BaseInventoryItemWidget
     );
   }
 
-  Widget statsWidget(BuildContext context) {
+  Widget statsWidget(BuildContext context, WidgetRef ref) {
     return Container(
         alignment: Alignment.topRight, child: ItemArmorStatsWidget(item: item));
   }

@@ -11,7 +11,7 @@ import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_ha
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/notification/events/notification.event.dart';
 import 'package:little_light/core/providers/notification/notifications.consumer.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 
 class AnimatedCharacterBackgroundWidget extends ConsumerStatefulWidget {
   final TabController tabController;
@@ -37,7 +37,8 @@ class _AnimatedCharacterBackgroundWidgetState
     with
         SingleTickerProviderStateMixin,
         ManifestConsumerState,
-        NotificationsConsumerState {
+        NotificationsConsumerState,
+        ProfileConsumerState {
   List<_CharacterInfo> characters;
   AnimationController _controller;
   ColorTween tween;
@@ -64,11 +65,11 @@ class _AnimatedCharacterBackgroundWidgetState
   }
 
   updateCharacters() async {
-    var _characters = ProfileService().getCharacters();
+    var _characters = profile.getCharacters();
     if (_characters == null) return;
     characters = [];
     for (var c in _characters) {
-      var equipment = ProfileService().getCharacterEquipment(c.characterId);
+      var equipment = profile.getCharacterEquipment(c.characterId);
       var subclass =
           equipment.firstWhere((i) => i.bucketHash == InventoryBucket.subclass);
       var subclassDef = await manifest

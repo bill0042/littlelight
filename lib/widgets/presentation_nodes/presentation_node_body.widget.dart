@@ -5,12 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/littlelight_data/littlelight_data.consumer.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/models/game_data.dart';
-import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/widgets/presentation_nodes/presentation_node_list.widget.dart';
 import 'package:little_light/widgets/presentation_nodes/presentation_node_tabs.widget.dart';
 
 class PresentationNodeBodyWidget extends ConsumerStatefulWidget {
-  final ProfileService profile = ProfileService();
+  
   final PresentationNodeItemBuilder itemBuilder;
   final PresentationNodeTileBuilder tileBuilder;
   final int presentationNodeHash;

@@ -2,10 +2,11 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_stat.dart';
 import 'package:bungie_api/models/destiny_stat_definition.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 
-class ItemArmorStatsWidget extends StatefulWidget {
+class ItemArmorStatsWidget extends ConsumerStatefulWidget {
   final double iconSize;
   final DestinyItemComponent item;
   ItemArmorStatsWidget({Key key, this.iconSize = 16, this.item})
@@ -17,14 +18,14 @@ class ItemArmorStatsWidget extends StatefulWidget {
   }
 }
 
-class ItemArmorStatsWidgetState extends State<ItemArmorStatsWidget> {
+class ItemArmorStatsWidgetState extends ConsumerState<ItemArmorStatsWidget>
+    with ProfileConsumerState {
   Map<String, DestinyStat> stats;
-
 
   @override
   void initState() {
     super.initState();
-    stats = ProfileService().getPrecalculatedStats(widget.item?.itemInstanceId);
+    stats = profile.getPrecalculatedStats(widget.item?.itemInstanceId);
     setState(() {});
   }
 

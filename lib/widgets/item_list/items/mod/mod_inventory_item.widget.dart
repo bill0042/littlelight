@@ -5,6 +5,7 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:bungie_api/models/destiny_stat_definition.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
@@ -27,7 +28,7 @@ class ModInventoryItemWidget extends BaseInventoryItemWidget {
         );
 
   @override
-  itemIcon(BuildContext context) {
+  itemIcon(BuildContext context, WidgetRef ref) {
     var energyType =
         definition?.plug?.energyCost?.energyType ?? DestinyEnergyType.Any;
     var energyCost = definition?.plug?.energyCost?.energyCost ?? 0;
@@ -35,7 +36,7 @@ class ModInventoryItemWidget extends BaseInventoryItemWidget {
         child: AspectRatio(
       aspectRatio: 1,
       child: Stack(children: [
-        Positioned.fill(child: super.itemIcon(context)),
+        Positioned.fill(child: super.itemIcon(context, ref)),
         energyType == DestinyEnergyType.Any
             ? Container()
             : Positioned.fill(
@@ -55,7 +56,7 @@ class ModInventoryItemWidget extends BaseInventoryItemWidget {
   }
 
   @override
-  Widget modsWidget(BuildContext context) {
+  Widget modsWidget(BuildContext context, WidgetRef ref) {
     var energyType =
         definition?.plug?.energyCost?.energyType ?? DestinyEnergyType.Any;
     var energyCost = definition?.plug?.energyCost?.energyCost ?? 0;
@@ -83,7 +84,7 @@ class ModInventoryItemWidget extends BaseInventoryItemWidget {
   }
 
   @override
-  Widget perksWidget(BuildContext context) {
+  Widget perksWidget(BuildContext context, WidgetRef ref) {
     return Positioned(
         bottom: 8,
         left: 96,

@@ -8,14 +8,14 @@ import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
 import 'package:little_light/core/providers/inventory/transfer_destination.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.provider.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateless_item.widget.dart';
 import 'package:little_light/widgets/common/equip_on_character.button.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
 class ManagementBlockWidget extends BaseDestinyStatelessItemWidget
-    with InventoryConsumerWidget {
+    with InventoryConsumerWidget, ProfileConsumerWidget {
   ManagementBlockWidget(
       DestinyItemComponent item,
       DestinyInventoryItemDefinition definition,
@@ -179,7 +179,7 @@ class ManagementBlockWidget extends BaseDestinyStatelessItemWidget
       return [];
     }
     return this
-        .profile
+        .profile(ref)
         .getCharacters(ref.read(userSettingsProvider).characterOrdering)
         .where((char) =>
             !((instanceInfo?.isEquipped ?? false) &&
@@ -197,7 +197,7 @@ class ManagementBlockWidget extends BaseDestinyStatelessItemWidget
       return [];
     }
 
-    if (ProfileService.profileBuckets
+    if (ProfileBuckets
         .contains(definition.inventory.bucketTypeHash)) {
       if (item.bucketHash == InventoryBucket.general) {
         return [TransferDestination(ItemDestination.Inventory)];
@@ -205,8 +205,8 @@ class ManagementBlockWidget extends BaseDestinyStatelessItemWidget
       return [TransferDestination(ItemDestination.Vault)];
     }
 
-    List<TransferDestination> list = this
-        .profile
+    List<TransferDestination> list = 
+        profile(ref)
         .getCharacters(ref.read(userSettingsProvider).characterOrdering)
         .where((char) => !(char.characterId == characterId))
         .map((char) => TransferDestination(ItemDestination.Character,
@@ -223,7 +223,7 @@ class ManagementBlockWidget extends BaseDestinyStatelessItemWidget
     if (item.bucketHash == InventoryBucket.lostItems &&
         !definition.doesPostmasterPullHaveSideEffects) {
       ItemDestination type;
-      if (ProfileService.profileBuckets
+      if (ProfileBuckets
           .contains(definition.inventory.bucketTypeHash)) {
         type = ItemDestination.Inventory;
       } else {

@@ -2,14 +2,12 @@ import 'dart:async';
 
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:flutter/widgets.dart';
+import 'package:little_light/core/providers/manifest/manifest.provider.dart';
 import 'package:little_light/core/providers/notification/events/notification.event.dart';
 import 'package:little_light/core/providers/notification/notifications.provider.dart';
+import 'package:little_light/core/providers/profile/profile.provider.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.provider.dart';
-import 'package:little_light/core/providers/manifest/manifest.provider.dart';
-
-import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/models/item_sort_parameter.dart';
-
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/utils/item_filters/ammo_type_filter.dart';
 import 'package:little_light/utils/item_filters/base_item_filter.dart';
@@ -48,8 +46,10 @@ List<BaseItemFilter> _replaceDefaultFilters(
 
 class SearchController extends ChangeNotifier {
   static UserSettingsService get userSettings => globalUserSettingsProvider;
-  static Manifest get manifest => globalManifestProvider;
-  static NotificationsManager get notifications => globalNotificationsProvider;
+  
+  Manifest get manifest => globalManifestProvider;
+  Profile get profile => globalProfileProvider;
+  NotificationsManager get notifications => globalNotificationsProvider;
 
   List<ItemWithOwner> _unfilteredList;
   List<ItemWithOwner> _prefilteredList;
@@ -232,7 +232,7 @@ class SearchController extends ChangeNotifier {
 
   List<ItemWithOwner> _getItems() {
     List<ItemWithOwner> allItems = [];
-    ProfileService profile = ProfileService();
+    
     Iterable<String> charIds =
         profile.getCharacters().map((char) => char.characterId);
     charIds.forEach((charId) {
@@ -261,9 +261,9 @@ class SearchController extends ChangeNotifier {
   _loadPlugDefinitions() async {
     Set<int> hashes = Set();
     _prefilteredList.forEach((item) {
-      var sockets = ProfileService().getItemSockets(item?.item?.itemInstanceId);
+      var sockets = profile.getItemSockets(item?.item?.itemInstanceId);
       var reusablePlugs =
-          ProfileService().getItemReusablePlugs(item?.item?.itemInstanceId);
+          profile.getItemReusablePlugs(item?.item?.itemInstanceId);
       hashes.addAll(sockets?.map((s) => s.plugHash) ?? []);
       reusablePlugs?.values?.forEach((plug) {
         hashes.addAll(plug?.map((p) => p.plugItemHash) ?? []);

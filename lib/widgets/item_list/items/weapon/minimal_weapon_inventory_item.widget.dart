@@ -6,6 +6,7 @@ import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:bungie_api/models/destiny_stat.dart';
 import 'package:bungie_api/models/destiny_stat_definition.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/item_list/items/base/minimal_base_inventory_item.widget.dart';
@@ -32,11 +33,11 @@ class MinimalWeaponInventoryItemWidget extends MinimalBaseInventoryItemWidget
   double get valueFontSize => 12;
 
   @override
-  Widget primaryStatWidget(BuildContext context) {
-    return infoContainer(context, weaponPrimaryStat(context));
+  Widget primaryStatWidget(BuildContext context, WidgetRef ref) {
+    return infoContainer(context, weaponPrimaryStat(context, ref));
   }
 
-  Widget weaponPrimaryStat(BuildContext context) {
+  Widget weaponPrimaryStat(BuildContext context, WidgetRef ref) {
     Color damageTypeColor = DestinyData.getDamageTypeTextColor(damageType);
     return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

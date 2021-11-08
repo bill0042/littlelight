@@ -1,12 +1,14 @@
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
+import 'package:little_light/core/providers/profile/profile.provider.dart';
 import 'package:little_light/core/providers/wishlists/wishlists.provider.dart';
 import 'package:little_light/models/wish_list.dart';
-import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 
 import 'base_item_filter.dart';
 
 class WishlistTagFilter extends BaseItemFilter<Set<WishlistTag>> {
+  Profile get profile => globalProfileProvider;
+  
   WishlistTagFilter() : super(Set(), Set());
 
   @override
@@ -15,7 +17,7 @@ class WishlistTagFilter extends BaseItemFilter<Set<WishlistTag>> {
     availableValues.clear();
     List<WishlistTag> tags = items
         .expand((i) {
-          final profile = ProfileService();
+          
           final reusable =
               profile.getItemReusablePlugs(i?.item?.itemInstanceId);
           final sockets = profile.getItemSockets(i?.item?.itemInstanceId);
@@ -41,7 +43,7 @@ class WishlistTagFilter extends BaseItemFilter<Set<WishlistTag>> {
 
   bool filterItem(ItemWithOwner item,
       {Map<int, DestinyInventoryItemDefinition> definitions}) {
-    final profile = ProfileService();
+    
     final reusable = profile.getItemReusablePlugs(item?.item?.itemInstanceId);
     final sockets = profile.getItemSockets(item?.item?.itemInstanceId);
     final tags = globalWishlistService

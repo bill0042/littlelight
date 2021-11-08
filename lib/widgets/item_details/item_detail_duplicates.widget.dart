@@ -83,7 +83,7 @@ class ItemDetailDuplicatesWidgetState
   }
 
   Widget buildItemInstance(ItemWithOwner item, BuildContext context) {
-    var instance = widget.profile.getInstanceInfo(item.item.itemInstanceId);
+    var instance = profile.getInstanceInfo(item.item.itemInstanceId);
     return Stack(
         key: Key("duplicate_${item.item.itemInstanceId}_${item.ownerId}"),
         children: <Widget>[
@@ -102,7 +102,7 @@ class ItemDetailDuplicatesWidgetState
     BuildContext context,
     ItemWithOwner item,
   ) {
-    var instance = widget.profile.getInstanceInfo(item.item.itemInstanceId);
+    var instance = profile.getInstanceInfo(item.item.itemInstanceId);
     var route = MaterialPageRoute(
       builder: (context) => ItemDetailScreen(
         item: item.item,

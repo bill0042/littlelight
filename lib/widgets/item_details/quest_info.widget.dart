@@ -51,7 +51,7 @@ class QuestInfoWidgetState extends BaseDestinyItemState<QuestInfoWidget>
   }
 
   loadDefinitions() async {
-    itemObjectives = widget.profile
+    itemObjectives = profile
         .getItemObjectives(item?.itemInstanceId, characterId, item?.itemHash);
     questlineDefinition =
         await manifest.getDefinition<DestinyInventoryItemDefinition>(

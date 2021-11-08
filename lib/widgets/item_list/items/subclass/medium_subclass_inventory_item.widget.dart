@@ -22,8 +22,8 @@ class MediumSubclassInventoryItemWidget extends MediumBaseInventoryItemWidget
             characterId: characterId, key: key, uniqueId: uniqueId);
 
   @override
-  DestinyItemTalentGridComponent get talentGrid =>
-      profile.getTalentGrid(item?.itemInstanceId);
+  DestinyItemTalentGridComponent talentGrid(WidgetRef ref) =>
+      profile(ref).getTalentGrid(item?.itemInstanceId);
 
   @override
   double get iconSize {
@@ -55,7 +55,7 @@ class MediumSubclassInventoryItemWidget extends MediumBaseInventoryItemWidget
   }
 
   @override
-  Widget positionedNameBar(BuildContext context) {
+  Widget positionedNameBar(BuildContext context, WidgetRef ref) {
     return Container();
   }
 
@@ -65,17 +65,17 @@ class MediumSubclassInventoryItemWidget extends MediumBaseInventoryItemWidget
   }
 
   @override
-  Widget perksWidget(BuildContext context) {
+  Widget perksWidget(BuildContext context, WidgetRef ref) {
     return Container();
   }
 
   @override
-  Widget modsWidget(BuildContext context) {
+  Widget modsWidget(BuildContext context, WidgetRef ref) {
     return Container();
   }
 
   @override
-  Widget primaryStatWidget(BuildContext context) {
+  Widget primaryStatWidget(BuildContext context, WidgetRef ref) {
     return Container();
   }
 }

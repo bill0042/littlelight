@@ -10,7 +10,7 @@ import 'package:little_light/screens/progress.screen.dart';
 import 'package:little_light/screens/old_triumphs.screen.dart';
 
 import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 
 import 'package:little_light/utils/platform_capabilities.dart';
 import 'package:little_light/utils/selected_page_persistence.dart';
@@ -30,7 +30,8 @@ class MainScreenState extends ConsumerState<MainScreen>
         UserSettingsConsumerState,
         LoadoutsConsumerState,
         ItemNotesConsumerState,
-        BungieAuthConsumerState {
+        BungieAuthConsumerState,
+        ProfileConsumerState {
   Widget currentScreen;
 
   @override
@@ -41,7 +42,6 @@ class MainScreenState extends ConsumerState<MainScreen>
   }
 
   initUpdaters() {
-    ProfileService profile = ProfileService();
     if (auth.isLogged) {
       auth.getMembershipData();
       loadoutsService.getLoadouts(forceFetch: true);
@@ -53,7 +53,6 @@ class MainScreenState extends ConsumerState<MainScreen>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
-    ProfileService profile = ProfileService();
     switch (state) {
       case AppLifecycleState.resumed:
         await profile.fetchProfileData();

@@ -18,11 +18,11 @@ class MediumBaseInventoryItemWidget extends BaseInventoryItemWidget {
       : super(item, itemDefinition, instanceInfo,
             key: key, characterId: characterId, uniqueId: uniqueId);
 
-  Widget positionedNameBar(BuildContext context) {
-    return Positioned(left: 0, right: 0, child: itemHeroNamebar(context));
+  Widget positionedNameBar(BuildContext context, WidgetRef ref) {
+    return Positioned(left: 0, right: 0, child: itemHeroNamebar(context, ref));
   }
 
-  Widget nameBar(BuildContext context) {
+  Widget nameBar(BuildContext context, WidgetRef ref) {
     return Consumer(
         builder: (context, ref, _) => ItemNameBarWidget(
               item,
@@ -35,17 +35,17 @@ class MediumBaseInventoryItemWidget extends BaseInventoryItemWidget {
             ));
   }
 
-  Widget categoryName(BuildContext context) {
+  Widget categoryName(BuildContext context, WidgetRef ref) {
     return null;
   }
 
-  Widget positionedIcon(BuildContext context) {
+  Widget positionedIcon(BuildContext context, WidgetRef ref) {
     return Positioned(
         top: padding * 3 + titleFontSize,
         left: padding,
         width: iconSize,
         height: iconSize,
-        child: itemIconHero(context));
+        child: itemIconHero(context, ref));
   }
 
   @override
@@ -70,19 +70,19 @@ class MediumBaseInventoryItemWidget extends BaseInventoryItemWidget {
     return 12;
   }
 
-  Widget perksWidget(BuildContext context) {
+  Widget perksWidget(BuildContext context, WidgetRef ref) {
     return Container();
   }
 
   @override
-  Widget modsWidget(BuildContext context) {
+  Widget modsWidget(BuildContext context, WidgetRef ref) {
     if (item?.itemInstanceId == null) return Container();
     return Positioned(
         bottom: 4,
         right: 4,
         child: ItemModsWidget(
             definition: definition,
-            itemSockets: profile.getItemSockets(item?.itemInstanceId),
+            itemSockets: profile(ref).getItemSockets(item?.itemInstanceId),
             iconSize: 22));
   }
 }

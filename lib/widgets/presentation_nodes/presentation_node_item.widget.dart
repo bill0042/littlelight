@@ -8,7 +8,7 @@ import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dar
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
@@ -21,7 +21,7 @@ class PresentationNodeItemWidget extends ConsumerStatefulWidget {
   final int depth;
   final PresentationNodePressedHandler onPressed;
 
-  final ProfileService profile = ProfileService();
+  
   final bool isCategorySet;
   PresentationNodeItemWidget(
       {Key key,
@@ -42,7 +42,8 @@ class PresentationNodeWidgetState
         UserSettingsConsumerState,
         BungieApiConfigConsumerState,
         BungieAuthConsumerState,
-        ManifestConsumerState {
+        ManifestConsumerState,
+        ProfileConsumerState {
   DestinyPresentationNodeComponent progress;
   Map<String, DestinyPresentationNodeComponent> multiProgress;
   DestinyPresentationNodeDefinition definition;
@@ -65,7 +66,7 @@ class PresentationNodeWidgetState
   }
 
   loadCompletionData() {
-    var profileNodes = widget.profile.getProfilePresentationNodes();
+    var profileNodes = profile.getProfilePresentationNodes();
 
     if (profileNodes?.containsKey("${widget.hash}") ?? false) {
       this.progress = profileNodes["${widget.hash}"];
@@ -73,7 +74,7 @@ class PresentationNodeWidgetState
     if (this.progress != null) return;
 
     var characters =
-        widget.profile.getCharacters(userSettings.characterOrdering);
+        profile.getCharacters(userSettings.characterOrdering);
     if (characters == null || characters.length == 0) return;
 
     DestinyPresentationNodeComponent highest;
@@ -82,7 +83,7 @@ class PresentationNodeWidgetState
 
     for (var c in characters) {
       var characterNodes =
-          widget.profile.getCharacterPresentationNodes(c.characterId);
+          profile.getCharacterPresentationNodes(c.characterId);
       var node = characterNodes["${widget.hash}"];
       if (highest == null ||
           (node?.progressValue ?? 0) > highest?.progressValue) {
@@ -180,7 +181,7 @@ class PresentationNodeWidgetState
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: multiProgress.entries.map((e) {
-          var c = widget.profile.getCharacter(e.key);
+          var c = profile.getCharacter(e.key);
           return buildSingleCount(context, e.value, c);
         }).toList(),
       );

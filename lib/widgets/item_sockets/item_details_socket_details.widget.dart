@@ -123,7 +123,7 @@ class ItemDetailsSocketDetailsWidgetState
   }
 
   buildObjectives(BuildContext context) {
-    var itemObjectives = widget.profile.getPlugObjectives(item?.itemInstanceId);
+    var itemObjectives = profile.getPlugObjectives(item?.itemInstanceId);
     if (!(itemObjectives?.containsKey("${definition.hash}") ?? false))
       return Container();
     var objectives = itemObjectives["${definition.hash}"];

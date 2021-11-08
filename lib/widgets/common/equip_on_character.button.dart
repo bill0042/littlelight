@@ -2,13 +2,14 @@ import 'package:bungie_api/models/destiny_character_component.dart';
 import 'package:bungie_api/models/destiny_class_definition.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/inventory/transfer_destination.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
-class EquipOnCharacterButton extends StatelessWidget {
+class EquipOnCharacterButton extends ConsumerWidget with ProfileConsumerWidget{
   final ItemDestination type;
   final String characterId;
   final Function onTap;
@@ -27,7 +28,7 @@ class EquipOnCharacterButton extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
         child: SizedBox(
             width: iconSize,
@@ -37,8 +38,8 @@ class EquipOnCharacterButton extends StatelessWidget {
                     border: Border.all(
                         width: borderSize, color: Colors.grey.shade400)),
                 child: Stack(fit: StackFit.expand, children: [
-                  characterIcon(context),
-                  characterClassName(context),
+                  characterIcon(context, ref),
+                  characterClassName(context, ref),
                   Material(
                     type: MaterialType.button,
                     color: Colors.transparent,
@@ -51,7 +52,7 @@ class EquipOnCharacterButton extends StatelessWidget {
                 ]))));
   }
 
-  Widget characterIcon(BuildContext context) {
+  Widget characterIcon(BuildContext context, WidgetRef ref) {
     switch (type) {
       case ItemDestination.Vault:
         return Image.asset('assets/imgs/vault-icon.jpg');
@@ -61,17 +62,17 @@ class EquipOnCharacterButton extends StatelessWidget {
 
       default:
         DestinyCharacterComponent character =
-            ProfileService().getCharacter(characterId);
+            profile(ref).getCharacter(characterId);
         return ManifestImageWidget<DestinyInventoryItemDefinition>(
             character.emblemHash);
     }
   }
 
-  Widget characterClassName(BuildContext context) {
+  Widget characterClassName(BuildContext context, WidgetRef ref) {
     switch (type) {
       case ItemDestination.Character:
         DestinyCharacterComponent character =
-            ProfileService().getCharacter(characterId);
+            profile(ref).getCharacter(characterId);
         return Positioned(
           bottom: 1,
           left: 1,

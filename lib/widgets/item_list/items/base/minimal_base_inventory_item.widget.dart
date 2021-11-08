@@ -29,8 +29,8 @@ class MinimalBaseInventoryItemWidget extends BaseInventoryItemWidget
   Widget build(BuildContext context, WidgetRef ref) {
     return Stack(
       children: <Widget>[
-        positionedIcon(context),
-        primaryStatWidget(context),
+        positionedIcon(context, ref),
+        primaryStatWidget(context, ref),
         buildItemTags(context, ref),
         buildTagsBadges(context, ref),
       ].where((w) => w != null).toList(),
@@ -38,8 +38,8 @@ class MinimalBaseInventoryItemWidget extends BaseInventoryItemWidget
   }
 
   Widget buildTagsBadges(BuildContext context, WidgetRef ref) {
-    final reusable = profile.getItemReusablePlugs(item?.itemInstanceId);
-    final sockets = profile.getItemSockets(item?.itemInstanceId);
+    final reusable = profile(ref).getItemReusablePlugs(item?.itemInstanceId);
+    final sockets = profile(ref).getItemSockets(item?.itemInstanceId);
     final wishlists = ref.read(wishlistProvider);
     final tags = wishlists.getWishlistBuildTags(
         itemHash: item?.itemHash, reusablePlugs: reusable, sockets: sockets);
@@ -55,13 +55,13 @@ class MinimalBaseInventoryItemWidget extends BaseInventoryItemWidget
   }
 
   @override
-  Widget positionedIcon(BuildContext context) {
+  Widget positionedIcon(BuildContext context, WidgetRef ref) {
     return Positioned(
-        top: 0, left: 0, right: 0, bottom: 0, child: itemIcon(context));
+        top: 0, left: 0, right: 0, bottom: 0, child: itemIcon(context, ref));
   }
 
   @override
-  Widget primaryStatWidget(BuildContext context) {
+  Widget primaryStatWidget(BuildContext context, WidgetRef ref) {
     if ([DestinyItemType.Subclass, DestinyItemType.Engram]
         .contains(definition?.itemType)) {
       return Container();
@@ -90,7 +90,7 @@ class MinimalBaseInventoryItemWidget extends BaseInventoryItemWidget
             textAlign: TextAlign.right,
           ));
     }
-    return super.primaryStatWidget(context);
+    return super.primaryStatWidget(context, ref);
   }
 
   Widget buildItemTags(BuildContext context, WidgetRef ref) {

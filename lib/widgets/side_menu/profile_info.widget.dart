@@ -10,7 +10,7 @@ import 'package:little_light/core/providers/bungie_api/bungie_api_config.consume
 import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dart';
 import 'package:little_light/screens/initial.screen.dart';
 
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/models/character_sort_parameter.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
@@ -24,7 +24,6 @@ import 'package:timeago/timeago.dart' as timeago;
 const Duration _kExpand = Duration(milliseconds: 200);
 
 class ProfileInfoWidget extends ConsumerStatefulWidget {
-  final ProfileService profile = ProfileService();
   final List<Widget> menuItems;
   ProfileInfoWidget({this.menuItems});
 
@@ -38,7 +37,8 @@ class ProfileInfoState extends ConsumerState<ProfileInfoWidget>
     with
         SingleTickerProviderStateMixin,
         BungieApiConfigConsumerState,
-        BungieAuthConsumerState {
+        BungieAuthConsumerState,
+        ProfileConsumerState {
   GeneralUser bungieNetUser;
   GroupUserInfoCard selectedMembership;
 
@@ -188,8 +188,7 @@ class ProfileInfoState extends ConsumerState<ProfileInfoWidget>
   }
 
   Widget buildActivityInfo(BuildContext context) {
-    var lastCharacter =
-        widget.profile.getCharacters(CharacterSortParameter())?.first;
+    var lastCharacter = profile.getCharacters(CharacterSortParameter())?.first;
     if (lastCharacter == null) {
       return Container();
     }
@@ -206,8 +205,7 @@ class ProfileInfoState extends ConsumerState<ProfileInfoWidget>
         style: TextStyle(fontSize: 12, color: Colors.grey.shade100),
       );
     }
-    var activities =
-        widget.profile.getCharacterActivities(lastCharacter.characterId);
+    var activities = profile.getCharacterActivities(lastCharacter.characterId);
     if (activities.currentActivityHash == 82913930) {
       return ManifestText<DestinyPlaceDefinition>(2961497387,
           textExtractor: (def) => def.displayProperties.description,

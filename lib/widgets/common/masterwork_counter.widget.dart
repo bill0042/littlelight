@@ -5,11 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 
 class MasterworkCounterWidget extends ConsumerStatefulWidget {
-  final ProfileService profile = ProfileService();
   final DestinyItemComponent item;
 
   MasterworkCounterWidget(this.item, {Key key}) : super(key: key);
@@ -25,7 +24,8 @@ class MasterworkCounterWidgetState
     with
         AutomaticKeepAliveClientMixin,
         BungieApiConfigConsumerState,
-        ManifestConsumerState {
+        ManifestConsumerState,
+        ProfileConsumerState {
   DestinyObjectiveProgress masterworkObjective;
   DestinyObjectiveDefinition masterworkObjectiveDefinition;
 
@@ -36,8 +36,7 @@ class MasterworkCounterWidgetState
 
   loadDefinitions() async {
     if (widget.item == null) return;
-    var plugObjectives =
-        widget.profile.getPlugObjectives(widget.item.itemInstanceId);
+    var plugObjectives = profile.getPlugObjectives(widget.item.itemInstanceId);
     for (var objectives in plugObjectives.values) {
       for (var objective in objectives) {
         if (objective.visible) {

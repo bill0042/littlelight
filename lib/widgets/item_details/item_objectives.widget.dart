@@ -10,9 +10,8 @@ import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/notification/events/notification.event.dart';
 import 'package:little_light/core/providers/notification/notifications.consumer.dart';
 import 'package:little_light/core/providers/objective_tracking/objective_tracking.consumer.dart';
+import 'package:little_light/core/providers/profile/component_groups.dart';
 import 'package:little_light/models/tracked_objective.dart';
-
-import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateful_item.widget.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
@@ -66,14 +65,14 @@ class ItemObjectivesWidgetState
   updateProgress() {
     var itemInstanceId = widget.item?.itemInstanceId;
     if (itemInstanceId == null) {
-      var allItems = widget.profile.getAllItems();
+      var allItems = profile.getAllItems();
       var item = allItems.firstWhere(
           (i) => i.itemHash == widget.definition?.hash,
           orElse: () => null);
       itemInstanceId = item?.itemInstanceId;
     }
 
-    itemObjectives = widget.profile
+    itemObjectives = profile
         .getItemObjectives(itemInstanceId, characterId, item?.itemHash);
 
     if (itemObjectives != null) {
@@ -81,7 +80,7 @@ class ItemObjectivesWidgetState
       return;
     }
 
-    var plugObjectives = widget.profile.getPlugObjectives(itemInstanceId);
+    var plugObjectives = profile.getPlugObjectives(itemInstanceId);
     var plugHash = "${widget.definition.hash}";
     if (plugObjectives?.containsKey(plugHash) ?? false) {
       itemObjectives = plugObjectives["${widget.definition.hash}"];
@@ -191,7 +190,7 @@ class ItemObjectivesWidgetState
                 child: Container(
                     padding: EdgeInsets.all(8), child: Icon(Icons.refresh)),
                 onTap: () {
-                  widget.profile.fetchProfileData(
+                  profile.fetchProfileData(
                       components: ProfileComponentGroups.basicProfile);
                 })
           ],

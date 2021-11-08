@@ -16,7 +16,7 @@ import 'package:little_light/core/providers/selection/selection_manager.consumer
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
 
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/utils/item_with_owner.dart';
@@ -29,7 +29,7 @@ import 'package:little_light/widgets/item_tags/item_tag.widget.dart';
 
 class PursuitItemWidget extends ConsumerStatefulWidget {
   final String characterId;
-  final ProfileService profile = ProfileService();
+  
 
   
   final Widget trailing;
@@ -65,7 +65,8 @@ class PursuitItemWidgetState<T extends PursuitItemWidget>
         UserSettingsConsumerState,
         ItemNotesConsumerState,
         ManifestConsumerState,
-        SelectionConsumerState, NotificationsConsumerState {
+        SelectionConsumerState, NotificationsConsumerState,
+        ProfileConsumerState {
   DestinyInventoryItemDefinition definition;
   Map<int, DestinyObjectiveDefinition> objectiveDefinitions;
   List<DestinyObjectiveProgress> itemObjectives;
@@ -325,8 +326,8 @@ class PursuitItemWidgetState<T extends PursuitItemWidget>
   }
 
   updateProgress() {
-    instanceInfo = widget.profile.getInstanceInfo(itemInstanceId);
-    itemObjectives = widget.profile
+    instanceInfo = profile.getInstanceInfo(itemInstanceId);
+    itemObjectives = profile
         .getItemObjectives(itemInstanceId, widget.characterId, hash);
     setState(() {});
   }

@@ -78,8 +78,8 @@ class ItemMainInfoWidgetState extends BaseDestinyItemState<ItemMainInfoWidget>
   }
 
   Widget buildWishListInfo(BuildContext context) {
-    final reusable = widget.profile.getItemReusablePlugs(item?.itemInstanceId);
-    final sockets = widget.profile.getItemSockets(item?.itemInstanceId);
+    final reusable = profile.getItemReusablePlugs(item?.itemInstanceId);
+    final sockets = profile.getItemSockets(item?.itemInstanceId);
     final tags = wishlistsService.getWishlistBuildTags(
         itemHash: item?.itemHash, reusablePlugs: reusable, sockets: sockets);
     if (tags == null) return Container();

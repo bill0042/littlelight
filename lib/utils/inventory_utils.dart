@@ -5,11 +5,11 @@ import 'package:bungie_api/models/destiny_inventory_bucket_definition.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/interpolation_point.dart';
+import 'package:little_light/core/providers/profile/profile.provider.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.provider.dart';
 import 'package:little_light/models/loadout.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/core/providers/manifest/manifest.provider.dart';
-import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/models/item_sort_parameter.dart';
 
 import 'package:little_light/utils/item_sorters/base_item_sorter.dart';
@@ -20,6 +20,7 @@ import 'package:little_light/utils/item_with_owner.dart';
 class InventoryUtils {
   static UserSettingsService get userSettings => globalUserSettingsProvider;
   static Manifest get manifest => globalManifestProvider;
+  static Profile get profile => globalProfileProvider;
 
   static int interpolateStat(
       int investmentValue, List<InterpolationPoint> displayInterpolation) {
@@ -82,7 +83,7 @@ class InventoryUtils {
   }
 
   static debugLoadout(LoadoutItemIndex loadout, int classType) async {
-    ProfileService profile = ProfileService();
+    
 
     var isInDebug = false;
     assert(isInDebug = true);
@@ -121,6 +122,7 @@ class InventoryUtils {
 
 class LoadoutItemIndex {
   static Manifest get manifest => globalManifestProvider;
+  static Profile get profile => globalProfileProvider;
 
   static const List<int> genericBucketHashes = [
     InventoryBucket.kineticWeapons,
@@ -163,7 +165,7 @@ class LoadoutItemIndex {
   }
 
   build() async {
-    ProfileService profile = ProfileService();
+    
     List<String> equippedIds =
         loadout.equipped.map((item) => item.itemInstanceId).toList();
     List<String> itemIds = equippedIds;

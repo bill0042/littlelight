@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:bungie_api/enums/destiny_item_type.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.provider.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 
 import 'base_item_filter.dart';
@@ -16,6 +16,8 @@ class TotalStatsConstraints {
 
 class TotalStatsConstraintsFilter
     extends BaseItemFilter<TotalStatsConstraints> {
+  Profile get profile => globalProfileProvider;
+  
   TotalStatsConstraintsFilter(
       TotalStatsConstraints available, TotalStatsConstraints selected)
       : super(available, selected);
@@ -29,8 +31,7 @@ class TotalStatsConstraintsFilter
     for (var item in items) {
       var def = definitions[item.item.itemHash];
       if (def.itemType == DestinyItemType.Armor) {
-        var stats =
-            ProfileService().getPrecalculatedStats(item.item.itemInstanceId);
+        var stats = profile.getPrecalculatedStats(item.item.itemInstanceId);
         var totalStats =
             stats.values.fold<int>(0, (t, s) => t + (s.value ?? 0));
         availableValues.min = min(availableValues.min, totalStats);
@@ -57,8 +58,7 @@ class TotalStatsConstraintsFilter
     var def = definitions[item.item.itemHash];
     if (def.itemType != DestinyItemType.Armor)
       return value.includeNonArmorItems;
-    var stats =
-        ProfileService().getPrecalculatedStats(item.item.itemInstanceId);
+    var stats = profile.getPrecalculatedStats(item.item.itemInstanceId);
     var totalStats = stats.values.fold<int>(0, (t, s) => t + (s.value ?? 0));
     if (totalStats < value.min) return false;
     if (totalStats > value.max) return false;

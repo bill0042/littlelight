@@ -4,9 +4,7 @@ import 'package:bungie_api/enums/destiny_item_type.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:flutter/material.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
-
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:little_light/widgets/item_list/items/armor/armor_inventory_item.widget.dart';
@@ -53,7 +51,7 @@ class QuickSelectItemWrapperWidgetState<T extends QuickSelectItemWrapperWidget>
         }
       case DestinyItemType.Weapon:
         {
-          var reusablePlugs = ProfileService()
+          var reusablePlugs = profile
               .getItemReusablePlugs(widget?.item?.itemInstanceId);
           int maxPlugs = 1;
           reusablePlugs?.forEach((key, value) {
@@ -136,7 +134,7 @@ class QuickSelectItemWrapperWidgetState<T extends QuickSelectItemWrapperWidget>
     } else if (widget.characterId == ItemWithOwner.OWNER_PROFILE) {
       icon = Image.asset("assets/imgs/inventory-icon.jpg");
     } else {
-      var character = widget.profile.getCharacter(widget.characterId);
+      var character = profile.getCharacter(widget.characterId);
       icon = QueuedNetworkImage(
           imageUrl: apiConfig.bungieUrl(character?.emblemPath));
     }

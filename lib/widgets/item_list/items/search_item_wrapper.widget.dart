@@ -125,7 +125,7 @@ class SearchItemWrapperWidgetState<T extends SearchItemWrapperWidget>
     } else if (widget.characterId == ItemWithOwner.OWNER_PROFILE) {
       icon = Image.asset("assets/imgs/inventory-icon.jpg");
     } else {
-      var character = widget.profile.getCharacter(widget.characterId);
+      var character = profile.getCharacter(widget.characterId);
       icon = QueuedNetworkImage(
           imageUrl: apiConfig.bungieUrl(character.emblemPath));
     }

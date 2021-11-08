@@ -7,7 +7,7 @@ import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
 import 'package:little_light/core/providers/inventory/transfer_destination.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateful_item.widget.dart';
 import 'package:little_light/widgets/common/equip_on_character.button.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
@@ -35,7 +35,10 @@ class BaseTransferDestinationsWidget extends BaseDestinyStatefulItemWidget {
 
 class BaseTransferDestinationState<T extends BaseTransferDestinationsWidget>
     extends BaseDestinyItemState<T>
-    with UserSettingsConsumerState, InventoryConsumerState {
+    with
+        UserSettingsConsumerState,
+        InventoryConsumerState,
+        ProfileConsumerState {
   @override
   Widget build(BuildContext context) {
     if (item == null) {
@@ -163,7 +166,7 @@ class BaseTransferDestinationState<T extends BaseTransferDestinationsWidget>
     if (!definition.equippable) {
       return [];
     }
-    return widget.profile
+    return profile
         .getCharacters(userSettings.characterOrdering)
         .where((char) =>
             !(instanceInfo.isEquipped && char.characterId == characterId) &&
@@ -180,7 +183,7 @@ class BaseTransferDestinationState<T extends BaseTransferDestinationsWidget>
       return [];
     }
 
-    if (ProfileService.profileBuckets
+    if (ProfileBuckets
         .contains(definition.inventory.bucketTypeHash)) {
       if (item.bucketHash == InventoryBucket.general) {
         return [TransferDestination(ItemDestination.Inventory)];
@@ -188,7 +191,7 @@ class BaseTransferDestinationState<T extends BaseTransferDestinationsWidget>
       return [TransferDestination(ItemDestination.Vault)];
     }
 
-    List<TransferDestination> list = widget.profile
+    List<TransferDestination> list = profile
         .getCharacters(userSettings.characterOrdering)
         .where((char) => !(char.characterId == characterId))
         .map((char) => TransferDestination(ItemDestination.Character,
@@ -205,7 +208,7 @@ class BaseTransferDestinationState<T extends BaseTransferDestinationsWidget>
     if (item.bucketHash == InventoryBucket.lostItems &&
         !definition.doesPostmasterPullHaveSideEffects) {
       ItemDestination type;
-      if (ProfileService.profileBuckets
+      if (ProfileBuckets
           .contains(definition.inventory.bucketTypeHash)) {
         type = ItemDestination.Inventory;
       } else {

@@ -1,15 +1,17 @@
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:little_light/core/providers/item_notes/item_notes.provider.dart';
 import 'package:little_light/core/providers/loadouts/loadouts.provider.dart';
+import 'package:little_light/core/providers/profile/profile.provider.dart';
 import 'package:little_light/core/providers/wishlists/wishlists.provider.dart';
 import 'package:little_light/models/loadout.dart';
-import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/utils/remove_diacritics.dart';
 
 import 'base_item_filter.dart';
 
 class TextFilter extends BaseItemFilter<String> {
+  Profile get profile => globalProfileProvider;
+  
   List<Loadout> loadouts;
   TextFilter({initialText = "", enabled = true})
       : super(null, initialText, enabled: enabled);
@@ -32,9 +34,9 @@ class TextFilter extends BaseItemFilter<String> {
         _def?.displayProperties?.name?.toLowerCase()?.trim() ?? "");
     final itemType = removeDiacritics(
         _def?.itemTypeDisplayName?.toLowerCase()?.trim() ?? "");
-    final sockets = ProfileService().getItemSockets(item?.item?.itemInstanceId);
+    final sockets = profile.getItemSockets(item?.item?.itemInstanceId);
     final reusablePlugs =
-        ProfileService().getItemReusablePlugs(item?.item?.itemInstanceId);
+        profile.getItemReusablePlugs(item?.item?.itemInstanceId);
     final plugHashes = Set<int>();
     plugHashes.addAll(sockets?.map((s) => s.plugHash)?.toSet() ?? Set());
     plugHashes.addAll(reusablePlugs?.values?.fold<List<int>>(

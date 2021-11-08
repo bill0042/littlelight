@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/component_groups.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/utils/item_filters/text_filter.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/inventory_tabs/selected_items.widget.dart';
@@ -9,21 +11,21 @@ import 'package:little_light/widgets/search/search.controller.dart';
 import 'package:little_light/widgets/search/search_filters/pseudo_item_type_filter.widget.dart';
 import 'package:little_light/widgets/search/search_filters/text_search_filter.widget.dart';
 
-class DuplicatedItemsScreen extends StatefulWidget {
+class DuplicatedItemsScreen extends ConsumerStatefulWidget {
   final SearchController searchController =
       SearchController.withDuplicatedItemsFilters();
   @override
   DuplicatedItemsScreenState createState() => DuplicatedItemsScreenState();
 }
 
-class DuplicatedItemsScreenState extends State<DuplicatedItemsScreen>
-    with SingleTickerProviderStateMixin {
+class DuplicatedItemsScreenState extends ConsumerState<DuplicatedItemsScreen>
+    with SingleTickerProviderStateMixin, ProfileConsumerState {
   bool searchOpen = false;
 
   @override
   initState() {
     super.initState();
-    ProfileService().updateComponents = ProfileComponentGroups.basicProfile;
+    profile.updateComponents = ProfileComponentGroups.basicProfile;
   }
 
   @override

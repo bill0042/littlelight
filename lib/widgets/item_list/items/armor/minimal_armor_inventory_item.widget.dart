@@ -3,6 +3,7 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:bungie_api/models/destiny_stat_definition.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/item_list/items/base/minimal_base_inventory_item.widget.dart';
@@ -23,16 +24,16 @@ class MinimalArmorInventoryItemWidget extends MinimalBaseInventoryItemWidget
   double get valueFontSize => 12;
 
   @override
-  Widget primaryStatWidget(BuildContext context) {
-    return infoContainer(context, armorPrimaryStat(context));
+  Widget primaryStatWidget(BuildContext context, WidgetRef ref) {
+    return infoContainer(context, armorPrimaryStat(context, ref));
   }
 
   @override
-  itemIcon(BuildContext context) {
-    return Stack(children: [super.itemIcon(context), buildStatTotal(context)]);
+  itemIcon(BuildContext context, WidgetRef ref) {
+    return Stack(children: [super.itemIcon(context, ref), buildStatTotal(context, ref)]);
   }
 
-  Widget armorPrimaryStat(BuildContext context) {
+  Widget armorPrimaryStat(BuildContext context, WidgetRef ref) {
     return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -40,11 +41,11 @@ class MinimalArmorInventoryItemWidget extends MinimalBaseInventoryItemWidget
           primaryStatIcon(
               context, DestinyData.getClassIcon(definition.classType),
               size: valueFontSize),
-          primaryStatValueField(context),
+          primaryStatValueField(context, ref),
         ].where((w) => w != null).toList());
   }
 
-  Widget primaryStatValueField(BuildContext context) {
+  Widget primaryStatValueField(BuildContext context, WidgetRef ref) {
     if (primaryStat == null) return Container();
     return Text(
       "${primaryStat?.value}",
@@ -52,7 +53,7 @@ class MinimalArmorInventoryItemWidget extends MinimalBaseInventoryItemWidget
     );
   }
 
-  Widget primaryStatNameField(BuildContext context) {
+  Widget primaryStatNameField(BuildContext context, WidgetRef ref) {
     return ManifestText<DestinyStatDefinition>(primaryStat.statHash,
         uppercase: true,
         style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16));

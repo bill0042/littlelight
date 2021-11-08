@@ -20,7 +20,7 @@ import 'package:little_light/core/providers/user_settings/user_settings.consumer
 import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
 import 'package:little_light/exceptions/exception_handler.dart';
 import 'package:little_light/screens/main.screen.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/exceptions/exception_dialog.dart';
@@ -31,7 +31,7 @@ import 'package:little_light/widgets/initial_page/select_platform.widget.dart';
 import 'package:little_light/widgets/layouts/floating_content_layout.dart';
 
 class InitialScreen extends ConsumerStatefulWidget {
-  final ProfileService profile = ProfileService();
+  
   final String authCode;
 
   InitialScreen({Key key, this.authCode}) : super(key: key);
@@ -51,7 +51,8 @@ class InitialScreenState extends FloatingContentState<InitialScreen>
         BungieApiConsumer,
         BungieAuthConsumerState,
         ManifestConsumerState,
-        DestinySettingsConsumerState {
+        DestinySettingsConsumerState,
+        ProfileConsumerState {
   @override
   void initState() {
     super.initState();
@@ -263,7 +264,7 @@ class InitialScreenState extends FloatingContentState<InitialScreen>
 
   loadProfile() async {
     this.changeContent(null, null);
-    await widget.profile.loadFromCache();
+    await profile.loadFromCache();
     this.goForward();
   }
 

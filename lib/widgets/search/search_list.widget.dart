@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-
-import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/media_query_helper.dart';
 import 'package:little_light/widgets/common/loading_anim.widget.dart';
 import 'package:little_light/widgets/item_list/items/search_item_wrapper.widget.dart';
 import 'package:little_light/widgets/search/search.controller.dart';
 
 class SearchListWidget extends StatefulWidget {
-  final ProfileService profile = ProfileService();
+  
   final SearchController controller;
 
   SearchListWidget({Key key, this.controller}) : super(key: key);

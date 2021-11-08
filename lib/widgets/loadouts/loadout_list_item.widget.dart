@@ -9,7 +9,7 @@ import 'package:little_light/models/loadout.dart';
 import 'package:little_light/screens/edit_loadout.screen.dart';
 import 'package:little_light/screens/equip_loadout.screen.dart';
 
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/utils/inventory_utils.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
@@ -34,7 +34,7 @@ class LoadoutListItemWidget extends ConsumerStatefulWidget {
 }
 
 class LoadoutListItemWidgetState extends ConsumerState<LoadoutListItemWidget>
-    with LoadoutsConsumerState, BungieApiConfigConsumerState {
+    with LoadoutsConsumerState, BungieApiConfigConsumerState, ProfileConsumerState {
   LoadoutItemIndex _itemIndex;
   Loadout _loadout;
   @override
@@ -264,7 +264,7 @@ class LoadoutListItemWidgetState extends ConsumerState<LoadoutListItemWidget>
       return ManifestImageWidget<DestinyInventoryItemDefinition>(1835369552,
           key: Key("item_icon_empty"));
     }
-    var instance = ProfileService().getInstanceInfo(item?.itemInstanceId);
+    var instance = profile.getInstanceInfo(item?.itemInstanceId);
     return DefinitionProviderWidget<DestinyInventoryItemDefinition>(
         item.itemHash,
         (def) => ItemIconWidget.builder(

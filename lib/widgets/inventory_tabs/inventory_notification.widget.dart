@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/notification/events/notification.event.dart';
 import 'package:little_light/core/providers/notification/notifications.consumer.dart';
 
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
 import 'package:little_light/widgets/common/item_icon/item_icon.widget.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
@@ -30,7 +30,7 @@ class InventoryNotificationWidget extends ConsumerStatefulWidget {
 
 class InventoryNotificationWidgetState
     extends ConsumerState<InventoryNotificationWidget>
-    with NotificationsConsumerState {
+    with NotificationsConsumerState, ProfileConsumerState {
   NotificationEvent _latestEvent;
   bool get _busy =>
       _latestEvent != null &&
@@ -148,7 +148,7 @@ class InventoryNotificationWidgetState
       case NotificationType.requestedTransfer:
       case NotificationType.requestedVaulting:
         var instanceInfo =
-            ProfileService().getInstanceInfo(_latestEvent.item.itemInstanceId);
+            profile.getInstanceInfo(_latestEvent.item.itemInstanceId);
         return Container(
           margin: EdgeInsets.only(left: 8),
           width: 24,

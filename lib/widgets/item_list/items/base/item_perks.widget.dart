@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
 import 'package:little_light/models/wish_list.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/utils/wishlists_data.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 
@@ -39,7 +39,7 @@ class ItemPerksWidget extends ConsumerStatefulWidget {
 }
 
 class ItemPerksWidgetState extends ConsumerState<ItemPerksWidget>
-    with WishlistsConsumerState, ManifestConsumerState {
+    with WishlistsConsumerState, ManifestConsumerState, ProfileConsumerState {
   List<DestinyItemSocketState> _itemSockets;
   Map<String, List<DestinyItemPlugBase>> _reusablePlugs;
   List<DestinyItemSocketState> get itemSockets =>
@@ -51,10 +51,10 @@ class ItemPerksWidgetState extends ConsumerState<ItemPerksWidget>
   void initState() {
     super.initState();
     _itemSockets =
-        ProfileService().getItemSockets(widget?.item?.itemInstanceId);
+        profile.getItemSockets(widget?.item?.itemInstanceId);
     if (widget.showUnusedPerks) {
       _reusablePlugs = widget.reusablePlugs ??
-          ProfileService().getItemReusablePlugs(widget?.item?.itemInstanceId);
+          profile.getItemReusablePlugs(widget?.item?.itemInstanceId);
     }
     loadPerks();
   }

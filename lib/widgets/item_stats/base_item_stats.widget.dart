@@ -49,9 +49,9 @@ class BaseItemStatsState<T extends BaseItemStatsWidget>
     super.initState();
 
     precalculatedStats =
-        widget.profile.getPrecalculatedStats(item?.itemInstanceId);
+        profile.getPrecalculatedStats(item?.itemInstanceId);
 
-    socketStates = widget.profile.getItemSockets(item?.itemInstanceId);
+    socketStates = profile.getItemSockets(item?.itemInstanceId);
     loadStatGroupDefinition();
     initializeSocketController();
   }

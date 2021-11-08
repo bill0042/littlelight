@@ -1,6 +1,6 @@
 import 'package:bungie_api/models/destiny_stat_definition.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/models/item_sort_parameter.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
@@ -18,14 +18,14 @@ class StatSorterWidget extends BaseSearchSorterWidget {
 }
 
 class StatSorterWidgetState
-    extends BaseSearchSorterWidgetState<StatSorterWidget> {
+    extends BaseSearchSorterWidgetState<StatSorterWidget>
+    with ProfileConsumerState {
   @override
   addSorter(BuildContext context) async {
     List<int> statHashes = [];
     controller.filtered.forEach((element) {
-      var stats = ProfileService()
-              .getPrecalculatedStats(element?.item?.itemInstanceId) ??
-          Map();
+      var stats =
+          profile.getPrecalculatedStats(element?.item?.itemInstanceId) ?? Map();
       statHashes.addAll(stats.keys.map((k) => int.parse(k)));
     });
     statHashes = statHashes.toSet().toList();

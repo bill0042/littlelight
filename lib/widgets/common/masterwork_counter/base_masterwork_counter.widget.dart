@@ -33,7 +33,7 @@ class BaseMasterworkCounterWidgetState<T extends BaseMasterworkCounterWidget>
   loadDefinitions() async {
     if (widget.item == null) return;
     var plugObjectives =
-        widget.profile.getPlugObjectives(widget?.item?.itemInstanceId);
+        profile.getPlugObjectives(widget?.item?.itemInstanceId);
 
     if (plugObjectives == null) return;
     for (var objectives in plugObjectives?.values) {

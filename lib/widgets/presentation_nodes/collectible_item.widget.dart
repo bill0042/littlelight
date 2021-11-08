@@ -11,7 +11,7 @@ import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/selection/selection_manager.consumer.dart';
 import 'package:little_light/screens/item_detail.screen.dart';
 
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
@@ -23,7 +23,7 @@ import 'package:little_light/widgets/item_list/items/mod/mod_inventory_item.widg
 import 'package:little_light/widgets/item_list/items/weapon/weapon_inventory_item.widget.dart';
 
 class CollectibleItemWidget extends ConsumerStatefulWidget {
-  final ProfileService profile = ProfileService();
+  
   final Map<int, List<ItemWithOwner>> itemsByHash;
   final int hash;
   CollectibleItemWidget({Key key, this.hash, this.itemsByHash})
@@ -40,7 +40,8 @@ class CollectibleItemWidgetState extends ConsumerState<CollectibleItemWidget>
         BungieApiConfigConsumerState,
         BungieAuthConsumerState,
         ManifestConsumerState,
-        SelectionConsumerState {
+        SelectionConsumerState,
+        ProfileConsumerState {
   DestinyCollectibleDefinition _definition;
   DestinyInventoryItemDefinition _itemDefinition;
   DestinyCollectibleDefinition get definition {
@@ -284,6 +285,6 @@ class CollectibleItemWidgetState extends ConsumerState<CollectibleItemWidget>
   bool get unlocked {
     if (!auth.isLogged) return true;
     if (definition == null) return false;
-    return widget.profile.isCollectibleUnlocked(widget.hash, definition.scope);
+    return profile.isCollectibleUnlocked(widget.hash, definition.scope);
   }
 }

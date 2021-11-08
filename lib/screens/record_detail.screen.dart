@@ -9,7 +9,7 @@ import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dar
 import 'package:little_light/core/providers/objective_tracking/objective_tracking.consumer.dart';
 import 'package:little_light/models/tracked_objective.dart';
 
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
@@ -19,7 +19,6 @@ import 'package:little_light/widgets/presentation_nodes/record_detail_objectives
 
 class RecordDetailScreen extends ConsumerStatefulWidget {
   final DestinyRecordDefinition definition;
-  final ProfileService profile = ProfileService();
 
   RecordDetailScreen(this.definition, {Key key}) : super(key: key);
 
@@ -33,7 +32,8 @@ class RecordDetailScreenState extends ConsumerState<RecordDetailScreen>
     with
         ObjectiveTrackingConsumerState,
         BungieApiConfigConsumerState,
-        BungieAuthConsumerState {
+        BungieAuthConsumerState,
+        ProfileConsumerState {
   bool get isLogged => auth.isLogged;
   bool isTracking = false;
 
@@ -46,7 +46,7 @@ class RecordDetailScreenState extends ConsumerState<RecordDetailScreen>
   DestinyRecordComponent get record {
     if (definition == null) return null;
     if (!auth.isLogged) return null;
-    return ProfileService().getRecord(definition.hash, definition.scope);
+    return profile.getRecord(definition.hash, definition.scope);
   }
 
   DestinyRecordState get recordState {

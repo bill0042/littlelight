@@ -8,15 +8,15 @@ import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_ha
 import 'package:little_light/core/providers/inventory/inventory.consumer.dart';
 import 'package:little_light/core/providers/inventory/transfer_destination.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/core/providers/selection/selection_manager.consumer.dart';
-import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/widgets/common/equip_on_character.button.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
 class MultiselectManagementBlockWidget extends ConsumerWidget
-    with InventoryConsumerWidget, ManifestConsumerWidget, SelectionConsumerWidget {
+    with InventoryConsumerWidget, ManifestConsumerWidget, SelectionConsumerWidget, ProfileConsumerWidget {
   final List<ItemWithOwner> items;
   MultiselectManagementBlockWidget({Key key, this.items})
       : super(
@@ -144,7 +144,7 @@ class MultiselectManagementBlockWidget extends ConsumerWidget
   }
 
   List<TransferDestination> equipDestinations(WidgetRef ref) {
-    var characters = ProfileService().getCharacters();
+    var characters = profile(ref).getCharacters();
     return characters
         .where((c) {
           return items.any((i) {
@@ -158,7 +158,7 @@ class MultiselectManagementBlockWidget extends ConsumerWidget
               return false;
 
             var instanceInfo =
-                ProfileService().getInstanceInfo(i?.item?.itemInstanceId);
+                profile(ref).getInstanceInfo(i?.item?.itemInstanceId);
             if (instanceInfo?.isEquipped == true && i.ownerId == c.characterId)
               return false;
 
@@ -177,7 +177,7 @@ class MultiselectManagementBlockWidget extends ConsumerWidget
     var hasItemsOnVault = false;
     var hasItemsOnPostmaster = false;
     var allCharacterIds =
-        ProfileService().getCharacters().map((c) => c.characterId);
+        profile(ref).getCharacters().map((c) => c.characterId);
     Set<String> destinationCharacterIds = Set();
 
     for (var i in items) {

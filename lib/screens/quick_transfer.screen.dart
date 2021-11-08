@@ -3,9 +3,8 @@ import 'package:bungie_api/enums/destiny_class.dart';
 import 'package:bungie_api/models/destiny_inventory_bucket_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
+import 'package:little_light/core/providers/profile/profile.provider.dart';
 import 'package:little_light/screens/search.screen.dart';
-import 'package:little_light/services/profile/profile.service.dart';
-
 import 'package:little_light/utils/item_filters/class_type_filter.dart';
 import 'package:little_light/utils/item_filters/item_bucket_filter.dart';
 import 'package:little_light/utils/item_filters/item_owner_filter.dart';
@@ -16,7 +15,7 @@ import 'package:little_light/widgets/search/search.controller.dart';
 Set<String> _characterIdsExcept(
     String characterId, DestinyInventoryBucketDefinition bucketDef) {
   Set<String> all =
-      ProfileService().getCharacters().map((c) => c.characterId).toSet();
+      globalProfileProvider.getCharacters().map((c) => c.characterId).toSet();
   all.add(ItemWithOwner.OWNER_VAULT);
   all.add(ItemWithOwner.OWNER_PROFILE);
   if (bucketDef.scope == BucketScope.Account) {

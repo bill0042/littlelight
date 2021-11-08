@@ -101,7 +101,7 @@ class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen>
 
   List<DestinyItemSocketState> get socketStates =>
       widget.socketStates ??
-      widget.profile.getItemSockets(item?.itemInstanceId);
+      profile.getItemSockets(item?.itemInstanceId);
 
   initState() {
     super.initState();
@@ -149,18 +149,18 @@ class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen>
     }
     List<ItemWithOwner> allItems = [];
     Iterable<String> charIds =
-        widget.profile.getCharacters().map((char) => char.characterId);
+        profile.getCharacters().map((char) => char.characterId);
     charIds.forEach((charId) {
-      allItems.addAll(widget.profile
+      allItems.addAll(profile
           .getCharacterEquipment(charId)
           .where((i) => i.itemHash == this.definition.hash)
           .map((item) => ItemWithOwner(item, charId)));
-      allItems.addAll(widget.profile
+      allItems.addAll(profile
           .getCharacterInventory(charId)
           .where((i) => i.itemHash == this.definition.hash)
           .map((item) => ItemWithOwner(item, charId)));
     });
-    allItems.addAll(widget.profile
+    allItems.addAll(profile
         .getProfileInventory()
         .where((i) => i.itemHash == this.definition.hash)
         .map((item) => ItemWithOwner(item, null)));

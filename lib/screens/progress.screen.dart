@@ -3,10 +3,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:little_light/core/providers/profile/component_groups.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/models/item_sort_parameter.dart';
 import 'package:little_light/screens/search.screen.dart';
-import 'package:little_light/services/profile/profile.service.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/utils/item_filters/item_owner_filter.dart';
 import 'package:little_light/utils/item_filters/pseudo_item_type_filter.dart';
 import 'package:little_light/utils/selected_page_persistence.dart';
@@ -24,14 +25,15 @@ import 'package:little_light/widgets/progress_tabs/character_ranks_list.widget.d
 import 'package:little_light/widgets/search/search.controller.dart';
 
 class ProgressScreen extends ConsumerStatefulWidget {
-  final profile = ProfileService();
-
   @override
   ProgressScreenState createState() => ProgressScreenState();
 }
 
 class ProgressScreenState extends ConsumerState<ProgressScreen>
-    with TickerProviderStateMixin, UserSettingsConsumerState {
+    with
+        TickerProviderStateMixin,
+        UserSettingsConsumerState,
+        ProfileConsumerState {
   Map<int, double> scrollPositions = Map();
 
   TabController charTabController;
@@ -44,7 +46,7 @@ class ProgressScreenState extends ConsumerState<ProgressScreen>
     super.initState();
 
     SelectedPagePersistence.saveLatestScreen(SelectedPagePersistence.progress);
-    ProfileService().updateComponents = ProfileComponentGroups.basicProfile;
+    profile.updateComponents = ProfileComponentGroups.basicProfile;
     charTabController = charTabController ??
         TabController(
           initialIndex: 0,
@@ -240,6 +242,6 @@ class ProgressScreenState extends ConsumerState<ProgressScreen>
   }
 
   List<DestinyCharacterComponent> get characters {
-    return widget.profile.getCharacters(userSettings.characterOrdering);
+    return profile.getCharacters(userSettings.characterOrdering);
   }
 }
