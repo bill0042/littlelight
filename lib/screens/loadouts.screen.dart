@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
-import 'package:drag_list/drag_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -171,21 +170,33 @@ class LoadoutScreenState extends ConsumerState<LoadoutsScreen>
   }
 
   Widget buildReorderingBody(BuildContext context) {
-    var screenPadding = MediaQuery.of(context).padding;
-    return DragList<Loadout>(
-        items: loadouts,
-        itemExtent: 56,
-        padding: EdgeInsets.all(8).copyWith(
-            left: max(screenPadding.left, 8),
-            right: max(screenPadding.right, 8)),
-        handleBuilder: (context) => buildHandle(context),
-        onItemReorder: (oldIndex, newIndex) {
-          var removed = loadouts.removeAt(oldIndex);
-          loadouts.insert(newIndex, removed);
-          loadoutsService.saveLoadoutsOrder(loadouts);
-        },
-        itemBuilder: (context, parameter, handle) =>
-            buildSortItem(context, parameter.value, handle));
+    return ReorderableList(
+      itemBuilder: (context, index) {
+        final item = loadouts[index];
+        return buildSortItem(context, item, buildHandle(context));
+      },
+      itemCount: loadouts.length,
+      onReorder: (oldIndex, newIndex) {
+        var removed = loadouts.removeAt(oldIndex);
+        loadouts.insert(newIndex, removed);
+        loadoutsService.saveLoadoutsOrder(loadouts);
+      },
+    );
+    // var screenPadding = MediaQuery.of(context).padding;
+    // return DragList<Loadout>(
+    //     items: loadouts,
+    //     itemExtent: 56,
+    //     padding: EdgeInsets.all(8).copyWith(
+    //         left: max(screenPadding.left, 8),
+    //         right: max(screenPadding.right, 8)),
+    //     handleBuilder: (context) => buildHandle(context),
+    //     onItemReorder: (oldIndex, newIndex) {
+    //       var removed = loadouts.removeAt(oldIndex);
+    //       loadouts.insert(newIndex, removed);
+    //       loadoutsService.saveLoadoutsOrder(loadouts);
+    //     },
+    //     itemBuilder: (context, parameter, handle) =>
+    //         buildSortItem(context, parameter.value, handle));
   }
 
   Widget buildHandle(BuildContext context) {

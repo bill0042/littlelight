@@ -1,4 +1,3 @@
-import 'package:drag_list/drag_list.dart';
 import 'package:flutter/material.dart';
 import 'package:little_light/models/item_sort_parameter.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
@@ -81,22 +80,35 @@ class _SearchSortMenuState extends State<SearchSortMenu> {
   }
 
   Widget buildDragList(BuildContext context) {
-    return DragList<ItemSortParameter>(
-      items: widget.controller.customSorting,
-      padding: EdgeInsets.all(0),
-      itemExtent: 48,
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      handleBuilder: (context) => buildHandle(context),
-      onItemReorder: (oldIndex, newIndex) {
+    return ReorderableList(
+      itemBuilder: (context, index) {
+        final item = widget.controller.customSorting[index];
+        return buildSortItem(context, item, buildHandle(context));
+      },
+      itemCount: widget.controller.customSorting.length,
+      onReorder: (oldIndex, newIndex) {
         var itemOrdering = widget.controller.customSorting;
         var removed = itemOrdering.removeAt(oldIndex);
         itemOrdering.insert(newIndex, removed);
         widget.controller.sort();
       },
-      itemBuilder: (context, parameter, handle) =>
-          buildSortItem(context, parameter.value, handle),
     );
+    // return DragList<ItemSortParameter>(
+    //   items: widget.controller.customSorting,
+    //   padding: EdgeInsets.all(0),
+    //   itemExtent: 48,
+    //   shrinkWrap: true,
+    //   physics: NeverScrollableScrollPhysics(),
+    //   handleBuilder: (context) => buildHandle(context),
+    //   onItemReorder: (oldIndex, newIndex) {
+    //     var itemOrdering = widget.controller.customSorting;
+    //     var removed = itemOrdering.removeAt(oldIndex);
+    //     itemOrdering.insert(newIndex, removed);
+    //     widget.controller.sort();
+    //   },
+    //   itemBuilder: (context, parameter, handle) =>
+    //       buildSortItem(context, parameter.value, handle),
+    // );
   }
 
   Widget buildSortItem(

@@ -1,4 +1,3 @@
-import 'package:drag_list/drag_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -371,20 +370,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   buildItemOrderList(BuildContext context) {
     return Container(
         height: (itemOrdering.length + 1) * 48.0,
-        child: DragList<ItemSortParameter>(
-          items: itemOrdering,
-          itemExtent: 48,
-          handleBuilder: (context) => buildHandle(context),
-          onItemReorder: (oldIndex, newIndex) {
-            var removed = itemOrdering.removeAt(oldIndex);
-            itemOrdering.insert(newIndex, removed);
-            userSettings.itemOrdering = itemOrdering;
-          },
-          itemBuilder: (context, parameter, handle) =>
-              buildSortItem(context, parameter.value, handle, onSave: () {
-            userSettings.itemOrdering = itemOrdering;
-          }),
-        ));
+        child: ReorderableList(
+            itemCount: itemOrdering.length,
+            onReorder: (oldIndex, newIndex) {
+              final removed = itemOrdering.removeAt(oldIndex);
+              itemOrdering.insert(newIndex, removed);
+              userSettings.itemOrdering = itemOrdering;
+            },
+            itemBuilder: (context, index) {
+              final item = itemOrdering[index];
+              return buildSortItem(context, item, buildHandle(context),
+                  onSave: () {
+                userSettings.itemOrdering = itemOrdering;
+              });
+            }));
   }
 
   Widget buildHandle(BuildContext context) {
@@ -400,20 +399,36 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   buildPursuitOrderList(BuildContext context) {
     return Container(
         height: (pursuitOrdering.length + 1) * 48.0,
-        child: DragList<ItemSortParameter>(
-          items: pursuitOrdering,
-          itemExtent: 48,
-          handleBuilder: (context) => buildHandle(context),
-          onItemReorder: (oldIndex, newIndex) {
-            var removed = pursuitOrdering.removeAt(oldIndex);
-            pursuitOrdering.insert(newIndex, removed);
-            userSettings.pursuitOrdering = pursuitOrdering;
-          },
-          itemBuilder: (context, parameter, handle) =>
-              buildSortItem(context, parameter.value, handle, onSave: () {
-            userSettings.pursuitOrdering = pursuitOrdering;
-          }),
-        ));
+        child: ReorderableList(
+            itemBuilder: (context, index) {
+              final item = pursuitOrdering[index];
+              return buildSortItem(
+                context,
+                item,
+                buildHandle(context),
+                onSave: () {
+                  userSettings.pursuitOrdering = pursuitOrdering;
+                },
+              );
+            },
+            itemCount: pursuitOrdering.length,
+            onReorder: (oldIndex, newIndex) {
+              var removed = pursuitOrdering.removeAt(oldIndex);
+              pursuitOrdering.insert(newIndex, removed);
+              userSettings.pursuitOrdering = pursuitOrdering;
+            }));
+    // child: DragList<ItemSortParameter>(
+    //   items: pursuitOrdering,
+    //   itemExtent: 48,
+    //   handleBuilder: (context) => buildHandle(context),
+    //   onItemReorder: (oldIndex, newIndex) {
+
+    //   },
+    //   itemBuilder: (context, parameter, handle) =>
+    //       buildSortItem(context, parameter.value, handle, onSave: () {
+    //     userSettings.pursuitOrdering = pursuitOrdering;
+    //   }),
+    // ));
   }
 
   Widget buildPriorityTags(BuildContext context) {
