@@ -26,9 +26,10 @@ import 'package:little_light/core/providers/bungie_api/bungie_api.provider.dart'
 import 'package:little_light/core/providers/global_container/global.container.dart';
 import 'package:little_light/core/providers/notification/events/notification.event.dart';
 import 'package:little_light/core/providers/notification/notifications.provider.dart';
+import 'package:little_light/core/providers/storage/storage.provider.dart';
+import 'package:little_light/core/providers/storage/storage_keys.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.provider.dart';
 import 'package:little_light/models/character_sort_parameter.dart';
-import 'package:little_light/services/storage/storage.service.dart';
 
 import 'component_groups.dart';
 
@@ -43,12 +44,14 @@ class Profile {
   ProviderRef _ref;
   NotificationsManager get notifications => _ref.read(notificationsProvider);
   UserSettingsService get userSettings => _ref.read(userSettingsProvider);
+  BungieApi get _api => _ref.read(bungieApiProvider);
+  GlobalStorage get _storage => _ref.read(globalStorageProvider);
+  Storage get _membershipStorage => _ref.read(currentMembershipStorageProvider);
 
   DateTime lastUpdated;
 
   Profile._(this._ref);
 
-  final _api = globalBungieApiProvider;
 
   DestinyProfileResponse _profile;
   LastLoadedFrom _lastLoadedFrom;
@@ -101,11 +104,11 @@ class Profile {
 
   Future<DestinyProfileResponse> _updateProfileData(
       List<DestinyComponentType> components) async {
-    var membership = StorageService.getMembership();
+    var membership = _storage.getMembership();
     DestinyProfileResponse response;
     response = await _api.getCurrentProfile(components);
 
-    if (membership != StorageService.getMembership()) {
+    if (membership != _storage.getMembership()) {
       return _profile;
     }
     lastUpdated = DateTime.now();
@@ -211,14 +214,12 @@ class Profile {
 
   _cacheProfile(DestinyProfileResponse profile) async {
     if (profile == null) return;
-    StorageService storage = StorageService.membership();
-    storage.setJson(StorageKeys.cachedProfile, profile.toJson());
+    _membershipStorage.setJson(StorageKeys.cachedProfile, profile.toJson());
     print('saved to cache');
   }
 
   Future<DestinyProfileResponse> loadFromCache() async {
-    StorageService storage = StorageService.membership();
-    var json = await storage.getJson(StorageKeys.cachedProfile);
+    var json = await _membershipStorage.getJson(StorageKeys.cachedProfile);
     if (json != null) {
       try {
         DestinyProfileResponse response = DestinyProfileResponse.fromJson(json);

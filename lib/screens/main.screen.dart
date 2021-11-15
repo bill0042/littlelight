@@ -2,20 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dart';
 import 'package:little_light/core/providers/item_notes/item_notes.consumer.dart';
+import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
+import 'package:little_light/core/providers/profile/profile.consumer.dart';
+import 'package:little_light/core/providers/starting_page/starting_page.consumer.dart';
+import 'package:little_light/core/providers/starting_page/starting_page_options.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/screens/collections.screen.dart';
 import 'package:little_light/screens/equipment.screen.dart';
 import 'package:little_light/screens/loadouts.screen.dart';
-import 'package:little_light/screens/progress.screen.dart';
 import 'package:little_light/screens/old_triumphs.screen.dart';
-
-import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
-import 'package:little_light/core/providers/profile/profile.consumer.dart';
-
+import 'package:little_light/screens/progress.screen.dart';
 import 'package:little_light/utils/platform_capabilities.dart';
-import 'package:little_light/utils/selected_page_persistence.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
-
 import 'package:little_light/widgets/side_menu/side_menu.widget.dart';
 import 'package:screen/screen.dart';
 
@@ -31,7 +29,8 @@ class MainScreenState extends ConsumerState<MainScreen>
         LoadoutsConsumerState,
         ItemNotesConsumerState,
         BungieAuthConsumerState,
-        ProfileConsumerState {
+        ProfileConsumerState,
+        StartingPageConsumerState {
   Widget currentScreen;
 
   @override
@@ -69,26 +68,31 @@ class MainScreenState extends ConsumerState<MainScreen>
   }
 
   getInitScreen() async {
-    String screen = await SelectedPagePersistence.getLatestScreen();
+    StartingPageOptions screen = await startingPage.getLatestScreen();
     switch (screen) {
-      case SelectedPagePersistence.equipment:
+      case StartingPageOptions.Equipment:
         currentScreen = EquipmentScreen();
         break;
 
-      case SelectedPagePersistence.progress:
+      case StartingPageOptions.Progress:
         currentScreen = ProgressScreen();
         break;
 
-      case SelectedPagePersistence.collections:
+      case StartingPageOptions.Collections:
         currentScreen = CollectionsScreen();
         break;
 
-      case SelectedPagePersistence.triumphs:
+      case StartingPageOptions.Triumphs:
         currentScreen = OldTriumphsScreen();
         break;
 
-      case SelectedPagePersistence.loadouts:
+      case StartingPageOptions.Loadouts:
         currentScreen = LoadoutsScreen();
+        break;
+      
+      case StartingPageOptions.DuplicatedItems:
+        break;
+      case StartingPageOptions.Search:
         break;
     }
 

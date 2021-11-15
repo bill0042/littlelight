@@ -1,8 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/global_container/global.container.dart';
+import 'package:little_light/core/providers/storage/storage_keys.dart';
 import 'package:little_light/models/bucket_display_options.dart';
 import 'package:little_light/models/item_notes_tag.dart';
-import 'package:little_light/services/storage/storage.service.dart';
+import 'package:little_light/core/providers/storage/storage.provider.dart';
 import 'package:little_light/models/character_sort_parameter.dart';
 import 'package:little_light/models/item_sort_parameter.dart';
 import 'package:little_light/utils/remove_diacritics.dart';
@@ -13,8 +14,10 @@ final userSettingsProvider =
 get globalUserSettingsProvider => globalContainer.read(userSettingsProvider);
 
 class UserSettingsService {
-  StorageService get globalStorage => StorageService.global();
-  StorageService get membershipStorage => StorageService.membership();
+  ProviderRef _ref;
+
+  GlobalStorage get globalStorage => _ref.read(globalStorageProvider);
+  Storage get membershipStorage => _ref.read(currentMembershipStorageProvider);
   List<ItemSortParameter> _itemOrdering;
   List<ItemSortParameter> _pursuitOrdering;
   CharacterSortParameter _characterOrdering;
@@ -22,7 +25,7 @@ class UserSettingsService {
   Map<String, BucketDisplayOptions> _bucketDisplayOptions;
   Map<String, bool> _detailsSectionDisplayVisibility;
 
-  UserSettingsService._(ProviderRef ref);
+  UserSettingsService._(this._ref);
 
   init() async {
     await initItemOrdering();

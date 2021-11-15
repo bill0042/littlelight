@@ -9,9 +9,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dart';
+import 'package:little_light/core/providers/storage/storage.consumer.dart';
+import 'package:little_light/core/providers/storage/storage_keys.dart';
 import 'package:little_light/screens/initial.screen.dart';
 
-import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/utils/platform_data.dart';
 import 'package:little_light/widgets/common/loading_anim.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
@@ -23,7 +24,7 @@ class AccountsScreen extends ConsumerStatefulWidget {
 }
 
 class _AccountsScreenState extends ConsumerState<AccountsScreen>
-    with BungieApiConfigConsumerState, BungieAuthConsumerState {
+    with BungieApiConfigConsumerState, BungieAuthConsumerState, StorageConsumerState {
   List<String> accounts;
   String currentAccount;
   Map<String, UserMembershipData> memberships;
@@ -35,12 +36,11 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen>
   }
 
   void loadAccounts() async {
-    currentAccount = StorageService.getAccount();
-    accounts = StorageService.getAccounts();
+    currentAccount = storage.global.getAccount();
+    accounts = storage.global.getAccounts();
     Map<String, UserMembershipData> memberships = Map();
     for (var account in accounts) {
-      var storage = StorageService.account(account);
-      var json = await storage.getJson(StorageKeys.membershipData);
+      var json = await storage.byAccount(account).getJson(StorageKeys.membershipData);
       var membership = UserMembershipData.fromJson(json ?? {});
       memberships[account] = membership;
     }
@@ -94,7 +94,7 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen>
 
   Widget buildAccountItem(BuildContext context, String accountId) {
     var membership = memberships[accountId];
-    var isCurrent = accountId == StorageService.getAccount();
+    var isCurrent = accountId == storage.global.getAccount();
     return Container(
         margin: EdgeInsets.symmetric(vertical: 4),
         height: 140,
@@ -189,8 +189,8 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen>
       color: plat.color,
       child: InkWell(
         onTap: () {
-          StorageService.setAccount(bungieNetUser.membershipId);
-          StorageService.setMembership(membership.membershipId);
+          storage.global.setAccount(bungieNetUser.membershipId);
+          storage.global.setMembership(membership.membershipId);
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -216,8 +216,8 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen>
     try {
       String code = await auth.authorize(true);
       if (code != null) {
-        await StorageService.setAccount(null);
-        await StorageService.setMembership(null);
+        await storage.global.setAccount(null);
+        await storage.global.setMembership(null);
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -272,13 +272,13 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen>
   void deleteAccount(UserMembershipData membership) async {
     if (membership?.destinyMemberships != null) {
       for (var m in membership.destinyMemberships) {
-        await StorageService.membership(m.membershipId).purge();
+        await storage.byMembership(m.membershipId).purge();
       }
     }
-    await StorageService.account(membership?.bungieNetUser?.membershipId)
+    await storage.byAccount(membership?.bungieNetUser?.membershipId)
         .purge();
 
-    await StorageService.removeAccount(membership?.bungieNetUser?.membershipId);
+    await storage.global.removeAccount(membership?.bungieNetUser?.membershipId);
     loadAccounts();
   }
 }

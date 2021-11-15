@@ -7,7 +7,7 @@ import 'package:bungie_api/helpers/oauth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:little_light/core/providers/bungie_api/exceptions/bungie_api.exception.dart';
-import 'package:little_light/services/storage/storage.service.dart';
+import 'package:little_light/core/providers/bungie_auth/bungie_auth.provider.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
 class ExceptionHandler {
@@ -94,8 +94,7 @@ class ExceptionHandler {
                         ? ErrorDialogButton(
                             text: "Login with another account",
                             onPressed: () async {
-                              await StorageService.account()
-                                  .remove(StorageKeys.latestToken, true);
+                              await globalBungieAuthProvider.logout();
                               Navigator.pop(context);
                               onRestart();
                             })

@@ -3,10 +3,11 @@ import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dar
 import 'package:little_light/core/providers/destiny_settings/destiny_settings.consumer.dart';
 import 'package:little_light/core/providers/profile/component_groups.dart';
 import 'package:little_light/core/providers/profile/profile.consumer.dart';
+import 'package:little_light/core/providers/starting_page/starting_page.consumer.dart';
+import 'package:little_light/core/providers/starting_page/starting_page_options.dart';
 import 'package:little_light/screens/collectible_search.screen.dart';
 import 'package:little_light/screens/presentation_node.screen.dart';
 import 'package:little_light/utils/item_with_owner.dart';
-import 'package:little_light/utils/selected_page_persistence.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/presentation_nodes/collectible_item.widget.dart';
 import 'package:little_light/widgets/presentation_nodes/nested_collectible_item.widget.dart';
@@ -26,14 +27,15 @@ class CollectionsScreenState
     with
         BungieAuthConsumerState,
         DestinySettingsConsumerState,
-        ProfileConsumerState {
+        ProfileConsumerState,
+        StartingPageConsumerState {
   Map<int, List<ItemWithOwner>> itemsByHash;
   @override
   void initState() {
     profile.updateComponents = ProfileComponentGroups.collections;
     profile.fetchProfileData();
-    SelectedPagePersistence.saveLatestScreen(
-        SelectedPagePersistence.collections);
+    startingPage.saveLatestScreen(
+        StartingPageOptions.Collections);
     if (auth.isLogged) {
       this.loadItems();
     }

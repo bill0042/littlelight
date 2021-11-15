@@ -11,9 +11,9 @@ import 'package:little_light/core/providers/bungie_api/bungie_api_config.consume
 import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/objective_tracking/objective_tracking.consumer.dart';
-import 'package:little_light/models/tracked_objective.dart';
 import 'package:little_light/core/providers/profile/profile.consumer.dart';
-import 'package:little_light/services/storage/storage.service.dart';
+import 'package:little_light/core/providers/translations/translations.consumer.dart';
+import 'package:little_light/models/tracked_objective.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 
@@ -33,7 +33,8 @@ class MetricItemWidgetState extends ConsumerState<MetricItemWidget>
         BungieApiConfigConsumerState,
         BungieAuthConsumerState,
         ManifestConsumerState,
-        ProfileConsumerState {
+        ProfileConsumerState,
+        TranslationsConsumerState {
   DestinyMetricDefinition _definition;
   bool isLogged = false;
   Map<int, DestinyObjectiveDefinition> objectiveDefinitions;
@@ -174,7 +175,7 @@ class MetricItemWidgetState extends ConsumerState<MetricItemWidget>
 
   buildObjective(BuildContext context) {
     if (metric.objectiveProgress.progress == null) return Container();
-    var formatter = NumberFormat.decimalPattern(StorageService.getLanguage());
+    var formatter = NumberFormat.decimalPattern(translations.currentLanguage);
     var formattedProgress = formatter.format(metric.objectiveProgress.progress);
     return Text(formattedProgress, style: TextStyle(fontSize: 18));
   }

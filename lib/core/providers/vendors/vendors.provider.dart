@@ -12,7 +12,8 @@ import 'package:bungie_api/models/destiny_vendors_response.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api.provider.dart';
 
-import 'package:little_light/services/storage/storage.service.dart';
+import 'package:little_light/core/providers/storage/storage.provider.dart';
+import 'package:little_light/core/providers/storage/storage_keys.dart';
 
 const _vendorComponents = [
   DestinyComponentType.ItemInstances,
@@ -29,6 +30,7 @@ class Vendors {
   ProviderRef _ref;
   Vendors._(this._ref);
   BungieApi get _api => _ref.read(bungieApiProvider);
+  Storage get _membershipStorage => _ref.read(currentMembershipStorageProvider);
 
   DateTime lastUpdated;
 
@@ -111,23 +113,8 @@ class Vendors {
 
   _cacheVendors(Map<String, DestinyVendorsResponse> vendors) async {
     if (vendors == null) return;
-    StorageService storage = StorageService.membership();
     var json = _vendors.map<String, dynamic>(
         (characterId, vendors) => MapEntry(characterId, vendors.toJson()));
-    storage.setJson(StorageKeys.cachedVendors, json);
+    _membershipStorage.setJson(StorageKeys.cachedVendors, json);
   }
-
-  // Future<Map<String, DestinyVendorsResponse>> _loadFromCache() async {
-  //   StorageService storage = StorageService.membership();
-  //   Map<String, dynamic> json = await storage.getJson(StorageKeys.cachedVendors);
-  //   if (json != null) {
-  //     this._vendors = json.map<String, DestinyVendorsResponse>((charId, obj)=>MapEntry(charId, DestinyVendorsResponse.fromJson(obj)));
-  //     print('loaded vendors from cache');
-  //     return this._vendors;
-  //   }
-
-  //   Map<String, DestinyVendorsResponse> response = await fetchVendorData();
-  //   print('loaded vendors from server');
-  //   return response;
-  // }
 }

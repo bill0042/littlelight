@@ -11,7 +11,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api.provider.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.provider.dart';
 import 'package:little_light/core/providers/global_container/global.container.dart';
-import 'package:little_light/services/storage/storage.service.dart';
+import 'package:little_light/core/providers/storage/storage.provider.dart';
+import 'package:little_light/core/providers/storage/storage_keys.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -25,6 +26,9 @@ BungieAuth get globalBungieAuthProvider =>
 class BungieAuth {
   BungieApi get _bungieApi => _ref.read(bungieApiProvider);
   BungieApiConfig get _bungieApiConfig => _ref.read(bungieApiConfigProvider);
+  Storage get accountStorage => _ref.read(currentAccountStorageProvider);
+  Storage get languageStorage => _ref.read(currentAccountStorageProvider);
+  GlobalStorage get globalStorage => _ref.read(globalStorageProvider);
 
   BungieNetToken _currentToken;
   GroupUserInfoCard _currentMembership;
@@ -38,13 +42,12 @@ class BungieAuth {
   BungieAuth._(this._ref);
 
   Future<BungieNetToken> _getStoredToken() async {
-    StorageService storage = StorageService.account();
-    var json = await storage.getJson(StorageKeys.latestToken);
+    var json = await accountStorage.getJson(StorageKeys.latestToken);
     try {
       return BungieNetToken.fromJson(json);
     } catch (e) {
       print(
-          "failed retrieving token for account: ${StorageService.getAccount()}");
+          "failed retrieving token for account: ${globalStorage.getAccount()}");
       print(e);
     }
     return null;
@@ -61,10 +64,9 @@ class BungieAuth {
     if (token?.accessToken == null) {
       return;
     }
-    await StorageService.setAccount(token.membershipId);
-    StorageService storage = StorageService.account();
-    await storage.setJson(StorageKeys.latestToken, token.toJson());
-    await storage.setDate(StorageKeys.latestTokenDate, DateTime.now());
+    await globalStorage.setAccount(token.membershipId);
+    await accountStorage.setJson(StorageKeys.latestToken, token.toJson());
+    await accountStorage.setDate(StorageKeys.latestTokenDate, DateTime.now());
     await Future.delayed(Duration(milliseconds: 1));
     _currentToken = token;
   }
@@ -78,8 +80,7 @@ class BungieAuth {
       return null;
     }
     DateTime now = DateTime.now();
-    StorageService storage = StorageService.account();
-    DateTime savedDate = storage.getDate(StorageKeys.latestTokenDate);
+    DateTime savedDate = accountStorage.getDate(StorageKeys.latestTokenDate);
     DateTime expire = savedDate.add(Duration(seconds: token.expiresIn));
     DateTime refreshExpire =
         savedDate.add(Duration(seconds: token.refreshExpiresIn));
@@ -123,7 +124,7 @@ class BungieAuth {
   }
 
   Future<String> authorize([bool forceReauth = true]) async {
-    String currentLanguage = StorageService.getLanguage();
+    String currentLanguage = globalStorage.getLanguage();
     var browser = BungieAuthBrowser();
     OAuth.openOAuth(
         browser, _bungieApiConfig.clientId, currentLanguage, forceReauth);
@@ -154,33 +155,11 @@ class BungieAuth {
     });
 
     return completer.future;
-
-    // Uri uri;
-    // if(waitingAuthCode) return null;
-    // waitingAuthCode = true;
-    // await for (var link in _stream) {
-    //   uri = Uri.parse(link);
-    //   if (uri.queryParameters.containsKey("code") ||
-    //       uri.queryParameters.containsKey("error")) {
-    //     break;
-    //   }
-    // }
-
-    // closeWebView();
-    // waitingAuthCode = false;
-    // if (uri.queryParameters.containsKey("code")) {
-    //   return uri.queryParameters["code"];
-    // } else {
-    //   String errorType = uri.queryParameters["error"];
-    //   String errorDescription = uri.queryParameters["error_description"];
-    //   throw OAuthException(errorType, errorDescription);
-    // }
   }
 
   Future<UserMembershipData> updateMembershipData() async {
     UserMembershipData membershipData = await _bungieApi.getMemberships();
-    var storage = StorageService.account();
-    await storage.setJson(StorageKeys.membershipData, membershipData);
+    await accountStorage.setJson(StorageKeys.membershipData, membershipData);
     return membershipData;
   }
 
@@ -189,8 +168,7 @@ class BungieAuth {
   }
 
   Future<UserMembershipData> _getStoredMembershipData() async {
-    var storage = StorageService.account();
-    var json = await storage.getJson(StorageKeys.membershipData);
+    var json = await accountStorage.getJson(StorageKeys.membershipData);
     if (json == null) {
       return null;
     }
@@ -207,13 +185,13 @@ class BungieAuth {
   Future<GroupUserInfoCard> getMembership() async {
     if (_currentMembership == null) {
       var _membershipData = await _getStoredMembershipData();
-      var _membershipId = StorageService.getMembership();
+      var _membershipId = globalStorage.getMembership();
       _currentMembership = getMembershipById(_membershipData, _membershipId);
     }
     if (_currentMembership?.membershipType ==
         BungieMembershipType.TigerBlizzard) {
-      var account = StorageService.getAccount();
-      StorageService.removeAccount(account);
+      var account = globalStorage.getAccount();
+      globalStorage.removeAccount(account);
       return null;
     }
     return _currentMembership;
@@ -228,14 +206,17 @@ class BungieAuth {
 
   Future<void> saveMembership(
       UserMembershipData membershipData, String membershipId) async {
-    StorageService storage = StorageService.account();
     _currentMembership = getMembershipById(membershipData, membershipId);
-    storage.setJson(StorageKeys.membershipData, membershipData.toJson());
-    StorageService.setMembership(membershipId);
+    accountStorage.setJson(StorageKeys.membershipData, membershipData.toJson());
+    globalStorage.setMembership(membershipId);
   }
 
   bool get isLogged {
     return _currentMembership != null;
+  }
+
+  Future<void> logout() async{
+    await accountStorage.remove(StorageKeys.latestToken, true);
   }
 }
 

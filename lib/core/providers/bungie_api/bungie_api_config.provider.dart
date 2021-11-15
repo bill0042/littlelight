@@ -1,13 +1,9 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/env/env.provider.dart';
-import 'package:little_light/core/providers/global_container/global.container.dart';
 
 final bungieApiConfigProvider =
     Provider<BungieApiConfig>((ref) => BungieApiConfig(ref));
-
-BungieApiConfig get globalBungieApiConfigProvider =>
-    globalContainer.read(bungieApiConfigProvider);
 
 class BungieApiConfig {
   ProviderRef _ref;

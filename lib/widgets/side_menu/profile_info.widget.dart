@@ -8,15 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.consumer.dart';
 import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dart';
-import 'package:little_light/screens/initial.screen.dart';
-
 import 'package:little_light/core/providers/profile/profile.consumer.dart';
-import 'package:little_light/services/storage/storage.service.dart';
+import 'package:little_light/core/providers/translations/translations.consumer.dart';
 import 'package:little_light/models/character_sort_parameter.dart';
+import 'package:little_light/screens/initial.screen.dart';
+import 'package:little_light/utils/platform_data.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
-
-import 'package:little_light/utils/platform_data.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -38,7 +36,8 @@ class ProfileInfoState extends ConsumerState<ProfileInfoWidget>
         SingleTickerProviderStateMixin,
         BungieApiConfigConsumerState,
         BungieAuthConsumerState,
-        ProfileConsumerState {
+        ProfileConsumerState,
+        TranslationsConsumerState {
   GeneralUser bungieNetUser;
   GroupUserInfoCard selectedMembership;
 
@@ -195,7 +194,7 @@ class ProfileInfoState extends ConsumerState<ProfileInfoWidget>
     var lastPlayed = DateTime.parse(lastCharacter.dateLastPlayed);
     var currentSession = lastCharacter.minutesPlayedThisSession;
     var time = timeago.format(lastPlayed,
-        allowFromNow: true, locale: StorageService.getLanguage());
+        allowFromNow: true, locale: translations.currentLanguage);
     if (lastPlayed
         .add(Duration(minutes: int.parse(currentSession) + 10))
         .isBefore(DateTime.now().toUtc())) {

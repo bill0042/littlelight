@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:little_light/services/storage/storage.service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/translations/translations.consumer.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 typedef ExtractTextFromData = String Function(dynamic data);
 
-class ExpiryDateWidget extends StatefulWidget {
+class ExpiryDateWidget extends ConsumerStatefulWidget {
   final String date;
   final double fontSize;
   ExpiryDateWidget(this.date, {Key key, this.fontSize = 12}) : super(key: key);
@@ -16,7 +17,8 @@ class ExpiryDateWidget extends StatefulWidget {
   }
 }
 
-class ExpiryDateWidgetState extends State<ExpiryDateWidget> {
+class ExpiryDateWidgetState extends ConsumerState<ExpiryDateWidget>
+    with TranslationsConsumerState {
   bool expired = false;
   String expiresIn = "";
 
@@ -33,7 +35,7 @@ class ExpiryDateWidgetState extends State<ExpiryDateWidget> {
       setState(() {});
       return;
     }
-    var locale = StorageService.getLanguage();
+    var locale = translations.currentLanguage;
     expiresIn = timeago.format(expiry, allowFromNow: true, locale: locale);
     setState(() {});
   }

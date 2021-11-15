@@ -16,12 +16,12 @@ import 'package:little_light/core/providers/littlelight_api/littlelight_api.cons
 import 'package:little_light/core/providers/loadouts/loadouts.consumer.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/objective_tracking/objective_tracking.consumer.dart';
+import 'package:little_light/core/providers/storage/storage.consumer.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/core/providers/wishlists/wishlists.consumer.dart';
 import 'package:little_light/exceptions/exception_handler.dart';
 import 'package:little_light/screens/main.screen.dart';
 import 'package:little_light/core/providers/profile/profile.consumer.dart';
-import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/exceptions/exception_dialog.dart';
 import 'package:little_light/widgets/initial_page/download_manifest.widget.dart';
@@ -52,7 +52,8 @@ class InitialScreenState extends FloatingContentState<InitialScreen>
         BungieAuthConsumerState,
         ManifestConsumerState,
         DestinySettingsConsumerState,
-        ProfileConsumerState {
+        ProfileConsumerState,
+        StorageConsumerState {
   @override
   void initState() {
     super.initState();
@@ -66,7 +67,7 @@ class InitialScreenState extends FloatingContentState<InitialScreen>
 
   initLoading() async {
     await dotEnv.load(fileName: 'assets/_env');
-    await StorageService.init();
+    await storage.global.init();
     auth.reset();
     await littleLightApi.reset();
     await loadoutsService.reset();
@@ -80,7 +81,7 @@ class InitialScreenState extends FloatingContentState<InitialScreen>
   }
 
   Future checkLanguage() async {
-    String selectedLanguage = StorageService.getLanguage();
+    String selectedLanguage = storage.global.getLanguage();
     bool hasSelectedLanguage = selectedLanguage != null;
     if (hasSelectedLanguage) {
       checkManifest();
@@ -144,7 +145,7 @@ class InitialScreenState extends FloatingContentState<InitialScreen>
   }
 
   showDownloadManifest() async {
-    String language = StorageService.getLanguage();
+    String language = storage.global.getLanguage();
     DownloadManifestWidget screen = DownloadManifestWidget(
       selectedLanguage: language,
       onFinish: () {

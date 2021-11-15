@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:little_light/core/providers/destiny_settings/destiny_settings.consumer.dart';
 import 'package:little_light/core/providers/profile/component_groups.dart';
+import 'package:little_light/core/providers/starting_page/starting_page.consumer.dart';
+import 'package:little_light/core/providers/starting_page/starting_page_options.dart';
 import 'package:little_light/screens/presentation_node.screen.dart';
 import 'package:little_light/screens/triumph_search.screen.dart';
 import 'package:little_light/core/providers/profile/profile.consumer.dart';
-import 'package:little_light/utils/selected_page_persistence.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/presentation_nodes/presentation_node_tabs.widget.dart';
 
@@ -17,12 +18,12 @@ class OldTriumphsScreen extends PresentationNodeScreen {
 }
 
 class TriumphsScreenState extends PresentationNodeScreenState<OldTriumphsScreen>
-    with DestinySettingsConsumerState, ProfileConsumerState {
+    with DestinySettingsConsumerState, ProfileConsumerState, StartingPageConsumerState {
   @override
   void initState() {
     super.initState();
     profile.updateComponents = ProfileComponentGroups.triumphs;
-    SelectedPagePersistence.saveLatestScreen(SelectedPagePersistence.triumphs);
+    startingPage.saveLatestScreen(StartingPageOptions.Triumphs);
   }
 
   @override

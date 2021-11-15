@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/storage/storage.consumer.dart';
 import 'package:little_light/core/providers/translations/translations.consumer.dart';
-import 'package:little_light/services/storage/storage.service.dart';
-
 import 'package:little_light/utils/media_query_helper.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
-
 import 'package:little_light/widgets/initial_page/language.button.dart';
 
 typedef LanguageSelectCallback = void Function(String languageCode);
@@ -23,7 +21,7 @@ class SelectLanguageWidget extends ConsumerStatefulWidget {
 }
 
 class SelectLanguageWidgetState extends ConsumerState<SelectLanguageWidget>
-    with TranslationsConsumerState {
+    with TranslationsConsumerState, StorageConsumerState {
   String selectedLanguage;
 
   @override
@@ -34,7 +32,7 @@ class SelectLanguageWidgetState extends ConsumerState<SelectLanguageWidget>
 
   void getLanguage() async {
     await Future.delayed(Duration(milliseconds: 1));
-    selectedLanguage = StorageService.getLanguage();
+    selectedLanguage = storage.global.getLanguage();
     Locale locale = Localizations.localeOf(context);
     if (selectedLanguage == null && locale != null) {
       String localeName =
@@ -50,7 +48,7 @@ class SelectLanguageWidgetState extends ConsumerState<SelectLanguageWidget>
   }
 
   void okClick() {
-    StorageService.setLanguage(selectedLanguage);
+    storage.global.setLanguage(selectedLanguage);
     if (widget.onSelect != null) {
       widget.onSelect(selectedLanguage);
     }

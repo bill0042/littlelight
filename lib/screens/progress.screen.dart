@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:little_light/core/providers/profile/component_groups.dart';
+import 'package:little_light/core/providers/starting_page/starting_page.consumer.dart';
+import 'package:little_light/core/providers/starting_page/starting_page_options.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/models/item_sort_parameter.dart';
 import 'package:little_light/screens/search.screen.dart';
 import 'package:little_light/core/providers/profile/profile.consumer.dart';
 import 'package:little_light/utils/item_filters/item_owner_filter.dart';
 import 'package:little_light/utils/item_filters/pseudo_item_type_filter.dart';
-import 'package:little_light/utils/selected_page_persistence.dart';
 import 'package:little_light/widgets/common/animated_character_background.widget.dart';
 import 'package:little_light/widgets/common/refresh_button.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
@@ -33,7 +34,8 @@ class ProgressScreenState extends ConsumerState<ProgressScreen>
     with
         TickerProviderStateMixin,
         UserSettingsConsumerState,
-        ProfileConsumerState {
+        ProfileConsumerState,
+        StartingPageConsumerState {
   Map<int, double> scrollPositions = Map();
 
   TabController charTabController;
@@ -45,7 +47,7 @@ class ProgressScreenState extends ConsumerState<ProgressScreen>
   void initState() {
     super.initState();
 
-    SelectedPagePersistence.saveLatestScreen(SelectedPagePersistence.progress);
+    startingPage.saveLatestScreen(StartingPageOptions.Progress);
     profile.updateComponents = ProfileComponentGroups.basicProfile;
     charTabController = charTabController ??
         TabController(

@@ -8,11 +8,11 @@ import 'package:http/http.dart' as http;
 import 'package:little_light/core/providers/bungie_auth/bungie_auth.provider.dart';
 import 'package:little_light/core/providers/env/env.provider.dart';
 import 'package:little_light/core/providers/global_container/global.container.dart';
+import 'package:little_light/core/providers/storage/storage.provider.dart';
+import 'package:little_light/core/providers/storage/storage_keys.dart';
 import 'package:little_light/models/item_notes.dart';
 import 'package:little_light/models/item_notes_tag.dart';
 import 'package:little_light/models/loadout.dart';
-
-import 'package:little_light/services/storage/storage.service.dart';
 import 'package:uuid/uuid.dart';
 
 import 'models/notes_response.dart';
@@ -20,11 +20,10 @@ import 'models/notes_response.dart';
 final littleLightApiProvider =
     Provider<LittleLightApi>((ref) => LittleLightApi._(ref));
 
-get globalLittleLightProvider => globalContainer.read(littleLightApiProvider);
-
 class LittleLightApi {
   ProviderRef _ref;
-  BungieAuth get auth => _ref.read(bungieAuthProvider);
+  BungieAuth get _auth => _ref.read(bungieAuthProvider);
+  Storage get _membership => _ref.read(currentMembershipStorageProvider);
 
   String _uuid;
   String _secret;
@@ -88,8 +87,8 @@ class LittleLightApi {
 
   Future<dynamic> _authorizedRequest(String path,
       {Map<String, dynamic> body = const {}}) async {
-    GroupUserInfoCard membership = await auth.getMembership();
-    BungieNetToken token = await auth.getToken();
+    GroupUserInfoCard membership = await _auth.getMembership();
+    BungieNetToken token = await _auth.getToken();
     String uuid = await _getUuid();
     String secret = await _getSecret();
     body = {
@@ -124,11 +123,10 @@ class LittleLightApi {
 
   Future<String> _getUuid() async {
     if (_uuid != null) return _uuid;
-    StorageService prefs = StorageService.membership();
-    String uuid = prefs.getString(StorageKeys.membershipUUID);
+    String uuid = _membership.getString(StorageKeys.membershipUUID);
     if (uuid == null) {
       uuid = Uuid().v4();
-      prefs.setString(StorageKeys.membershipUUID, uuid);
+      _membership.setString(StorageKeys.membershipUUID, uuid);
       _uuid = uuid;
     }
     return uuid;
@@ -136,15 +134,13 @@ class LittleLightApi {
 
   Future<String> _getSecret() async {
     if (_secret != null) return _secret;
-    StorageService prefs = StorageService.membership();
-    String secret = prefs.getString(StorageKeys.membershipSecret);
+    String secret = _membership.getString(StorageKeys.membershipSecret);
     _secret = secret;
     return secret;
   }
 
   _setSecret(String secret) async {
-    StorageService prefs = StorageService.membership();
-    prefs.setString(StorageKeys.membershipSecret, secret);
+    _membership.setString(StorageKeys.membershipSecret, secret);
     _secret = secret;
   }
 }

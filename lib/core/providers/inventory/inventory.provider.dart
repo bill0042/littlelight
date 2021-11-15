@@ -17,7 +17,6 @@ import 'package:bungie_api/models/destiny_item_instance_component.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api.provider.dart';
 import 'package:little_light/core/providers/bungie_api/enums/inventory_bucket_hash.enum.dart';
-import 'package:little_light/core/providers/global_container/global.container.dart';
 import 'package:little_light/core/providers/manifest/manifest.provider.dart';
 import 'package:little_light/core/providers/notification/events/notification.event.dart';
 import 'package:little_light/core/providers/notification/notifications.provider.dart';
@@ -30,8 +29,6 @@ import 'transfer_destination.dart';
 import 'transfer_error.dart';
 
 final inventoryProvider = Provider<Inventory>((ref) => Inventory._(ref));
-
-get globalInventoryProvider => globalContainer.read(inventoryProvider);
 
 class Inventory {
   ProviderRef _ref;

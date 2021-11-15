@@ -3,6 +3,7 @@ import 'dart:core';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:little_light/core/providers/storage/storage_keys.dart';
 import 'package:little_light/core/providers/translations/timeago_messages/cn_messages.dart';
 import 'package:little_light/core/providers/translations/timeago_messages/de_messages.dart';
 import 'package:little_light/core/providers/translations/timeago_messages/en_messages.dart';
@@ -14,7 +15,7 @@ import 'package:little_light/core/providers/translations/timeago_messages/ko_mes
 import 'package:little_light/core/providers/translations/timeago_messages/pl_messages.dart';
 import 'package:little_light/core/providers/translations/timeago_messages/pt_messages.dart';
 import 'package:little_light/core/providers/translations/timeago_messages/ru_messages.dart';
-import 'package:little_light/services/storage/storage.service.dart';
+import 'package:little_light/core/providers/storage/storage.provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 final translationsProvider =
@@ -22,11 +23,15 @@ final translationsProvider =
 
 class Translations {
   String fallbackLanguage = "en";
-  String get _currentLanguage =>
-      StorageService.getLanguage() ?? fallbackLanguage;
+
+  ProviderRef _ref;
+  GlobalStorage get _storage => _ref.read(globalStorageProvider);
+  Storage _languageStorage(String code) => _ref.read(languageStorageProvider(code));
+  String get currentLanguage =>
+      _storage.getLanguage() ?? fallbackLanguage;
   Map<String, Map<String, String>> _translationMaps = Map();
 
-  Translations._(ProviderRef ref) {
+  Translations._(this._ref) {
     timeago.setLocaleMessages('de', DeMessages());
     timeago.setLocaleMessages('en', EnMessages());
     timeago.setLocaleMessages('es', EsMessages());
@@ -61,7 +66,7 @@ class Translations {
   Future<String> getTranslation(String text,
       {String languageCode, Map<String, String> replace = const {}}) async {
     if (text == null || text.length == 0) return "";
-    String code = languageCode ?? _currentLanguage;
+    String code = languageCode ?? currentLanguage;
 
     Map<String, String> translationMap = await _getTranslationMap(code);
     if (translationMap != null && translationMap.containsKey(text)) {
@@ -103,7 +108,7 @@ class Translations {
         "https://cdn.jsdelivr.net/gh/LittleLightForDestiny/LittleLightTranslations/languages/$languageCode.json";
     var req = await http.get(Uri.parse(url));
     var raw = req.body;
-    StorageService.language(languageCode).saveRawFile(
+    _languageStorage(languageCode).saveRawFile(
         StorageKeys.rawData, StorageKeys.littleLightTranslation.path, raw);
     Map<String, String> translation = Map<String, String>.from(jsonDecode(raw));
     _translationMaps[languageCode] = translation;
@@ -113,7 +118,7 @@ class Translations {
   Future<Map<String, String>> _loadTranslationMapFromSavedData(
       String languageCode) async {
     try {
-      var storage = StorageService.language(languageCode);
+      var storage = _languageStorage(languageCode);
       String raw = await storage.getRawFile(
           StorageKeys.rawData, StorageKeys.littleLightTranslation.path);
       Map<String, String> translation =

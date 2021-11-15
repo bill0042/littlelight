@@ -1,145 +1,125 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:little_light/services/storage/storage_migrations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
-enum StorageKeys {
-  latestToken,
-  latestTokenDate,
-  membershipData,
-  languages,
-  accountIds,
-  membershipIds,
-  selectedLanguage,
-  selectedAccountId,
-  selectedMembershipId,
-  cachedProfile,
-  cachedLoadouts,
-  cachedNotes,
-  cachedTags,
-  trackedObjectives,
-  membershipUUID,
-  membershipSecret,
-  manifestVersion,
-  manifestFile,
-  currentVersion,
-  keepAwake,
-  tapToSelect,
-  itemOrdering,
-  pursuitOrdering,
-  characterOrdering,
-  autoOpenKeyboard,
-  defaultFreeSlots,
-  hasTappedGhost,
-  bungieCommonSettings,
-  cachedVendors,
-  loadoutsOrder,
-  parsedWishlists,
-  wishlists,
-  latestScreen,
-  rawWishlists,
-  rawData,
-  featuredWishlists,
-  collaboratorsData,
-  gameData,
-  priorityTags,
-  bucketDisplayOptions,
-  latestVersion,
-  versionUpdatedDate,
-  littleLightTranslation,
-  detailsSectionDisplayVisibility,
-}
+import 'storage_keys.dart';
+import 'storage_migrations.dart';
 
-extension StorageKeysExtension on StorageKeys {
-  String get path {
-    String name = this.toString().split(".")[1];
-    switch (this) {
-      //specific
-      case StorageKeys.membershipData:
-        return "memberships";
-      case StorageKeys.manifestFile:
-        return "manifest.db";
+final globalStorageProvider =
+    Provider<GlobalStorage>((ref) => GlobalStorage._(ref));
 
-      //camelCase to snakecase
-      case StorageKeys.accountIds:
-      case StorageKeys.membershipIds:
-      case StorageKeys.selectedLanguage:
-      case StorageKeys.selectedAccountId:
-      case StorageKeys.selectedMembershipId:
-      case StorageKeys.cachedProfile:
-      case StorageKeys.cachedVendors:
-      case StorageKeys.cachedLoadouts:
-      case StorageKeys.cachedNotes:
-      case StorageKeys.cachedTags:
-      case StorageKeys.loadoutsOrder:
-      case StorageKeys.trackedObjectives:
-      case StorageKeys.bungieCommonSettings:
-      case StorageKeys.membershipUUID:
-      case StorageKeys.membershipSecret:
-      case StorageKeys.latestScreen:
-        return name.replaceAllMapped(
-            RegExp(r'[A-Z]'), (letter) => "_${letter[0].toLowerCase()}");
+final languageStorageProvider = Provider.family<Storage, String>(
+    (ref, languageCode) => Storage._(ref, "languages/$languageCode"));
 
-      //user prefs
-      case StorageKeys.keepAwake:
-      case StorageKeys.autoOpenKeyboard:
-      case StorageKeys.defaultFreeSlots:
-      case StorageKeys.itemOrdering:
-      case StorageKeys.pursuitOrdering:
-      case StorageKeys.characterOrdering:
-      case StorageKeys.hasTappedGhost:
-        return "userpref_$name";
+final currentLanguageStorageProvider = Provider<Storage>((ref){
+  final global = ref.read(globalStorageProvider);
+  final language = global.getLanguage();
+  return ref.read(languageStorageProvider(language));
+});
 
-      default:
-        return name;
-    }
-  }
-}
+final membershipStorageProvider =
+    Provider.family<Storage, String>((ref, id) => Storage._(ref, "memberships/$id"));
 
-class StorageService {
-  static SharedPreferences _prefs;
-  static init() async {
-    _prefs = await SharedPreferences.getInstance();
-    await StorageMigrations().run();
+final currentMembershipStorageProvider = Provider<Storage>((ref){
+  final global = ref.read(globalStorageProvider);
+  final membership = global.getMembership();
+  return ref.read(membershipStorageProvider(membership));
+});
 
+final accountStorageProvider =
+    Provider.family<Storage, String>((ref, id) => Storage._(ref, "accounts/$id"));
+
+final currentAccountStorageProvider = Provider<Storage>((ref){
+  final global = ref.read(globalStorageProvider);
+  final account = global.getAccount();
+  return ref.read(accountStorageProvider(account));
+});
+
+
+class GlobalStorage extends Storage {
+  GlobalStorage._(ProviderRef _ref) : super._(_ref);
+
+  init() async {
+    super.init();
+    final migrations = _ref.read(storageMigrationsProvider);
+    await migrations.run();
     _versionCheck();
   }
 
-  static _versionCheck() async {
-    var storedVersion =
-        StorageService.global().getString(StorageKeys.currentVersion);
+  _versionCheck() async {
+    var storedVersion = getString(StorageKeys.currentVersion);
     var info = await PackageInfo.fromPlatform();
     var packageVersion = info.version;
     if (storedVersion != packageVersion) {
-      StorageService.global()
-          .setString(StorageKeys.currentVersion, packageVersion);
-      StorageService.global()
-          .setDate(StorageKeys.versionUpdatedDate, DateTime.now());
+      setString(StorageKeys.currentVersion, packageVersion);
+      setDate(StorageKeys.versionUpdatedDate, DateTime.now());
     }
   }
 
+  Future<void> setLanguage(String language) async {
+    await _prefs.setString(StorageKeys.selectedLanguage.path, language);
+  }
+
+  String getLanguage() {
+    return _prefs.getString(StorageKeys.selectedLanguage.path);
+  }
+
+  Future<void> setAccount(String accountId) async {
+    if (accountId == null) {
+      await _prefs.remove(StorageKeys.selectedAccountId.path);
+      return;
+    }
+    await _prefs.setString(StorageKeys.selectedAccountId.path, accountId);
+    var accounts = getAccounts();
+    if (!accounts.contains(accountId)) {
+      accounts.add(accountId);
+      await _prefs.setStringList(StorageKeys.accountIds.path, accounts);
+    }
+  }
+
+  String getAccount() {
+    return _prefs.getString(StorageKeys.selectedAccountId.path);
+  }
+
+  List<String> getAccounts() {
+    return _prefs.getStringList(StorageKeys.accountIds.path) ?? [];
+  }
+
+  Future<void> removeAccount(String accountId) async {
+    var accounts = getAccounts();
+    accounts.remove(accountId);
+    await _prefs.setStringList(StorageKeys.accountIds.path, accounts);
+  }
+
+  Future<void> setMembership(String membershipId) async {
+    if (membershipId == null) {
+      await _prefs.remove(StorageKeys.selectedMembershipId.path);
+      return;
+    }
+    await _prefs.setString(StorageKeys.selectedMembershipId.path, membershipId);
+  }
+
+  String getMembership() {
+    return _prefs.getString(StorageKeys.selectedMembershipId.path);
+  }
+}
+
+class Storage {
+  SharedPreferences _prefs;
+  final ProviderRef _ref;
   final String _path;
-  StorageService([this._path = ""]);
 
-  factory StorageService.global() => StorageService();
-  factory StorageService.language([String languageCode]) {
-    var code = languageCode ?? StorageService.getLanguage();
-    return StorageService("languages/$code");
-  }
+  Storage._(this._ref, [this._path = ""]);
 
-  factory StorageService.account([String accountId]) {
-    var id = accountId ?? StorageService.getAccount();
-    return StorageService("accounts/$id");
-  }
+  init() async {
+    _prefs = await SharedPreferences.getInstance();
+  }  
 
-  factory StorageService.membership([String membershipId]) {
-    var id = membershipId ?? StorageService.getMembership();
-    return StorageService("memberships/$id");
-  }
 
   bool getBool(StorageKeys key) {
     return _prefs.getBool("$_path/${key.path}");
@@ -316,52 +296,5 @@ class StorageService {
     var trailingSlash = (_path?.length ?? 0) > 0 ? "/" : "";
     String keyPath = key?.path ?? "";
     return "$basePath/$_path$trailingSlash$keyPath" + (json ? '.json' : '');
-  }
-
-  static Future<void> setLanguage(String language) async {
-    await _prefs.setString(StorageKeys.selectedLanguage.path, language);
-  }
-
-  static String getLanguage() {
-    return _prefs.getString(StorageKeys.selectedLanguage.path);
-  }
-
-  static Future<void> setAccount(String accountId) async {
-    if (accountId == null) {
-      await _prefs.remove(StorageKeys.selectedAccountId.path);
-      return;
-    }
-    await _prefs.setString(StorageKeys.selectedAccountId.path, accountId);
-    var accounts = getAccounts();
-    if (!accounts.contains(accountId)) {
-      accounts.add(accountId);
-      await _prefs.setStringList(StorageKeys.accountIds.path, accounts);
-    }
-  }
-
-  static String getAccount() {
-    return _prefs.getString(StorageKeys.selectedAccountId.path);
-  }
-
-  static List<String> getAccounts() {
-    return _prefs.getStringList(StorageKeys.accountIds.path) ?? [];
-  }
-
-  static Future<void> removeAccount(String accountId) async {
-    var accounts = getAccounts();
-    accounts.remove(accountId);
-    await _prefs.setStringList(StorageKeys.accountIds.path, accounts);
-  }
-
-  static Future<void> setMembership(String membershipId) async {
-    if (membershipId == null) {
-      await _prefs.remove(StorageKeys.selectedMembershipId.path);
-      return;
-    }
-    await _prefs.setString(StorageKeys.selectedMembershipId.path, membershipId);
-  }
-
-  static String getMembership() {
-    return _prefs.getString(StorageKeys.selectedMembershipId.path);
   }
 }

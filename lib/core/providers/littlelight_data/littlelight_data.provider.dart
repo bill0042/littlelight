@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
 import 'package:little_light/core/providers/global_container/global.container.dart';
+import 'package:little_light/core/providers/storage/storage.provider.dart';
+import 'package:little_light/core/providers/storage/storage_keys.dart';
 import 'package:little_light/models/collaborators.dart';
 import 'package:little_light/models/game_data.dart';
 import 'package:little_light/models/wish_list.dart';
-import 'package:little_light/services/storage/storage.service.dart';
-import 'package:http/http.dart' as http;
 
 final littleLightDataProvider =
     Provider<LittleLightData>((ref) => LittleLightData._(ref));
@@ -15,9 +16,11 @@ get globalLittleLightDataProvider =>
     globalContainer.read(littleLightDataProvider);
 
 class LittleLightData {
-  StorageService storage = StorageService.global();
+  ProviderRef _ref;
 
-  LittleLightData._(ProviderRef _ref);
+  GlobalStorage get _globalStorage => _ref.read(globalStorageProvider);
+
+  LittleLightData._(this._ref);
 
   Map<StorageKeys, dynamic> _data = Map();
 
@@ -49,12 +52,12 @@ class LittleLightData {
 
   Future<dynamic> _loadFromStorage(StorageKeys key, [Duration time]) async {
     DateTime lastModified =
-        await storage.getRawFileDate(StorageKeys.rawData, key.path);
+        await _globalStorage.getRawFileDate(StorageKeys.rawData, key.path);
     DateTime minimumDate = DateTime.now().subtract(time ?? Duration(days: 7));
     if (lastModified == null || lastModified.isBefore(minimumDate)) {
       return null;
     }
-    String raw = await storage.getRawFile(StorageKeys.rawData, key.path);
+    String raw = await _globalStorage.getRawFile(StorageKeys.rawData, key.path);
     if (raw == null) return null;
     var data = _decodeData(raw, key);
     _data[key] = data;
@@ -70,7 +73,7 @@ class LittleLightData {
       raw = res.body;
     } catch (e) {}
     if (raw == null) return null;
-    storage.saveRawFile(StorageKeys.rawData, key.path, raw);
+    _globalStorage.saveRawFile(StorageKeys.rawData, key.path, raw);
     var data = _decodeData(raw, key);
     _data[key] = data;
     return data;

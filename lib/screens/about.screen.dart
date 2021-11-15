@@ -7,9 +7,10 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:little_light/core/providers/littlelight_data/littlelight_data.consumer.dart';
+import 'package:little_light/core/providers/storage/storage.consumer.dart';
+import 'package:little_light/core/providers/storage/storage_keys.dart';
 import 'package:little_light/core/providers/translations/translations.consumer.dart';
 import 'package:little_light/models/collaborators.dart';
-import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/widgets/about/supporter_character.widget.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
@@ -22,7 +23,7 @@ class AboutScreen extends ConsumerStatefulWidget {
 }
 
 class _AboutScreenState extends ConsumerState<AboutScreen>
-    with TranslationsConsumerState, LittleLightDataConsumerState {
+    with TranslationsConsumerState, LittleLightDataConsumerState, StorageConsumerState {
   String packageVersion = "";
   String appName = "";
   CollaboratorsResponse collaborators;
@@ -40,7 +41,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen>
     appName = info.appName;
     if (Platform.isIOS) {
       var lastUpdated =
-          StorageService.global().getDate(StorageKeys.versionUpdatedDate);
+          storage.global.getDate(StorageKeys.versionUpdatedDate);
       var now = DateTime.now();
       if (lastUpdated == null || now.difference(lastUpdated).inDays < 3) {
         showDonationLinks = false;

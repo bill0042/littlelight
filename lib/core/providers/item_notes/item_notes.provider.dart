@@ -1,9 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/global_container/global.container.dart';
 import 'package:little_light/core/providers/littlelight_api/littlelight_api.provider.dart';
+import 'package:little_light/core/providers/storage/storage_keys.dart';
 import 'package:little_light/models/item_notes.dart';
 import 'package:little_light/models/item_notes_tag.dart';
-import 'package:little_light/services/storage/storage.service.dart';
+import 'package:little_light/core/providers/storage/storage.provider.dart';
 
 final Map<String, ItemNotesTag> _defaultTags = {
   "favorite": ItemNotesTag.favorite(),
@@ -25,6 +26,7 @@ class ItemNotesService {
   Map<String, ItemNotesTag> _tags;
 
   LittleLightApi get _littleLightApi => _ref.read(littleLightApiProvider);
+  Storage get _membershipStorage => _ref.read(currentMembershipStorageProvider);
 
   reset() {
     _notes = null;
@@ -59,9 +61,8 @@ class ItemNotesService {
   }
 
   Future<bool> _loadNotesFromCache() async {
-    var storage = StorageService.membership();
-    List<dynamic> notesJson = await storage.getJson(StorageKeys.cachedNotes);
-    List<dynamic> tagsJson = await storage.getJson(StorageKeys.cachedTags);
+    List<dynamic> notesJson = await _membershipStorage.getJson(StorageKeys.cachedNotes);
+    List<dynamic> tagsJson = await _membershipStorage.getJson(StorageKeys.cachedTags);
 
     if (notesJson != null && tagsJson != null) {
       _notes = Map.fromEntries(notesJson.map((j) {
@@ -131,13 +132,11 @@ class ItemNotesService {
   }
 
   Future<void> _saveTagsToStorage() async {
-    var storage = StorageService.membership();
     List<dynamic> json = _tags?.values?.map((l) => l.toJson())?.toList() ?? [];
-    await storage.setJson(StorageKeys.cachedTags, json);
+    await _membershipStorage.setJson(StorageKeys.cachedTags, json);
   }
 
   Future<void> _saveNotesToStorage() async {
-    var storage = StorageService.membership();
     List<dynamic> json = _notes?.values
             ?.where((element) =>
                 (element?.notes?.length ?? 0) > 0 ||
@@ -146,6 +145,6 @@ class ItemNotesService {
             ?.map((l) => l.toJson())
             ?.toList() ??
         [];
-    await storage.setJson(StorageKeys.cachedNotes, json);
+    await _membershipStorage.setJson(StorageKeys.cachedNotes, json);
   }
 }

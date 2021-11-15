@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
-import 'package:little_light/services/storage/storage.service.dart';
+import 'package:little_light/core/providers/translations/translations.consumer.dart';
 import 'package:little_light/utils/destiny_data.dart';
 
 class ObjectiveWidget extends ConsumerStatefulWidget {
@@ -36,7 +36,7 @@ class ObjectiveWidget extends ConsumerStatefulWidget {
 }
 
 class ObjectiveWidgetState extends ConsumerState<ObjectiveWidget>
-    with ManifestConsumerState {
+    with ManifestConsumerState, TranslationsConsumerState {
   DestinyObjectiveDefinition _definition;
   DestinyObjectiveDefinition get definition => widget.definition ?? _definition;
 
@@ -156,7 +156,7 @@ class ObjectiveWidgetState extends ConsumerState<ObjectiveWidget>
     if (forceComplete) {
       progress = total;
     }
-    var formatter = NumberFormat.decimalPattern(StorageService.getLanguage());
+    var formatter = NumberFormat.decimalPattern(translations.currentLanguage);
     String formattedProgress = formatter.format(progress);
     String formattedTotal = formatter.format(total);
 

@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
+import 'package:little_light/core/providers/storage/storage.consumer.dart';
+import 'package:little_light/core/providers/storage/storage_keys.dart';
 import 'package:little_light/core/providers/translations/translations.consumer.dart';
 import 'package:little_light/screens/initial.screen.dart';
-import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/widgets/common/loading_anim.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 
@@ -15,7 +16,7 @@ class LanguagesScreen extends ConsumerStatefulWidget {
 }
 
 class _LanguagesScreenState extends ConsumerState<LanguagesScreen>
-    with TranslationsConsumerState, ManifestConsumerState {
+    with TranslationsConsumerState, ManifestConsumerState, StorageConsumerState {
   List<String> languages;
   Map<String, int> fileSizes;
   String currentLanguage;
@@ -28,12 +29,11 @@ class _LanguagesScreenState extends ConsumerState<LanguagesScreen>
   }
 
   void loadLanguages() async {
-    currentLanguage = selectedLanguage = StorageService.getLanguage();
+    currentLanguage = selectedLanguage = storage.global.getLanguage();
     languages = await manifest.getAvailableLanguages();
     fileSizes = Map();
     for (var l in languages) {
-      var storage = StorageService.language(l);
-      var path = await storage.getPath(StorageKeys.manifestFile, dbPath: true);
+      var path = await storage.byLanguage(l).getPath(StorageKeys.manifestFile, dbPath: true);
       var file = File(path);
       if (await file.exists()) {
         fileSizes[l] = await file.length();
@@ -74,7 +74,7 @@ class _LanguagesScreenState extends ConsumerState<LanguagesScreen>
       padding: EdgeInsets.all(8).copyWith(bottom: bottomPadding + 8),
       child: ElevatedButton(
           onPressed: () {
-            StorageService.setLanguage(selectedLanguage);
+            storage.global.setLanguage(selectedLanguage);
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
@@ -162,7 +162,7 @@ class _LanguagesScreenState extends ConsumerState<LanguagesScreen>
               child: InkWell(
                   borderRadius: BorderRadius.circular(30),
                   onTap: () async {
-                    await StorageService.language(languageCode).purge();
+                    await storage.byLanguage(languageCode).purge();
                     print('purge');
                     loadLanguages();
                   },

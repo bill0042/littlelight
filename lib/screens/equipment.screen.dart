@@ -10,11 +10,12 @@ import 'package:little_light/core/providers/notification/events/notification.eve
 import 'package:little_light/core/providers/notification/notifications.consumer.dart';
 import 'package:little_light/core/providers/profile/component_groups.dart';
 import 'package:little_light/core/providers/profile/profile.consumer.dart';
+import 'package:little_light/core/providers/starting_page/starting_page.consumer.dart';
+import 'package:little_light/core/providers/starting_page/starting_page_options.dart';
 import 'package:little_light/core/providers/user_settings/user_settings.consumer.dart';
 import 'package:little_light/screens/search.screen.dart';
 import 'package:little_light/utils/item_filters/pseudo_item_type_filter.dart';
 import 'package:little_light/utils/media_query_helper.dart';
-import 'package:little_light/utils/selected_page_persistence.dart';
 import 'package:little_light/widgets/common/animated_character_background.widget.dart';
 import 'package:little_light/widgets/common/refresh_button.widget.dart';
 import 'package:little_light/widgets/flutter/passive_tab_bar_view.dart';
@@ -48,7 +49,8 @@ class EquipmentScreenState extends ConsumerState<EquipmentScreen>
         UserSettingsConsumerState,
         ManifestConsumerState,
         NotificationsConsumerState,
-        ProfileConsumerState {
+        ProfileConsumerState,
+        StartingPageConsumerState {
   int currentGroup = DestinyItemCategory.Weapon;
   Map<int, double> scrollPositions = Map();
 
@@ -62,7 +64,7 @@ class EquipmentScreenState extends ConsumerState<EquipmentScreen>
   void initState() {
     super.initState();
     profile.updateComponents = ProfileComponentGroups.basicProfile;
-    SelectedPagePersistence.saveLatestScreen(SelectedPagePersistence.equipment);
+    startingPage.saveLatestScreen(StartingPageOptions.Equipment);
 
     typeTabController = typeTabController ??
         TabController(

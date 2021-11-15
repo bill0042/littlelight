@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/manifest/manifest.consumer.dart';
 import 'package:little_light/core/providers/profile/profile.consumer.dart';
-import 'package:little_light/services/storage/storage.service.dart';
+import 'package:little_light/core/providers/storage/storage.consumer.dart';
 
-class DevToolsScreen extends ConsumerWidget with ManifestConsumerWidget, ProfileConsumerWidget {
+class DevToolsScreen extends ConsumerWidget
+    with ManifestConsumerWidget, ProfileConsumerWidget, StorageConsumerWidget {
   final Map<String, TextEditingController> fieldControllers = Map();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,10 +36,11 @@ class DevToolsScreen extends ConsumerWidget with ManifestConsumerWidget, Profile
                         "Clear Data",
                         () async {
                           await manifest(ref).reset();
-                          await StorageService.language().purge();
-                          await StorageService.membership().purge();
-                          await StorageService.account().purge();
-                          await StorageService.global().purge();
+                          final _storage = storage(ref);
+                          await _storage.language.purge();
+                          await _storage.membership.purge();
+                          await _storage.account.purge();
+                          await _storage.global.purge();
                         },
                       ),
                       buildDivider(context),

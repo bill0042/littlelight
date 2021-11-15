@@ -11,7 +11,8 @@ import 'package:little_light/core/providers/bungie_api/bungie_api.provider.dart'
 import 'package:little_light/core/providers/bungie_api/bungie_api_config.provider.dart';
 import 'package:little_light/core/providers/bungie_api/enums/definition_table_names.enum.dart';
 import 'package:little_light/core/providers/global_container/global.container.dart';
-import 'package:little_light/services/storage/storage.service.dart';
+import 'package:little_light/core/providers/storage/storage.provider.dart';
+import 'package:little_light/core/providers/storage/storage_keys.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 
@@ -25,6 +26,9 @@ class Manifest {
   ProviderRef _ref;
   BungieApi get _api => _ref.read(bungieApiProvider);
   BungieApiConfig get _apiConfig => _ref.read(bungieApiConfigProvider);
+  GlobalStorage get _storage => _ref.read(globalStorageProvider);
+  Storage get _languageStorage => _ref.read(currentLanguageStorageProvider);
+  
 
   sqflite.Database _db;
   DestinyManifest _manifestInfo;
@@ -75,7 +79,7 @@ class Manifest {
   Future<bool> needsUpdate() async {
     DestinyManifest manifestInfo = await loadManifestInfo();
     String currentVersion = await getSavedVersion();
-    String language = StorageService.getLanguage();
+    String language = _storage.getLanguage();
     var working = await test();
     return !working ||
         currentVersion != manifestInfo.mobileWorldContentPaths[language];
@@ -83,7 +87,7 @@ class Manifest {
 
   Future<bool> download({DownloadProgress onProgress}) async {
     DestinyManifest info = await loadManifestInfo();
-    String language = StorageService.getLanguage();
+    String language = _storage.getLanguage();
     String path = info.mobileWorldContentPaths[language];
     String url = _apiConfig.bungieUrl(path);
     String localPath = await _localPath;
@@ -106,8 +110,7 @@ class Manifest {
     await sink.close();
 
     List<int> unzippedData = await compute(_extractFromZip, zipFile);
-    StorageService storage = StorageService.language();
-    await storage.saveDatabase(StorageKeys.manifestFile, unzippedData);
+    await _languageStorage.saveDatabase(StorageKeys.manifestFile, unzippedData);
 
     await zipFile.delete();
 
@@ -143,8 +146,7 @@ class Manifest {
     if (_db?.isOpen == true) {
       return _db;
     }
-    var storage = StorageService.language();
-    var path = await storage.getPath(StorageKeys.manifestFile, dbPath: true);
+    var path = await _languageStorage.getPath(StorageKeys.manifestFile, dbPath: true);
     var dbFile = File(path);
     var dbExists = await dbFile.exists();
     if (!dbExists) return null;
@@ -161,8 +163,7 @@ class Manifest {
   }
 
   Future<String> getSavedVersion() async {
-    StorageService _prefs = StorageService.language();
-    String version = _prefs.getString(StorageKeys.manifestVersion);
+    String version = _languageStorage.getString(StorageKeys.manifestVersion);
     if (version == null) {
       return null;
     }
@@ -170,8 +171,7 @@ class Manifest {
   }
 
   Future<void> saveManifestVersion(String version) async {
-    StorageService _prefs = StorageService.language();
-    _prefs.setString(StorageKeys.manifestVersion, version);
+    _languageStorage.setString(StorageKeys.manifestVersion, version);
   }
 
   Future<Map<int, T>> searchDefinitions<T>(List<String> parameters,

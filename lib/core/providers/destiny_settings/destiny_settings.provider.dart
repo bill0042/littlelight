@@ -3,18 +3,17 @@ import 'package:bungie_api/models/destiny_season_definition.dart';
 import 'package:bungie_api/models/destiny_season_pass_definition.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/bungie_api/bungie_api.provider.dart';
-import 'package:little_light/core/providers/global_container/global.container.dart';
 import 'package:little_light/core/providers/manifest/manifest.provider.dart';
-import 'package:little_light/services/storage/storage.service.dart';
+import 'package:little_light/core/providers/storage/storage.provider.dart';
+import 'package:little_light/core/providers/storage/storage_keys.dart';
 
 final destinySettingsProvider = Provider<DestinySettings>((ref) => DestinySettings._(ref));
-
-get globalDestinySettingsProvider => globalContainer.read(destinySettingsProvider);
 
 class DestinySettings {
   ProviderRef _ref;
 
   Manifest get manifest => _ref.read(manifestProvider);
+  GlobalStorage get globalStorage => _ref.read(globalStorageProvider);
 
   DateTime lastUpdated;
 
@@ -29,7 +28,7 @@ class DestinySettings {
 
   init() async {
     var json =
-        await StorageService.global().getJson(StorageKeys.bungieCommonSettings);
+        await globalStorage.getJson(StorageKeys.bungieCommonSettings);
     var settings = CoreSettingsConfiguration.fromJson(json ?? {});
     var seasonHash = settings?.destiny2CoreSettings?.currentSeasonHash;
     var seasonDef =
@@ -44,7 +43,7 @@ class DestinySettings {
       seasonHash = settings?.destiny2CoreSettings?.currentSeasonHash;
       seasonDef =
           await manifest.getDefinition<DestinySeasonDefinition>(seasonHash);
-      await StorageService.global()
+      await globalStorage
           .setJson(StorageKeys.bungieCommonSettings, settings.toJson());
     }
     _currentSettings = settings;

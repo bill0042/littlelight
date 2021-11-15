@@ -4,8 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:little_light/core/providers/global_container/global.container.dart';
 import 'package:little_light/core/providers/manifest/manifest.provider.dart';
 import 'package:little_light/core/providers/profile/profile.provider.dart';
+import 'package:little_light/core/providers/storage/storage_keys.dart';
 import 'package:little_light/models/tracked_objective.dart';
-import 'package:little_light/services/storage/storage.service.dart';
+import 'package:little_light/core/providers/storage/storage.provider.dart';
 
 final objectiveTrackingProvider =
     Provider<ObjectiveTracking>((ref) => ObjectiveTracking._(ref));
@@ -17,6 +18,7 @@ class ObjectiveTracking {
   ProviderRef _ref;
   Manifest get manifest => _ref.read(manifestProvider);
   Profile get profile => _ref.read(profileProvider);
+  Storage get membershipStorage => _ref.read(currentMembershipStorageProvider);
 
   ObjectiveTracking._(this._ref);
   List<TrackedObjective> _trackedObjectives;
@@ -108,8 +110,7 @@ class ObjectiveTracking {
   }
 
   Future<List<TrackedObjective>> _loadTrackedObjectivesFromCache() async {
-    var storage = StorageService.membership();
-    List<dynamic> json = await storage.getJson(StorageKeys.trackedObjectives);
+    List<dynamic> json = await membershipStorage.getJson(StorageKeys.trackedObjectives);
 
     if (json != null) {
       List<TrackedObjective> objectives =
@@ -153,11 +154,10 @@ class ObjectiveTracking {
   }
 
   Future<void> _saveTrackedObjectives() async {
-    StorageService storage = StorageService.membership();
     dynamic json = _trackedObjectives
         .where((l) => l.hash != null)
         .map((l) => l.toJson())
         .toList();
-    await storage.setJson(StorageKeys.trackedObjectives, json);
+    await membershipStorage.setJson(StorageKeys.trackedObjectives, json);
   }
 }

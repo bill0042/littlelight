@@ -9,9 +9,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:little_light/core/providers/bungie_auth/bungie_auth.consumer.dart';
+import 'package:little_light/core/providers/storage/storage.consumer.dart';
+import 'package:little_light/core/providers/storage/storage_keys.dart';
+import 'package:little_light/screens/about.screen.dart';
 import 'package:little_light/screens/accounts.screen.dart';
 import 'package:little_light/screens/collections.screen.dart';
-import 'package:little_light/screens/about.screen.dart';
 import 'package:little_light/screens/dev_tools.screen.dart';
 import 'package:little_light/screens/duplicated_items.screen.dart';
 import 'package:little_light/screens/equipment.screen.dart';
@@ -19,13 +21,11 @@ import 'package:little_light/screens/initial.screen.dart';
 import 'package:little_light/screens/languages.screen.dart';
 import 'package:little_light/screens/loadouts.screen.dart';
 import 'package:little_light/screens/objectives.screen.dart';
+import 'package:little_light/screens/old_triumphs.screen.dart';
 import 'package:little_light/screens/progress.screen.dart';
 import 'package:little_light/screens/settings.screen.dart';
-import 'package:little_light/screens/old_triumphs.screen.dart';
 import 'package:little_light/screens/triumphs.screen.dart';
 import 'package:little_light/screens/vendors.screen.dart';
-
-import 'package:little_light/services/storage/storage.service.dart';
 import 'package:little_light/utils/platform_data.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
@@ -45,7 +45,7 @@ class SideMenuWidget extends ConsumerStatefulWidget {
 }
 
 class SideMenuWidgetState extends ConsumerState<SideMenuWidget>
-    with BungieAuthConsumerState {
+    with BungieAuthConsumerState, StorageConsumerState {
   List<UserMembershipData> memberships;
 
   @override
@@ -55,11 +55,10 @@ class SideMenuWidgetState extends ConsumerState<SideMenuWidget>
   }
 
   fetchMemberships() async {
-    var accounts = StorageService.getAccounts();
+    var accounts = storage.global.getAccounts();
     memberships = [];
     for (var accountId in accounts) {
-      var storage = StorageService.account(accountId);
-      var json = await storage.getJson(StorageKeys.membershipData);
+      var json = await storage.byAccount(accountId).getJson(StorageKeys.membershipData);
       var membershipData = UserMembershipData.fromJson(json ?? {});
       memberships.add(membershipData);
     }
@@ -72,7 +71,7 @@ class SideMenuWidgetState extends ConsumerState<SideMenuWidget>
     bool isDebug = false;
     assert(isDebug = true);
     List<Widget> settingsMenuOptions = [];
-    var currentMembership = StorageService.getMembership();
+    var currentMembership = storage.global.getMembership();
     var altMembershipCount = 0;
     if (memberships != null) {
       for (var account in memberships) {
@@ -207,8 +206,8 @@ class SideMenuWidgetState extends ConsumerState<SideMenuWidget>
             borderRadius: BorderRadius.circular(4),
             child: InkWell(
                 onTap: () {
-                  StorageService.setAccount(bungieNetUser.membershipId);
-                  StorageService.setMembership(membership.membershipId);
+                  storage.global.setAccount(bungieNetUser.membershipId);
+                  storage.global.setMembership(membership.membershipId);
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -271,8 +270,8 @@ class SideMenuWidgetState extends ConsumerState<SideMenuWidget>
     try {
       String code = await auth.authorize(true);
       if (code != null) {
-        await StorageService.setAccount(null);
-        await StorageService.setMembership(null);
+        await storage.global.setAccount(null);
+        await storage.global.setMembership(null);
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(

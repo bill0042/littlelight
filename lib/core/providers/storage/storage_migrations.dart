@@ -3,16 +3,26 @@ import 'dart:io';
 
 import 'package:bungie_api/helpers/bungie_net_token.dart';
 import 'package:bungie_api/models/user_membership_data.dart';
-import 'package:little_light/services/storage/storage.service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:little_light/core/providers/storage/storage.provider.dart';
+import 'package:little_light/core/providers/storage/storage_keys.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
+final storageMigrationsProvider =
+    Provider<StorageMigrations>((ref) => StorageMigrations._(ref));
+
+
 class StorageMigrations {
   String rootPath;
   SharedPreferences prefs;
+
+  ProviderRef _ref;
   int get currentVersion => prefs.getInt(StorageKeys.currentVersion.path) ?? 0;
-  constructor() {}
+
+  StorageMigrations._(this._ref);
+
   run() async {
     var root = await getApplicationDocumentsDirectory();
     prefs = await SharedPreferences.getInstance();
@@ -55,14 +65,16 @@ class StorageMigrations {
               orElse: () => null)
           ?.membershipId;
 
-      var accountStorage = StorageService.account(selectedAccount);
-      var membershipStorage = StorageService.membership(selectedMembership);
+      final accountStorage = _ref.read(accountStorageProvider(selectedAccount));
+      final membershipStorage = _ref.read(membershipStorageProvider(selectedMembership));
+      final globalStorage = _ref.read(globalStorageProvider);
 
       accountStorage.setJson(StorageKeys.latestToken, bungieNetToken);
       accountStorage.setJson(StorageKeys.membershipData, bungieNetToken);
       accountStorage.setDate(StorageKeys.latestTokenDate, tokenDate);
-      StorageService.setAccount(selectedAccount);
-      StorageService.setMembership(selectedMembership);
+      
+      globalStorage.setAccount(selectedAccount);
+      globalStorage.setMembership(selectedMembership);
 
       membershipStorage.setString(
           StorageKeys.membershipSecret, prefs.getString("littlelight_secret"));
