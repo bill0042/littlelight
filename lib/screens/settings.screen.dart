@@ -17,9 +17,9 @@ import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/flutter/center_icon_workaround.dart';
 import 'package:little_light/widgets/item_tags/item_tag.widget.dart';
 import 'package:little_light/widgets/option_sheets/free_slots_slider.widget.dart';
-import 'package:screen/screen.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wakelock/wakelock.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   @override
@@ -126,7 +126,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
           onChanged: (val) {
             userSettings.keepAwake = val;
             setState(() {});
-            Screen.keepOn(val);
+            Wakelock.toggle(enable:val);
           },
         ));
   }

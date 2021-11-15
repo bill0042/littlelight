@@ -15,7 +15,7 @@ import 'package:little_light/screens/progress.screen.dart';
 import 'package:little_light/utils/platform_capabilities.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/side_menu/side_menu.widget.dart';
-import 'package:screen/screen.dart';
+import 'package:wakelock/wakelock.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
   @override
@@ -100,7 +100,7 @@ class MainScreenState extends ConsumerState<MainScreen>
     bool keepAwake = userSettings.keepAwake;
 
     if (PlatformCapabilities.keepScreenOnAvailable) {
-      Screen.keepOn(keepAwake);
+      Wakelock.toggle(enable:keepAwake);
     }
   }
 
