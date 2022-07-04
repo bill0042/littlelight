@@ -233,8 +233,11 @@ class InitialPageStateNotifier
       wishlistsSelected();
       return;
     }
-
-    await littleLightData.getFeaturedWishlists();
+    try {
+      await littleLightData.getFeaturedWishlists();
+    } catch (e, stack) {
+      analytics.registerNonFatal(e, stack);
+    }
 
     _phase = InitialPagePhase.WishlistsSelect;
     _loading = false;
