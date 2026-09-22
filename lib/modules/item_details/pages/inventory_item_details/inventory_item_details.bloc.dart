@@ -30,6 +30,8 @@ import 'package:little_light/shared/utils/helpers/wishlist_helpers.dart';
 import 'package:little_light/shared/utils/sorters/items/export.dart';
 import 'package:little_light/shared/widgets/transfer_destinations/transfer_destinations.widget.dart';
 import 'package:provider/provider.dart';
+import 'package:little_light/modules/loadouts/pages/home/destiny_loadouts.bloc.dart';
+import 'package:little_light/models/destiny_loadout.dart';
 
 class InventoryItemDetailsBloc extends ItemDetailsBloc {
   final ProfileBloc _profileBloc;
@@ -39,6 +41,7 @@ class InventoryItemDetailsBloc extends ItemDetailsBloc {
   final ManifestService _manifestBloc;
   final WishlistsService _wishlists;
   final LoadoutsBloc _loadoutsBloc;
+  final DestinyLoadoutsBloc _destinyLoadoutsBloc;
   final UserSettingsBloc _userSettingsBloc;
 
   @protected
@@ -56,6 +59,7 @@ class InventoryItemDetailsBloc extends ItemDetailsBloc {
   LittleLightDataBloc _littleLightDataBloc;
 
   List<LoadoutItemIndex>? _loadouts;
+  List<DestinyLoadoutInfo>? _destinyLoadouts;
 
   bool _lockBusy = false;
 
@@ -71,6 +75,7 @@ class InventoryItemDetailsBloc extends ItemDetailsBloc {
       _littleLightDataBloc = context.read<LittleLightDataBloc>(),
       _wishlists = getInjectedWishlistsService(),
       _loadoutsBloc = context.read<LoadoutsBloc>(),
+      _destinyLoadoutsBloc = context.read<DestinyLoadoutsBloc>(),
       _userSettingsBloc = context.read<UserSettingsBloc>(),
       super(context) {
     _init();
@@ -80,9 +85,11 @@ class InventoryItemDetailsBloc extends ItemDetailsBloc {
     _profileBloc.addListener(_updateItem);
     _itemNotesBloc.addListener(notifyListeners);
     _loadoutsBloc.addListener(_updateLoadouts);
+    _destinyLoadoutsBloc.addListener(_updateDestinyLoadouts);
     _socketControllerBloc.init(this._item);
     _updateItem();
     _updateLoadouts();
+    _updateDestinyLoadouts();
   }
 
   @override
@@ -90,6 +97,7 @@ class InventoryItemDetailsBloc extends ItemDetailsBloc {
     _profileBloc.removeListener(_updateItem);
     _itemNotesBloc.removeListener(notifyListeners);
     _loadoutsBloc.removeListener(_updateLoadouts);
+    _destinyLoadoutsBloc.removeListener(_updateDestinyLoadouts);
     super.dispose();
   }
 
@@ -141,6 +149,19 @@ class InventoryItemDetailsBloc extends ItemDetailsBloc {
       filteredLoadouts.add(loadoutIndex);
     }
     this._loadouts = filteredLoadouts;
+    notifyListeners();
+  }
+
+  void _updateDestinyLoadouts() async {
+    final instanceId = this.item?.instanceId;
+    if (instanceId == null) return null;
+    final characters = _profileBloc.characters;
+    if (characters == null) return;
+    final filteredLoadouts = characters
+        .expand((c) => _destinyLoadoutsBloc.getLoadoutsFromCharacter(c) ?? <DestinyLoadoutInfo>[])
+        .where((loadout) => loadout.items?.values.any((item) => item.instanceId == instanceId) ?? false)
+        .toList();
+    this._destinyLoadouts = filteredLoadouts;
     notifyListeners();
   }
 
@@ -341,6 +362,13 @@ class InventoryItemDetailsBloc extends ItemDetailsBloc {
     final item = this.item;
     if (item == null) return;
     AddToLoadoutBottomsheet(item).show(context);
+  }
+
+  @override
+  List<DestinyLoadoutInfo>? get destinyLoadouts => _destinyLoadouts;
+
+  void openDestinyLoadout(DestinyLoadoutInfo loadout) {
+    _destinyLoadoutsBloc.openLoadout(loadout);
   }
 
   void _updateItemSetEquippedCount() async {

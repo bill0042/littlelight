@@ -10,6 +10,7 @@ import 'package:little_light/modules/item_details/widgets/details_item_descripti
 import 'package:little_light/modules/item_details/widgets/details_item_duplicates.widget.dart';
 import 'package:little_light/modules/item_details/widgets/details_item_intrinsic_perk.widget.dart';
 import 'package:little_light/modules/item_details/widgets/details_item_loadouts.widget.dart';
+import 'package:little_light/modules/item_details/widgets/details_item_destiny_loadouts.widget.dart';
 import 'package:little_light/modules/item_details/widgets/details_item_shaped_weapon_progress.widget.dart';
 import 'package:little_light/modules/item_details/widgets/item_cover/details_item_landscape_cover.widget.dart';
 import 'package:little_light/modules/item_details/widgets/details_item_lore.widget.dart';
@@ -119,6 +120,7 @@ abstract class BaseItemDetailsView extends StatelessWidget {
         buildItemNotes(context),
         buildItemTags(context),
         buildItemLoadouts(context),
+        buildItemDestinyLoadouts(context),
         buildLore(context),
         buildCollectibleInfo(context),
         buildRawData(context),
@@ -154,6 +156,7 @@ abstract class BaseItemDetailsView extends StatelessWidget {
         buildItemNotes(context),
         buildItemTags(context),
         buildItemLoadouts(context),
+        buildItemDestinyLoadouts(context),
         buildLore(context),
         buildCollectibleInfo(context),
         buildRawData(context),
@@ -259,6 +262,9 @@ abstract class BaseItemDetailsView extends StatelessWidget {
   }
 
   List<Widget> buildReusablePerks(BuildContext context) {
+    final def = context.definition<DestinyInventoryItemDefinition>(state.itemHash);
+    final isArtifact = def?.inventory?.bucketTypeHash == InventoryBucket.artifact;
+    if (isArtifact) return [];
     final reusable = socketState.getSocketCategories(DestinySocketCategoryStyle.Reusable) ?? [];
     final all = reusable;
     return all
@@ -395,6 +401,18 @@ abstract class BaseItemDetailsView extends StatelessWidget {
         loadouts: loadouts,
         onSelectLoadout: (l) => bloc.openLoadout(l),
         onAddToLoadout: () => bloc.addToLoadout(),
+      ),
+    );
+  }
+
+  Widget? buildItemDestinyLoadouts(BuildContext context) {
+    final loadouts = state.destinyLoadouts;
+    if (loadouts == null || loadouts.isEmpty) return null;
+    return sectionContainer(
+      context,
+      DetailsItemDestinyLoadoutsWidget(
+        loadouts: loadouts,
+        onSelectLoadout: (l) => bloc.openDestinyLoadout(l),
       ),
     );
   }

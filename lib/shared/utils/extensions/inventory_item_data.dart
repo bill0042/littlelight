@@ -43,6 +43,9 @@ extension DestinyInventoryItemDefinitionHelper on DestinyInventoryItemDefinition
       itemType == DestinyItemType.Engram || //
       inventory?.bucketTypeHash == InventoryBucket.engrams || //
       uiItemDisplayStyle == "ui_display_style_engram";
+  
+  bool get isArtifact =>
+     inventory?.bucketTypeHash == InventoryBucket.artifact;
 }
 
 extension DestinytemInfoHelpers on DestinyItemInfo {

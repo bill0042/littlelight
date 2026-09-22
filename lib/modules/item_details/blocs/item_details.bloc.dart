@@ -14,6 +14,7 @@ import 'package:little_light/shared/models/transfer_destination.dart';
 import 'package:little_light/shared/utils/helpers/wishlist_helpers.dart';
 import 'package:little_light/shared/widgets/transfer_destinations/transfer_destinations.widget.dart';
 import 'package:provider/provider.dart';
+import 'package:little_light/models/destiny_loadout.dart';
 
 const _allWishlistsBuildsVisibilityKey = 'all wishlists builds';
 const _allWishlistsNotesVisibilityKey = 'all wishlists notes';
@@ -128,6 +129,9 @@ abstract class ItemDetailsBloc extends ChangeNotifier {
   List<LoadoutItemIndex>? get loadouts;
   void openLoadout(LoadoutItemIndex loadout);
   void addToLoadout();
+
+  List<DestinyLoadoutInfo>? get destinyLoadouts => null;
+  void openDestinyLoadout(DestinyLoadoutInfo loadout) {}
 
   int? get itemSetCount => null;
 }

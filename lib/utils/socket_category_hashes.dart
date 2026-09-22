@@ -8,6 +8,9 @@ abstract class SocketCategoryHashes {
   static const modClanStaves = 3954618873;
   static const modVehicle = 4243480345;
   static const modVehicle2 = 4265082475;
+  static const modArtifact1 = 2631166533;
+  static const modArtifact2 = 2631166534;
+  static const modArtifact3 = 2631166535;
 
   static const mods = {
     modEmblemCustomization,
@@ -19,6 +22,9 @@ abstract class SocketCategoryHashes {
     modClanStaves,
     modVehicle,
     modVehicle2,
+    modArtifact1,
+    modArtifact2,
+    modArtifact3,
   };
 
   static const perksSparrow = 319279448;
