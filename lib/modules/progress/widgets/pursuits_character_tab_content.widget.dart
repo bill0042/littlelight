@@ -105,7 +105,7 @@ class PursuitsCharacterTabContentWidget extends StatelessWidget with ManifestCon
       context,
     ).getDisplayTypeForItemSection(sectionId, defaultValue: defaultDisplayType);
     final unequippedDensity = displayType.unequippedDensity;
-    final idealCount = unequippedDensity?.getIdealCount(constraints.maxWidth) ?? 5;
+    final idealCount = unequippedDensity?.getIdealItemsPerRowCount(constraints.maxWidth, items.length) ?? 5;
     final unequippedCount = (items.length / idealCount).ceil() * idealCount;
     final key = "${character.characterId} $sectionId";
     return [
@@ -138,7 +138,7 @@ class PursuitsCharacterTabContentWidget extends StatelessWidget with ManifestCon
       context,
     ).getDisplayTypeForItemSection(sectionId, defaultValue: defaultDisplayType);
     final unequippedDensity = displayType.unequippedDensity;
-    final idealCount = unequippedDensity?.getIdealCount(constraints.maxWidth) ?? 5;
+    final idealCount = unequippedDensity?.getIdealItemsPerRowCount(constraints.maxWidth, items.length) ?? 5;
     final unequippedCount = (items.length / idealCount).ceil() * idealCount;
     final key = "${character.characterId} $sectionId";
     return [

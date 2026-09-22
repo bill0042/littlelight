@@ -102,8 +102,9 @@ class EquipmentCharacterTabContentWidget extends StatelessWidget with ManifestCo
     final unequippedDensity = displayType.unequippedDensity;
     final useBucketCount = bucketDef?.hasTransferDestination == true && bucketDef?.scope == BucketScope.Character;
     final bucketDefCount = (bucketDef?.itemCount ?? 10) - (equipped != null ? 1 : 0);
-    final idealCount = unequippedDensity?.getIdealCount(constraints.maxWidth) ?? 5;
-    final unequippedCount = ((useBucketCount ? bucketDefCount : unequipped.length) / idealCount).ceil() * idealCount;
+    final layoutCount = useBucketCount ? bucketDefCount : unequipped.length;
+    final idealCount = unequippedDensity?.getIdealItemsPerRowCount(constraints.maxWidth, layoutCount) ?? 5;
+    final unequippedCount = (layoutCount / idealCount).ceil() * idealCount;
     final key = "${character.characterId} $bucketHash";
     return [
       FixedHeightScrollSection(

@@ -39,8 +39,17 @@ extension IdealItemWidth on InventoryItemWidgetDensity {
     }
   }
 
-  int getIdealCount(double containerWidth) {
-    return (containerWidth / idealWidth).floor().clamp(1, 100);
+  int getIdealItemsPerRowCount(double containerWidth, int itemCount) {
+    final itemsPerRow = (containerWidth / idealWidth).floor().clamp(1, 100);
+    if (this == InventoryItemWidgetDensity.Low)
+      return itemsPerRow;
+    if (itemsPerRow <= 1 || itemCount <= 0)
+      return itemsPerRow;
+
+    // Calculate the maximum items per row that maintains the minimum row count
+    final minRowThreshold = (itemCount - 1) ~/ itemsPerRow;
+    final optimizedItemsPerRow = (itemCount + minRowThreshold) ~/ (minRowThreshold + 1);
+    return optimizedItemsPerRow.clamp(1, itemsPerRow);
   }
 }
 
