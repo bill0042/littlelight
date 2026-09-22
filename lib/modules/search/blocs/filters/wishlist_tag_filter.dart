@@ -11,7 +11,7 @@ class WishlistTagFilter extends BaseItemFilter<WishlistTagFilterOptions> with Wi
 
   @override
   Future<List<DestinyItemInfo>> filter(BuildContext context, List<DestinyItemInfo> items) async {
-    if (data.value.isEmpty) {
+    if (data.isEmpty) {
       return items;
     }
     return super.filter(context, items);
@@ -23,8 +23,8 @@ class WishlistTagFilter extends BaseItemFilter<WishlistTagFilterOptions> with Wi
     if (instanceId == null) return false;
 
     final tags = _itemTags[instanceId];
-    if (tags == null || tags.isEmpty) return data.value.contains(null);
-    return data.value.any((t) => tags.contains(t));
+    if (tags == null || tags.isEmpty) return data.isSelected(null);
+    return data.anySelected(tags);
   }
 
   @override

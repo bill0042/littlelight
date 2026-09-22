@@ -1,31 +1,21 @@
 import 'base_filter_values_options.dart';
 
-class ItemOwnerValues {
-  Set<String> characters;
-  bool vault;
-  bool profile;
-
-  ItemOwnerValues({
-    Set<String>? characters,
-    this.vault = false,
-    this.profile = false,
-  }) : this.characters = characters ?? {};
-
-  ItemOwnerValues clone() => ItemOwnerValues(characters: characters.toSet(), vault: vault, profile: profile);
-
-  bool get isEmpty => length == 0;
-  int get length => characters.length + (vault ? 1 : 0) + (profile ? 1 : 0);
-  void clear() {
-    characters.clear();
-    vault = false;
-    profile = false;
-  }
+enum ItemOwnerType {
+  Character,
+  LostItems,
+  Vault,
+  Profile,
 }
 
-class ItemOwnerFilterOptions extends BaseFilterOptions<ItemOwnerValues> {
-  ItemOwnerFilterOptions(ItemOwnerValues availableValues)
+typedef ItemOwnerValue = ({ItemOwnerType ownerType, String? ownerValue});
+
+const ItemOwnerValue ItemOwnerVault = (ownerType: ItemOwnerType.Vault, ownerValue: null);
+const ItemOwnerValue ItemOwnerProfile = (ownerType: ItemOwnerType.Profile, ownerValue: null);
+
+class ItemOwnerFilterOptions extends BaseDiscreteFilterOptions<ItemOwnerValue> {
+  ItemOwnerFilterOptions(Set<ItemOwnerValue> availableValues)
     : super(
-        availableValues.clone(),
+        availableValues.toSet(),
         availableValues: availableValues,
       );
 }

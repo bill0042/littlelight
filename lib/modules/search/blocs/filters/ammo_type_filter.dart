@@ -11,7 +11,7 @@ class AmmoTypeFilter extends BaseItemFilter<AmmoTypeFilterOptions> with Manifest
 
   @override
   Future<List<DestinyItemInfo>> filter(BuildContext context, List<DestinyItemInfo> items) async {
-    if (data.value.isNotEmpty) {
+    if (!data.isEmpty) {
       return super.filter(context, items);
     }
     return items;
@@ -21,7 +21,7 @@ class AmmoTypeFilter extends BaseItemFilter<AmmoTypeFilterOptions> with Manifest
   Future<bool> filterItem(DestinyItemInfo item) async {
     final hash = item.itemHash;
     final def = await manifest.getDefinition<DestinyInventoryItemDefinition>(hash);
-    return data.value.contains(def?.equippingBlock?.ammoType);
+    return data.isSelected(def?.equippingBlock?.ammoType);
   }
 
   @override

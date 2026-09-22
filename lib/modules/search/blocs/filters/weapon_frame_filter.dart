@@ -15,7 +15,7 @@ class WeaponFrameFilter extends BaseItemFilter<WeaponFrameFilterOptions> with Ma
 
   @override
   Future<List<DestinyItemInfo>> filter(BuildContext context, List<DestinyItemInfo> items) async {
-    if (data.value.isEmpty) {
+    if (data.isEmpty) {
       return items;
     }
     return super.filter(context, items);
@@ -28,7 +28,7 @@ class WeaponFrameFilter extends BaseItemFilter<WeaponFrameFilterOptions> with Ma
     if (plugHashes == null) return false;
     final definitions = await manifest.getDefinitions<DestinyInventoryItemDefinition>(plugHashes);
     final names = definitions.values.map((e) => e.displayProperties?.name).whereType<String>();
-    return names.any((p) => data.value.contains(p));
+    return data.anySelected(names.toSet());
   }
 
   @override

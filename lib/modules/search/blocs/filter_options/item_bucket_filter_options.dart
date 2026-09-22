@@ -1,6 +1,6 @@
 import 'base_filter_values_options.dart';
 
-class ItemBucketFilterOptions extends BaseFilterOptions<Set<int>> {
+class ItemBucketFilterOptions extends BaseDiscreteFilterOptions<int> {
   ItemBucketFilterOptions(Set<int> values)
     : super(
         values.toSet(),

@@ -89,6 +89,9 @@ abstract class SocketControllerBloc<T> extends ChangeNotifier {
 
   bool get isBusy;
 
+  int? _armorTuningStatHash;
+  int? get armorTuningStatHash => _armorTuningStatHash;
+
   SocketControllerBloc(this.context)
     : manifest = context.read<ManifestService>(),
       wishlists = getInjectedWishlistsService(),
@@ -352,6 +355,8 @@ abstract class SocketControllerBloc<T> extends ChangeNotifier {
 
     _weaponLevelRequired = await loadWeaponLevelRequired();
 
+    _armorTuningStatHash = await getArmorTuningStatHash();
+
     notifyListeners();
   }
 
@@ -554,4 +559,45 @@ abstract class SocketControllerBloc<T> extends ChangeNotifier {
 
   @protected
   Future<void> loadAdditionalDefinitions() async => null;
+
+  @protected
+  Future<int?> getArmorTuningStatHash() async => null;
+
+  // For an armor item, find the one single stat that can be increased by tuning mods,
+  // if it exists, so we can show it as is done in game.
+  // Exotics and some bugged legendaries allow all tuning mods and are ignored.
+  @protected
+  Future<int?> loadArmorTuningStatHash() async {
+    final isArmor = itemDefinition?.isArmor ?? false;
+    if (!isArmor) return null;
+    bool isExotic = itemDefinition?.inventory?.tierType == TierType.Exotic;
+    if (isExotic) return null;
+    final socketCount = itemDefinition?.sockets?.socketEntries?.length ?? 0;
+    final equippedPlugHashes = List.generate(socketCount, (i) => equippedPlugHashForSocket(i));
+    final equippedDefs = await manifest.getDefinitions<DestinyInventoryItemDefinition>(equippedPlugHashes);
+    final tuningSocketIndex = equippedPlugHashes.indexWhere((hash) {
+      final plugCategoryIdentifier = equippedDefs[hash]?.plug?.plugCategoryIdentifier;
+      return plugCategoryIdentifier?.endsWith("tuning.mods") ?? false;
+    });
+    if (tuningSocketIndex < 0) return null;
+    final tuningPlugHashes = availablePlugHashesForSocket(tuningSocketIndex) ?? [];
+    if (tuningPlugHashes.length == 0) return null;
+    final tuningPlugs = await manifest.getDefinitions<DestinyInventoryItemDefinition>(tuningPlugHashes);
+    final positiveStats = tuningPlugs.values
+        .map((def) => def.investmentStats)
+        .where((statList) => statList?.isNotEmpty ?? false)
+        .map(
+          (statList) =>
+              statList
+                  ?.where((statDef) => (statDef.value ?? 0) > 0)
+                  .map((statDef) => statDef.statTypeHash)
+                  .nonNulls
+                  .toSet() ??
+              {},
+        );
+    if (positiveStats.isEmpty) return null;
+    final commonPositiveStats = positiveStats.reduce((values, next) => values.intersection(next));
+    if (commonPositiveStats.length == 1) return commonPositiveStats.first;
+    return null;
+  }
 }

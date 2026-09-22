@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:little_light/core/blocs/user_settings/user_settings.bloc.dart';
 import 'package:little_light/models/item_info/inventory_item_info.dart';
 import 'package:little_light/models/item_sort_parameter.dart';
+import 'package:little_light/modules/loadouts/pages/home/destiny_loadouts.bloc.dart';
 import 'package:little_light/modules/search/blocs/search_filter.bloc.dart';
 import 'package:little_light/modules/search/blocs/search_sorter.bloc.dart';
 import 'package:little_light/modules/search/pages/item_search/item_search.bloc.dart';
@@ -25,6 +26,7 @@ class ItemSearchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => DestinyLoadoutsBloc(context)),
         ChangeNotifierProvider(create: (context) => SearchFilterBloc(context)),
         ChangeNotifierProvider<SearchSorterBloc>(
           create: (context) {

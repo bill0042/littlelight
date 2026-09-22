@@ -495,4 +495,58 @@ class GlobalStorage extends StorageBase<GlobalStorageKeys> {
       logger.error("Error setting randomLoadoutForceExotics setting");
     }
   }
+
+  Future<bool?> getFilterTapToExclude() async {
+    try {
+      final value = await getBool(GlobalStorageKeys.filterTapToExclude);
+      return value;
+    } catch (e) {
+      logger.error("Error getting filterTapToExclude setting");
+    }
+    return null;
+  }
+
+  Future<void> setFilterTapToExclude(bool value) async {
+    try {
+      await setBool(GlobalStorageKeys.filterTapToExclude, value);
+    } catch (e) {
+      logger.error("Error setting filterTapToExclude setting");
+    }
+  }
+
+  Future<bool?> getTextFilterWishlistNotes() async {
+    try {
+      final value = await getBool(GlobalStorageKeys.textFilterWishlistNotes);
+      return value;
+    } catch (e) {
+      logger.error("Error getting textFilterWishlistNotes setting");
+    }
+    return null;
+  }
+
+  Future<void> setTextFilterWishlistNotes(bool value) async {
+    try {
+      await setBool(GlobalStorageKeys.textFilterWishlistNotes, value);
+    } catch (e) {
+      logger.error("Error setting textFilterWishlistNotes setting");
+    }
+  }
+
+  Future<bool?> getTextFilterLoadoutName() async {
+    try {
+      final value = await getBool(GlobalStorageKeys.textFilterLoadoutName);
+      return value;
+    } catch (e) {
+      logger.error("Error getting textFilterLoadoutName setting");
+    }
+    return null;
+  }
+
+  Future<void> setTextFilterLoadoutName(bool value) async {
+    try {
+      await setBool(GlobalStorageKeys.textFilterLoadoutName, value);
+    } catch (e) {
+      logger.error("Error setting textFilterLoadoutName setting");
+    }
+  }
 }

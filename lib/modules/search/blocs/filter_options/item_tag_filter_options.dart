@@ -1,6 +1,6 @@
 import 'base_filter_values_options.dart';
 
-class ItemTagFilterOptions extends BaseFilterOptions<Set<String?>> {
+class ItemTagFilterOptions extends BaseDiscreteFilterOptions<String?> {
   ItemTagFilterOptions(Set<String?> availableValues)
     : super(
         availableValues.toSet(),

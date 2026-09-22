@@ -10,7 +10,7 @@ class ItemSubtypeFilter extends BaseItemFilter<ItemSubtypeFilterOptions> with Ma
 
   @override
   Future<List<DestinyItemInfo>> filter(BuildContext context, List<DestinyItemInfo> items) async {
-    if (data.value.isEmpty) {
+    if (data.isEmpty) {
       return items;
     }
     return super.filter(context, items);
@@ -20,7 +20,7 @@ class ItemSubtypeFilter extends BaseItemFilter<ItemSubtypeFilterOptions> with Ma
   Future<bool> filterItem(DestinyItemInfo item) async {
     final hash = item.itemHash;
     final def = await manifest.getDefinition<DestinyInventoryItemDefinition>(hash);
-    return data.value.any((hash) => def?.itemCategoryHashes?.contains(hash) ?? false);
+    return data.anySelected(def?.itemCategoryHashes?.toSet());
   }
 
   @override

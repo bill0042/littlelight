@@ -15,7 +15,8 @@ class WeaponFrameFilterWidget extends BaseDrawerFilterWidget<WeaponFrameFilterOp
   @override
   Widget buildOptions(BuildContext context, WeaponFrameFilterOptions data) {
     final availableValues = data.availableValues;
-    final values = data.value;
+    final include = data.include;
+    final exclude = data.exclude;
     return Column(
       children: availableValues
           .map(
@@ -29,9 +30,10 @@ class WeaponFrameFilterWidget extends BaseDrawerFilterWidget<WeaponFrameFilterOp
                     ),
                   ],
                 ),
-                selected: values.contains(type),
-                onTap: () => updateOption(context, data, type, false),
-                onLongPress: () => updateOption(context, data, type, true),
+                selected: include.contains(type),
+                excluded: exclude.contains(type),
+                onTap: () => updateDiscreteOption(context, data, type, false),
+                onLongPress: () => updateDiscreteOption(context, data, type, true),
               ),
             ),
           )

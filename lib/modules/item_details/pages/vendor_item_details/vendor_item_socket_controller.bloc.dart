@@ -82,4 +82,7 @@ class VendorItemSocketControllerBloc extends SocketControllerBloc<VendorItemInfo
 
   @override
   bool canApply(int socketIndex, int plugHash) => false;
+
+  @override
+  Future<int?> getArmorTuningStatHash() async => loadArmorTuningStatHash();
 }

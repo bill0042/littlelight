@@ -10,7 +10,7 @@ class ClassTypeFilter extends BaseItemFilter<ClassTypeFilterOptions> with Manife
 
   @override
   Future<List<DestinyItemInfo>> filter(BuildContext context, List<DestinyItemInfo> items) async {
-    if (data.value.isNotEmpty) {
+    if (!data.isEmpty) {
       return super.filter(context, items);
     }
     return items;
@@ -20,7 +20,7 @@ class ClassTypeFilter extends BaseItemFilter<ClassTypeFilterOptions> with Manife
   Future<bool> filterItem(DestinyItemInfo item) async {
     final hash = item.itemHash;
     final def = await manifest.getDefinition<DestinyInventoryItemDefinition>(hash);
-    return data.value.contains(def?.classType);
+    return data.isSelected(def?.classType);
   }
 
   @override

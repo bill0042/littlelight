@@ -19,7 +19,8 @@ class LoadoutFilterWidget extends BaseDrawerFilterWidget<LoadoutFilterOptions> {
   Widget buildOptions(BuildContext context, LoadoutFilterOptions data) {
     final loadouts = context.watch<LoadoutsBloc>().loadouts;
     final availableValues = data.availableValues;
-    final values = data.value;
+    final include = data.include;
+    final exclude = data.exclude;
     final allLoadouts = loadouts ?? [];
     final availableLoadouts = allLoadouts.where((t) => availableValues.contains(t.assignedId));
     final hasNone = availableValues.contains(null);
@@ -52,9 +53,10 @@ class LoadoutFilterWidget extends BaseDrawerFilterWidget<LoadoutFilterOptions> {
                         fit: BoxFit.cover,
                         alignment: Alignment.centerLeft,
                       ),
-                selected: values.contains(loadout.assignedId),
-                onTap: () => updateOption(context, data, loadout.assignedId, false),
-                onLongPress: () => updateOption(context, data, loadout.assignedId, true),
+                selected: include.contains(loadout.assignedId),
+                excluded: exclude.contains(loadout.assignedId),
+                onTap: () => updateDiscreteOption(context, data, loadout.assignedId, false),
+                onLongPress: () => updateDiscreteOption(context, data, loadout.assignedId, true),
               );
             },
           ).toList() +
@@ -64,9 +66,10 @@ class LoadoutFilterWidget extends BaseDrawerFilterWidget<LoadoutFilterOptions> {
                 Text(
                   "None".translate(context).toUpperCase(),
                 ),
-                selected: values.contains(null),
-                onTap: () => updateOption(context, data, null, false),
-                onLongPress: () => updateOption(context, data, null, true),
+                selected: include.contains(null),
+                excluded: exclude.contains(null),
+                onTap: () => updateDiscreteOption(context, data, null, false),
+                onLongPress: () => updateDiscreteOption(context, data, null, true),
               ),
           ],
     );

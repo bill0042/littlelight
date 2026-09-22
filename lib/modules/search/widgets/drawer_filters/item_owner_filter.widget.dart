@@ -10,8 +10,6 @@ import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:provider/provider.dart';
 import 'base_drawer_filter.widget.dart';
 
-enum _NonCharacterOwners { Vault, Profile }
-
 class ItemOwnerFilterWidget extends BaseDrawerFilterWidget<ItemOwnerFilterOptions> {
   @override
   Widget buildTitle(BuildContext context) {
@@ -20,52 +18,65 @@ class ItemOwnerFilterWidget extends BaseDrawerFilterWidget<ItemOwnerFilterOption
 
   @override
   Widget buildOptions(BuildContext context, ItemOwnerFilterOptions data) {
-    final selectedCharacters = data.value.characters;
+    final availableValues = data.availableValues;
     final characters = context.watch<ProfileBloc>().characters;
-    final availableCharacters = characters?.where((c) => data.availableValues.characters.contains(c.characterId)) ?? [];
+    final characterList =
+        characters
+            ?.where((c) => c.characterId != null)
+            .map((c) {
+              final ItemOwnerValue itemOwner = (ownerType: ItemOwnerType.Character, ownerValue: c.characterId);
+              return (character: c, itemOwner: itemOwner);
+            })
+            .where((e) => availableValues.contains(e.itemOwner)) ??
+        [];
+    final include = data.include;
+    final exclude = data.exclude;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Column(
-          children: availableCharacters
-              .map(
-                (char) => FilterButtonWidget(
-                  Row(
-                    children: [
-                      Container(
-                        width: 36,
-                        child: ManifestImageWidget<DestinyInventoryItemDefinition>(
-                          char.character.emblemHash,
-                          urlExtractor: (def) => def.secondaryOverlay,
-                          fit: BoxFit.contain,
-                        ),
+          children: characterList.map(
+            (entry) {
+              final char = entry.character;
+              final itemOwner = entry.itemOwner;
+              return FilterButtonWidget(
+                Row(
+                  children: [
+                    Container(
+                      width: 36,
+                      child: ManifestImageWidget<DestinyInventoryItemDefinition>(
+                        char.character.emblemHash,
+                        urlExtractor: (def) => def.secondaryOverlay,
+                        fit: BoxFit.contain,
                       ),
-                      SizedBox(width: 8),
-                      ManifestText<DestinyClassDefinition>(
-                        char.character.classHash,
-                        textExtractor: (def) => def.genderedClassNamesByGenderHash?["${char.character.genderHash}"],
-                        uppercase: true,
-                      ),
-                    ],
-                  ),
-                  background: ManifestImageWidget<DestinyInventoryItemDefinition>(
-                    char.character.emblemHash,
-                    urlExtractor: (def) => def.secondarySpecial,
-                    fit: BoxFit.cover,
-                    alignment: Alignment.centerLeft,
-                  ),
-                  selected: selectedCharacters.contains(char.characterId),
-                  onTap: () => updateCharacter(context, data, char.characterId, false),
-                  onLongPress: () => updateCharacter(context, data, char.characterId, true),
+                    ),
+                    SizedBox(width: 8),
+                    ManifestText<DestinyClassDefinition>(
+                      char.character.classHash,
+                      textExtractor: (def) => def.genderedClassNamesByGenderHash?["${char.character.genderHash}"],
+                      uppercase: true,
+                    ),
+                  ],
                 ),
-              )
-              .toList(),
+                background: ManifestImageWidget<DestinyInventoryItemDefinition>(
+                  char.character.emblemHash,
+                  urlExtractor: (def) => def.secondarySpecial,
+                  fit: BoxFit.cover,
+                  alignment: Alignment.centerLeft,
+                ),
+                selected: include.contains(itemOwner),
+                excluded: exclude.contains(itemOwner),
+                onTap: () => updateDiscreteOption(context, data, itemOwner, false),
+                onLongPress: () => updateDiscreteOption(context, data, itemOwner, true),
+              );
+            },
+          ).toList(),
         ),
         Row(
           children: [
-            if (data.availableValues.vault)
+            if (data.availableValues.contains(ItemOwnerVault))
               Expanded(
                 child: FilterButtonWidget(
                   buildNonCharacterFilterButtonContent(
@@ -78,12 +89,13 @@ class ItemOwnerFilterWidget extends BaseDrawerFilterWidget<ItemOwnerFilterOption
                     fit: BoxFit.cover,
                     alignment: Alignment.centerLeft,
                   ),
-                  selected: data.value.vault,
-                  onTap: () => updateNonCharacterOptions(context, data, _NonCharacterOwners.Vault, false),
-                  onLongPress: () => updateNonCharacterOptions(context, data, _NonCharacterOwners.Vault, true),
+                  selected: include.contains(ItemOwnerVault),
+                  excluded: exclude.contains(ItemOwnerVault),
+                  onTap: () => updateDiscreteOption(context, data, ItemOwnerVault, false),
+                  onLongPress: () => updateDiscreteOption(context, data, ItemOwnerVault, true),
                 ),
               ),
-            if (data.availableValues.profile)
+            if (data.availableValues.contains(ItemOwnerProfile))
               Expanded(
                 child: FilterButtonWidget(
                   buildNonCharacterFilterButtonContent(
@@ -101,53 +113,16 @@ class ItemOwnerFilterWidget extends BaseDrawerFilterWidget<ItemOwnerFilterOption
                     fit: BoxFit.cover,
                     alignment: Alignment.centerLeft,
                   ),
-                  selected: data.value.profile,
-                  onTap: () => updateNonCharacterOptions(context, data, _NonCharacterOwners.Profile, false),
-                  onLongPress: () => updateNonCharacterOptions(context, data, _NonCharacterOwners.Profile, true),
+                  selected: include.contains(ItemOwnerProfile),
+                  excluded: exclude.contains(ItemOwnerProfile),
+                  onTap: () => updateDiscreteOption(context, data, ItemOwnerProfile, false),
+                  onLongPress: () => updateDiscreteOption(context, data, ItemOwnerProfile, true),
                 ),
               ),
           ],
         ),
       ],
     );
-  }
-
-  void updateCharacter(BuildContext context, ItemOwnerFilterOptions data, String? characterId, bool forceAdd) {
-    if (characterId == null) return;
-    final value = data.value.clone();
-    final characters = value.characters;
-    final multiselect = forceAdd || data.value.length > 1;
-    final isSelected = characters.contains(characterId);
-    if (multiselect && !isSelected) {
-      characters.add(characterId);
-    } else if (isSelected) {
-      characters.remove(characterId);
-    } else {
-      value.clear();
-      characters.add(characterId);
-    }
-    update(context, ItemOwnerFilterOptions(value));
-  }
-
-  void updateNonCharacterOptions(
-    BuildContext context,
-    ItemOwnerFilterOptions data,
-    _NonCharacterOwners option,
-    bool forceAdd,
-  ) {
-    final value = data.value.clone();
-
-    final multiselect = forceAdd || data.value.length > 1;
-    final isSelected = option == _NonCharacterOwners.Vault ? value.vault : value.profile;
-    if (multiselect && !isSelected) {
-      option == _NonCharacterOwners.Vault ? value.vault = true : value.profile = true;
-    } else if (isSelected) {
-      option == _NonCharacterOwners.Vault ? value.vault = false : value.profile = false;
-    } else {
-      value.clear();
-      option == _NonCharacterOwners.Vault ? value.vault = true : value.profile = true;
-    }
-    update(context, ItemOwnerFilterOptions(value));
   }
 
   Widget buildNonCharacterFilterButtonContent(BuildContext context, Widget icon, Widget label) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:little_light/modules/search/widgets/drawer_filters/armor_stats_filter.widget.dart';
+import 'package:little_light/modules/search/widgets/drawer_filters/armor_single_stats_filter.widget.dart';
 import 'package:little_light/modules/search/widgets/drawer_filters/crafted_filter.widget.dart';
 import 'package:little_light/modules/search/widgets/drawer_filters/deepsight_filter.widget.dart';
 import 'package:little_light/modules/search/widgets/drawer_filters/power_level_filter.widget.dart';
@@ -16,6 +17,8 @@ import 'drawer_filters/item_owner_filter.widget.dart';
 import 'drawer_filters/item_subtype_filter.widget.dart';
 import 'drawer_filters/item_tag_filter.widget.dart';
 import 'drawer_filters/loadout_filter.widget.dart';
+import 'drawer_filters/gear_tier_filter.widget.dart';
+import 'drawer_filters/destiny_loadout_filter.widget.dart';
 
 class FiltersListWidget extends StatelessWidget {
   final EdgeInsets? padding;
@@ -36,6 +39,8 @@ class FiltersListWidget extends StatelessWidget {
           ItemSubtypeFilterWidget(),
           TierTypeFilterWidget(),
           ItemOwnerFilterWidget(),
+          GearTierFilterWidget(),
+          DestinyLoadoutFilterWidget(),
 
           /// weapon filter types
           AmmoTypeFilterWidget(),
@@ -49,6 +54,7 @@ class FiltersListWidget extends StatelessWidget {
           EnergyLevelFilterWidget(),
           ClassTypeFilterWidget(),
           ArmorStatsFilterWidget(),
+          ArmorSingleStatsFilterWidget(),
 
           /// LL specific stuff
           ItemTagFilterWidget(),

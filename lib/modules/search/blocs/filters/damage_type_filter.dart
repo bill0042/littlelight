@@ -11,7 +11,7 @@ class DamageTypeFilter extends BaseItemFilter<DamageTypeFilterOptions> with Mani
 
   @override
   Future<List<DestinyItemInfo>> filter(BuildContext context, List<DestinyItemInfo> items) async {
-    if (data.value.isNotEmpty) {
+    if (!data.isEmpty) {
       return super.filter(context, items);
     }
     return items;
@@ -22,9 +22,9 @@ class DamageTypeFilter extends BaseItemFilter<DamageTypeFilterOptions> with Mani
     if (item.bucketHash == InventoryBucket.subclass) {
       final def = await manifest.getDefinition<DestinyInventoryItemDefinition>(item.itemHash);
       final damageType = def?.talentGrid?.hudDamageType;
-      return data.value.contains(damageType);
+      return data.isSelected(damageType);
     }
-    return data.value.contains(item.damageType);
+    return data.isSelected(item.damageType);
   }
 
   @override

@@ -145,6 +145,9 @@ class LowDensityInventoryItem extends StatelessWidget with WishlistsConsumer, Ma
     if (definition.isQuestStep) {
       return buildQuestStepProgress(context, definition);
     }
+    if (definition.isArtifact) {
+      return const SizedBox.shrink();
+    }
     final isStack = (definition.inventory?.maxStackSize ?? 0) > 1;
     if (isStack) {
       return buildQuantity(context, definition);

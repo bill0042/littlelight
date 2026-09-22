@@ -100,7 +100,7 @@ class EquipmentVaultTabContentWidget extends StatelessWidget with ManifestConsum
     final defaultType = BucketDisplayType.Small;
     final displayType = bucketOptionsState(context).getDisplayTypeForItemSection(sectionId, defaultValue: defaultType);
     final itemDensity = displayType.unequippedDensity;
-    final idealCount = itemDensity?.getIdealCount(constraints.maxWidth) ?? 5;
+    final idealCount = itemDensity?.getIdealItemsPerRowCount(constraints.maxWidth, items.length) ?? 5;
     final itemCount = (items.length / idealCount).ceil() * idealCount;
     final key = "vault $bucketHash";
     return [

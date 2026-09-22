@@ -82,6 +82,8 @@ class DestinyLoadoutListItemWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 8),
       child: Row(
         children: [
+          Text((loadout.index + 1).toString(), style: context.textTheme.itemNameHighDensity),
+          SizedBox(width: 8),
           Expanded(child: buildLoadoutName(context)),
           buildLoadoutIcon(context),
         ],

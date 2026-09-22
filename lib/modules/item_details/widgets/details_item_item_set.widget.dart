@@ -109,10 +109,13 @@ class DetailsItemItemSetWidget extends StatelessWidget {
             indent: 4,
             color: context.theme.onSurfaceLayers.layer2,
           ),
-          Container(
+          Expanded(
             child: Text(
               sandboxPerkName.toUpperCase(),
               style: textStyle,
+              maxLines: 1,
+              softWrap: false,
+              overflow: TextOverflow.clip,
             ),
           ),
         ],

@@ -128,7 +128,8 @@ class EquipmentCharacterLandscapeTabContentWidget extends StatelessWidget {
     final unequippedDensity = displayType.unequippedDensity;
     final useBucketCount = bucketDef?.hasTransferDestination == true && bucketDef?.scope == BucketScope.Character;
     final bucketDefCount = (bucketDef?.itemCount ?? 10) - (equipped != null ? 1 : 0);
-    final idealCount = unequippedDensity?.getIdealCount(constraints.maxWidth) ?? 5;
+    final layoutCount = useBucketCount ? bucketDefCount : unequipped.length;
+    final idealCount = unequippedDensity?.getIdealItemsPerRowCount(constraints.maxWidth, layoutCount) ?? 5;
     final unequippedCount = ((useBucketCount ? bucketDefCount : unequipped.length) / idealCount).ceil() * idealCount;
     final key = "${character.characterId} $bucketHash";
     return [
@@ -245,7 +246,7 @@ class EquipmentCharacterLandscapeTabContentWidget extends StatelessWidget {
     final equippedDensity = displayType.equippedDensity;
     final unequippedDensity = displayType.unequippedDensity;
     final bucketDefCount = (bucketDef?.itemCount ?? 10) - (equipped != null ? 1 : 0);
-    final idealCount = unequippedDensity?.getIdealCount(columnWidth) ?? 5;
+    final idealCount = unequippedDensity?.getIdealItemsPerRowCount(columnWidth, bucketDefCount) ?? 5;
     final unequippedCount = ((bucketDefCount) / idealCount).ceil() * idealCount;
     final key = "${character.characterId} $bucketHash";
     return Column(

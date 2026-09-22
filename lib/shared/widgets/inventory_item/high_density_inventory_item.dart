@@ -43,6 +43,7 @@ import 'utils/get_subclass_mods_socket_category.dart';
 import 'utils/get_subclass_super_plug_item.dart';
 import 'package:little_light/utils/intrinsic_breaker_utils.dart';
 import 'package:little_light/shared/utils/extensions/breaker_type_data.dart';
+import 'utils/get_artifact_mods_socket_categories.dart';
 
 const _titleBarHeight = 32.0;
 const _titleBarIconSize = 24.0;
@@ -564,6 +565,9 @@ class HighDensityInventoryItem extends StatelessWidget with WishlistsConsumer, M
     }
     if (definition.isQuestStep) {
       return buildQuestStepMainContent(context, definition);
+    }
+    if (definition.isArtifact) {
+      return buildArtifactMainContent(context, definition);
     }
     final isStack = (definition.inventory?.maxStackSize ?? 0) > 1;
     if (isStack) {
@@ -1111,6 +1115,49 @@ class HighDensityInventoryItem extends StatelessWidget with WishlistsConsumer, M
           ),
         ),
       ],
+    );
+  }
+
+  Widget buildArtifactMainContent(BuildContext context, DestinyInventoryItemDefinition definition) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 4, bottom: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          buildItemTypeName(context, definition),
+          Expanded(
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: buildArtifactMods(context, definition),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildArtifactMods(BuildContext context, DestinyInventoryItemDefinition definition) {
+    return FutureBuilder<List<int>?>(
+      future: getArtifactModsSocketCategories(manifest, definition),
+      builder: (context, snapshot) {
+        final categoryHashes = snapshot.data;
+        if (categoryHashes == null) return const SizedBox.shrink();
+        return FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            spacing: 8,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              for (final categoryHash in categoryHashes)
+                InventoryItemMods(
+                  item,
+                  categoryHash: categoryHash,
+                  plugMargin: const EdgeInsets.all(1),
+                ),
+            ]
+          ),
+        );
+      },
     );
   }
 }

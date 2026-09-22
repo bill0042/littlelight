@@ -22,7 +22,8 @@ class AmmoTypeFilterWidget extends BaseDrawerFilterWidget<AmmoTypeFilterOptions>
       DestinyAmmunitionType.Heavy,
     ].where((e) => availableValues.contains(e));
     final hasNone = availableValues.contains(DestinyAmmunitionType.None);
-    final values = data.value;
+    final include = data.include;
+    final exclude = data.exclude;
     return Column(
       children: [
         Row(
@@ -31,9 +32,10 @@ class AmmoTypeFilterWidget extends BaseDrawerFilterWidget<AmmoTypeFilterOptions>
                 (type) => Expanded(
                   child: FilterButtonWidget(
                     buildIcon(context, type),
-                    selected: values.contains(type),
-                    onTap: () => updateOption(context, data, type, false),
-                    onLongPress: () => updateOption(context, data, type, true),
+                    selected: include.contains(type),
+                    excluded: exclude.contains(type),
+                    onTap: () => updateDiscreteOption(context, data, type, false),
+                    onLongPress: () => updateDiscreteOption(context, data, type, true),
                   ),
                 ),
               )
@@ -42,9 +44,10 @@ class AmmoTypeFilterWidget extends BaseDrawerFilterWidget<AmmoTypeFilterOptions>
         if (hasNone)
           FilterButtonWidget(
             Text("None".translate(context).toUpperCase()),
-            selected: values.contains(DestinyAmmunitionType.None),
-            onTap: () => updateOption(context, data, DestinyAmmunitionType.None, false),
-            onLongPress: () => updateOption(context, data, DestinyAmmunitionType.None, true),
+            selected: include.contains(DestinyAmmunitionType.None),
+            excluded: exclude.contains(DestinyAmmunitionType.None),
+            onTap: () => updateDiscreteOption(context, data, DestinyAmmunitionType.None, false),
+            onLongPress: () => updateDiscreteOption(context, data, DestinyAmmunitionType.None, true),
           ),
       ],
     );

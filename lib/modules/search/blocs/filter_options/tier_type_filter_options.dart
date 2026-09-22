@@ -1,7 +1,7 @@
 import 'package:bungie_api/destiny2.dart';
 import 'base_filter_values_options.dart';
 
-class TierTypeFilterOptions extends BaseFilterOptions<Set<TierType>> {
+class TierTypeFilterOptions extends BaseDiscreteFilterOptions<TierType> {
   final Map<TierType, String> names = {};
   TierTypeFilterOptions(Set<TierType> values)
     : super(

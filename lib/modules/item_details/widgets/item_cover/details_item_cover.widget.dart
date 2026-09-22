@@ -35,7 +35,8 @@ class DetailsItemCoverWidget extends StatelessWidget {
     final paddingTop = MediaQuery.of(context).padding.top;
     final screenshotHeight = width / (16 / 9);
     final minHeight = paddingTop + kToolbarHeight;
-    final hasScreenshot = (definition?.screenshot?.length ?? 0) > 0;
+    final isArtifact = definition?.isArtifact ?? false;
+    final hasScreenshot = (definition?.screenshot?.length ?? 0) > 0 && !isArtifact;
     final maxHeight = hasScreenshot ? kToolbarHeight + screenshotHeight : kToolbarHeight + paddingTop;
     return SliverPersistentHeader(
       pinned: true,
@@ -212,6 +213,9 @@ class ItemCoverContentsWidget extends StatelessWidget {
     if (definition?.isQuestStep ?? false) {
       imgUrl = styleDefinition?.secondaryIcon;
     }
+    if (definition?.isArtifact ?? false) {
+      imgUrl = null;
+    }
 
     if (imgUrl == null) {
       return Container();
@@ -246,6 +250,7 @@ class ItemCoverContentsWidget extends StatelessWidget {
   Widget? buildPrimaryStat(BuildContext context) {
     final definition = context.definition<DestinyInventoryItemDefinition>(state.itemHash);
     if (definition?.isSubclass ?? false) return null;
+    if (definition?.isArtifact ?? false) return null;
     final item = state.item;
     final statHash = definition?.stats?.primaryBaseStatHash;
     final disableStat = definition?.stats?.disablePrimaryStatDisplay ?? false;

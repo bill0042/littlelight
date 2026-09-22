@@ -17,7 +17,8 @@ class TierTypeFilterWidget extends BaseDrawerFilterWidget<TierTypeFilterOptions>
   @override
   Widget buildOptions(BuildContext context, TierTypeFilterOptions data) {
     final availableValues = data.availableValues;
-    final values = data.value;
+    final include = data.include;
+    final exclude = data.exclude;
     final orderedValues = TierType.values.where((t) => availableValues.contains(t));
     return Wrap(
       alignment: WrapAlignment.center,
@@ -31,9 +32,10 @@ class TierTypeFilterWidget extends BaseDrawerFilterWidget<TierTypeFilterOptions>
                   style: TextStyle(inherit: true, color: type.getTextColor(context)),
                 ),
                 background: Container(color: type.getColorLayer(context)),
-                selected: values.contains(type),
-                onTap: () => updateOption(context, data, type, false),
-                onLongPress: () => updateOption(context, data, type, true),
+                selected: include.contains(type),
+                excluded: exclude.contains(type),
+                onTap: () => updateDiscreteOption(context, data, type, false),
+                onLongPress: () => updateDiscreteOption(context, data, type, true),
               ),
             ),
           )

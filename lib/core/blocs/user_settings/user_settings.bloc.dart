@@ -24,6 +24,10 @@ const _defaultRandomLoadoutForceExotics = false;
 
 const _defaultEnableEyeCandy = false;
 
+const _defaultFilterTapToExclude = false;
+const _defaultTextFilterWishlistNotes = true;
+const _defaultTextFilterLoadoutName = true;
+
 class UserSettingsBloc extends ChangeNotifier with StorageConsumer, AuthConsumer {
   final BuildContext context;
   List<ItemSortParameter>? _itemOrdering;
@@ -47,6 +51,10 @@ class UserSettingsBloc extends ChangeNotifier with StorageConsumer, AuthConsumer
 
   bool? _enableEyeCandy;
 
+  bool? _filterTapToExclude;
+  bool? _textFilterWishlistNotes;
+  bool? _textFilterLoadoutName;
+
   UserSettingsBloc(this.context);
 
   init() async {
@@ -61,6 +69,7 @@ class UserSettingsBloc extends ChangeNotifier with StorageConsumer, AuthConsumer
       initScrollAreaOptions(),
       initShowClarityInsights(),
       initEnableEyeCandy(),
+      initFilterOptions(),
     ]);
     notifyListeners();
   }
@@ -146,6 +155,12 @@ class UserSettingsBloc extends ChangeNotifier with StorageConsumer, AuthConsumer
 
   Future<void> initEnableEyeCandy() async {
     _enableEyeCandy = await globalStorage.getEnableEyeCandy();
+  }
+
+  Future<void> initFilterOptions() async {
+    _filterTapToExclude = await globalStorage.getFilterTapToExclude();
+    _textFilterWishlistNotes = await globalStorage.getTextFilterWishlistNotes();
+    _textFilterLoadoutName = await globalStorage.getTextFilterLoadoutName();
   }
 
   BucketDisplayOptions? getDisplayOptionsForItemSection(String? id) {
@@ -380,6 +395,27 @@ class UserSettingsBloc extends ChangeNotifier with StorageConsumer, AuthConsumer
   set enableEyeCandy(bool value) {
     this._enableEyeCandy = value;
     globalStorage.setEnableEyeCandy(value);
+    notifyListeners();
+  }
+
+  bool get filterTapToExclude => _filterTapToExclude ?? _defaultFilterTapToExclude;
+  set filterTapToExclude(bool value) {
+    this._filterTapToExclude = value;
+    globalStorage.setFilterTapToExclude(value);
+    notifyListeners();
+  }
+
+  bool get textFilterWishlistNotes => _textFilterWishlistNotes ?? _defaultTextFilterWishlistNotes;
+  set textFilterWishlistNotes(bool value) {
+    this._textFilterWishlistNotes = value;
+    globalStorage.setTextFilterWishlistNotes(value);
+    notifyListeners();
+  }
+
+  bool get textFilterLoadoutName => _textFilterLoadoutName ?? _defaultTextFilterLoadoutName;
+  set textFilterLoadoutName(bool value) {
+    this._textFilterLoadoutName = value;
+    globalStorage.setTextFilterLoadoutName(value);
     notifyListeners();
   }
 }

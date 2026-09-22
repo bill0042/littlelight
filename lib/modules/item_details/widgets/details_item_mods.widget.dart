@@ -15,6 +15,8 @@ import 'package:little_light/shared/utils/helpers/stat_helpers.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 import 'package:little_light/core/blocs/language/language.consumer.dart';
 import 'package:provider/provider.dart';
+import 'package:little_light/utils/socket_category_hashes.dart';
+import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
 
 const _animationDuration = const Duration(milliseconds: 300);
 
@@ -53,6 +55,8 @@ class DetailsItemModsWidget extends StatelessWidget {
   Widget buildTitle(BuildContext context, bool showEnergyBar) {
     final state = context.watch<SocketControllerBloc>();
     final socketCategoryHash = socketCategory.socketCategoryHash;
+    final def = context.definition<DestinyInventoryItemDefinition>(state.itemHash);
+    final isArtifact = def?.inventory?.bucketTypeHash == InventoryBucket.artifact;
     if (showEnergyBar) {
       final total = state.availableEnergyCapacity?.equipped ?? 0;
       final used = state.usedEnergyCapacity?.selected ?? 0;
@@ -67,6 +71,13 @@ class DetailsItemModsWidget extends StatelessWidget {
           ),
         ],
       );
+    } else if (isArtifact) {
+      final text = switch (socketCategoryHash) {
+        SocketCategoryHashes.modArtifact1 => "Tier 1",
+        SocketCategoryHashes.modArtifact2 => "Tier 2",
+        _ => "Tier 3",
+      };
+      return Text(text.translate(context).toUpperCase());
     }
     return ManifestText<DestinySocketCategoryDefinition>(socketCategoryHash);
   }

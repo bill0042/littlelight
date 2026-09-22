@@ -16,7 +16,8 @@ class DamageTypeFilterWidget extends BaseDrawerFilterWidget<DamageTypeFilterOpti
   @override
   Widget buildOptions(BuildContext context, DamageTypeFilterOptions data) {
     final availableValues = data.availableValues;
-    final values = data.value;
+    final include = data.include;
+    final exclude = data.exclude;
     final validValues = DamageType.values.where((e) => availableValues.contains(e) && e != DamageType.None);
     final hasNone = availableValues.contains(DamageType.None);
     return Column(
@@ -29,9 +30,10 @@ class DamageTypeFilterWidget extends BaseDrawerFilterWidget<DamageTypeFilterOpti
                   widthFactor: 1 / math.min(validValues.length, 3),
                   child: FilterButtonWidget(
                     buildIcon(context, type),
-                    selected: values.contains(type),
-                    onTap: () => updateOption(context, data, type, false),
-                    onLongPress: () => updateOption(context, data, type, true),
+                    selected: include.contains(type),
+                    excluded: exclude.contains(type),
+                    onTap: () => updateDiscreteOption(context, data, type, false),
+                    onLongPress: () => updateDiscreteOption(context, data, type, true),
                   ),
                 ),
               )
@@ -40,9 +42,10 @@ class DamageTypeFilterWidget extends BaseDrawerFilterWidget<DamageTypeFilterOpti
         if (hasNone)
           FilterButtonWidget(
             Text("None".translate(context).toUpperCase()),
-            selected: values.contains(DamageType.None),
-            onTap: () => updateOption(context, data, DamageType.None, false),
-            onLongPress: () => updateOption(context, data, DamageType.None, true),
+            selected: include.contains(DamageType.None),
+            excluded: exclude.contains(DamageType.None),
+            onTap: () => updateDiscreteOption(context, data, DamageType.None, false),
+            onLongPress: () => updateDiscreteOption(context, data, DamageType.None, true),
           ),
       ],
     );

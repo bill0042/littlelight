@@ -1,6 +1,6 @@
 import 'base_filter_values_options.dart';
 
-class WeaponFrameFilterOptions extends BaseFilterOptions<Set<String>> {
+class WeaponFrameFilterOptions extends BaseDiscreteFilterOptions<String> {
   WeaponFrameFilterOptions(Set<String> values)
     : super(
         values.toSet(),

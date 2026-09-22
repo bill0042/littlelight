@@ -39,6 +39,9 @@ enum GlobalStorageKeys {
   randomLoadoutEquipSubclass,
   randomLoadoutForceExotics,
   enableEyeCandy,
+  filterTapToExclude,
+  textFilterWishlistNotes,
+  textFilterLoadoutName,
 }
 
 extension StorageKeysExtension on GlobalStorageKeys {

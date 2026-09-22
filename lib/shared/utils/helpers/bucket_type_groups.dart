@@ -25,6 +25,7 @@ extension InventoryTabBucketHashes on EquipmentBucketGroup {
           InventoryBucket.lostItems,
           InventoryBucket.engrams,
           InventoryBucket.ghost,
+          InventoryBucket.artifact,
           InventoryBucket.vehicle,
           InventoryBucket.ships,
           InventoryBucket.emblems,

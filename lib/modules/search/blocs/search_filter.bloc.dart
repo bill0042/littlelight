@@ -5,13 +5,19 @@ import 'package:little_light/modules/search/blocs/filter_options/deepsight_filte
 import 'package:little_light/modules/search/blocs/filter_options/main_item_type_filter_options.dart';
 import 'package:little_light/modules/search/blocs/filter_options/weapon_frame_filter_options.dart';
 import 'package:little_light/modules/search/blocs/filter_options/breaker_type_filter_options.dart';
+import 'package:little_light/modules/search/blocs/filter_options/gear_tier_filter_options.dart';
+import 'package:little_light/modules/search/blocs/filter_options/destiny_loadout_filter_options.dart';
 import 'package:little_light/modules/search/blocs/filters/crafted_filter.dart';
 import 'package:little_light/modules/search/blocs/filters/deepsight_filter.dart';
 import 'package:little_light/modules/search/blocs/filters/export.dart';
 import 'package:little_light/modules/search/blocs/filters/weapon_frame_filter.dart';
 import 'package:little_light/modules/search/blocs/filters/breaker_type_filter.dart';
+import 'package:little_light/modules/search/blocs/filters/gear_tier_filter.dart';
+import 'package:little_light/modules/search/blocs/filters/destiny_loadout_filter.dart';
 import 'filter_options/export.dart';
 import 'filters/main_item_type_filter.dart';
+import 'package:little_light/core/blocs/user_settings/user_settings.bloc.dart';
+import 'package:provider/provider.dart';
 
 _defaultSearchFilters(BuildContext context) => <Type, BaseItemFilter>{
   /// generic filters (all item types)
@@ -22,6 +28,8 @@ _defaultSearchFilters(BuildContext context) => <Type, BaseItemFilter>{
   ItemSubtypeFilterOptions: ItemSubtypeFilter(),
   TierTypeFilterOptions: TierTypeFilter(),
   ItemOwnerFilterOptions: ItemOwnerFilter(),
+  GearTierFilterOptions: GearTierFilter(),
+  DestinyLoadoutFilterOptions: DestinyLoadoutFilter(context),
 
   /// weapon filter types
   AmmoTypeFilterOptions: AmmoTypeFilter(),
@@ -35,6 +43,7 @@ _defaultSearchFilters(BuildContext context) => <Type, BaseItemFilter>{
   EnergyLevelFilterOptions: EnergyLevelFilter(),
   ClassTypeFilterOptions: ClassTypeFilter(),
   ArmorStatsFilterOptions: ArmorStatsFilter(),
+  ArmorSingleStatsFilterOptions: ArmorSingleStatsFilter(),
 
   /// LL specific stuff
   ItemTagFilterOptions: ItemTagFilter(context),
@@ -79,6 +88,33 @@ class SearchFilterBloc extends ChangeNotifier {
       elements.add(value);
     }
     type.value = elements;
+    filter.updateValue(type);
+    notifyListeners();
+  }
+
+  void changeDiscreteValue<Y, T extends BaseDiscreteFilterOptions<Y>>(T type, Y value, [bool forceAdd = false]) {
+    final filter = this._filters[T];
+    if (filter == null) return;
+    final userSettings = _context.read<UserSettingsBloc>();
+    final included = type.include.toSet();
+    final excluded = type.exclude.toSet();
+    final isIncluded = included.contains(value);
+    final isExcluded = excluded.contains(value);
+    final tapToExclude = userSettings.filterTapToExclude;
+    if (!isIncluded && !isExcluded) {
+      if (forceAdd)
+        excluded.add(value);
+      else
+        included.add(value);
+    } else if (isIncluded && (forceAdd || tapToExclude)) {
+      included.remove(value);
+      excluded.add(value);
+    } else {
+      included.remove(value);
+      excluded.remove(value);
+    }
+    type.include = included;
+    type.exclude = excluded;
     filter.updateValue(type);
     notifyListeners();
   }
