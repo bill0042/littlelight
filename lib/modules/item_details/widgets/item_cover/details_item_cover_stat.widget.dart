@@ -7,6 +7,9 @@ import 'package:little_light/shared/utils/helpers/stat_helpers.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/modules/item_details/widgets/direction_stat_bar.widget.dart';
 import 'package:tinycolor2/tinycolor2.dart';
+import 'package:little_light/shared/blocs/socket_controller/socket_controller.bloc.dart';
+import 'package:little_light/shared/widgets/stats/armor_stat_tuning_icon.widget.dart';
+import 'package:provider/provider.dart';
 
 const _barAnimationDuration = Duration(milliseconds: 300);
 
@@ -27,7 +30,7 @@ class DetailsItemCoverStatWidget extends StatelessWidget {
     return SizedBox(
       height: 30 * pixelSize,
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.end,
         children: buildParts(context),
       ),
@@ -57,13 +60,30 @@ class DetailsItemCoverStatWidget extends StatelessWidget {
   }
 
   Widget buildLabel(BuildContext context) {
-    return Container(
+    final state = context.read<SocketControllerBloc>();
+    final armorTuningStatHash = state.armorTuningStatHash;
+    return Padding(
       padding: EdgeInsets.only(right: 12 * pixelSize),
-      child: ManifestText<DestinyStatDefinition>(
-        modValues.statHash,
-        style: context.textTheme.body.copyWith(color: getBaseColor(context), fontSize: 20 * pixelSize),
-        textAlign: TextAlign.end,
-        softWrap: false,
+      child: IntrinsicHeight(
+        child: Row(
+          spacing: 2,
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (modValues.statHash == armorTuningStatHash)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 2),
+                child: ArmorStatTuningIconWidget(color: getBaseColor(context)),
+              ),
+            ManifestText<DestinyStatDefinition>(
+              modValues.statHash,
+              style: context.textTheme.body.copyWith(color: getBaseColor(context), fontSize: 20 * pixelSize),
+              textAlign: TextAlign.end,
+              softWrap: false,
+              overflow: TextOverflow.clip,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -7,6 +7,9 @@ import 'package:little_light/shared/utils/helpers/stat_helpers.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/modules/item_details/widgets/direction_stat_bar.widget.dart';
 import 'package:tinycolor2/tinycolor2.dart';
+import 'package:little_light/shared/blocs/socket_controller/socket_controller.bloc.dart';
+import 'package:little_light/shared/widgets/stats/armor_stat_tuning_icon.widget.dart';
+import 'package:provider/provider.dart';
 
 const _barAnimationDuration = Duration(milliseconds: 300);
 
@@ -39,12 +42,29 @@ class DetailsItemStatWidget extends StatelessWidget {
   }
 
   Widget buildLabel(BuildContext context) {
-    return Container(
-      child: ManifestText<DestinyStatDefinition>(
-        modValues.statHash,
-        style: context.textTheme.body.copyWith(color: getBaseColor(context)),
-        textAlign: TextAlign.end,
-        softWrap: false,
+    final state = context.read<SocketControllerBloc>();
+    final armorTuningStatHash = state.armorTuningStatHash;
+    return IntrinsicHeight(
+      child: Row(
+        spacing: 2,
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (modValues.statHash == armorTuningStatHash)
+            Padding(
+              padding: const EdgeInsets.only(top: 4, bottom: 2),
+              child: ArmorStatTuningIconWidget(color: getBaseColor(context)),
+            ),
+          Flexible(
+            child: ManifestText<DestinyStatDefinition>(
+              modValues.statHash,
+              style: context.textTheme.body.copyWith(color: getBaseColor(context)),
+              textAlign: TextAlign.end,
+              softWrap: false,
+              overflow: TextOverflow.clip,
+            ),
+          ),
+        ],
       ),
     );
   }

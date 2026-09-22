@@ -109,4 +109,7 @@ class InventoryItemSocketControllerBloc extends SocketControllerBloc<InventoryIt
   bool canApply(int socketIndex, int plugHash) {
     return super.canApply(socketIndex, plugHash) && !isEquipped(socketIndex, plugHash);
   }
+
+  @override
+  Future<int?> getArmorTuningStatHash() async => loadArmorTuningStatHash();
 }
