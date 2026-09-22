@@ -1,5 +1,6 @@
 export 'ammo_type_filter.dart';
 export 'armor_stats_filter.dart';
+export 'armor_single_stats_filter.dart';
 export 'base_item_filter.dart';
 export 'class_type_filter.dart';
 export 'damage_type_filter.dart';

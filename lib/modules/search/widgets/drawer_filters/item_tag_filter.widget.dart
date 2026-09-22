@@ -20,7 +20,8 @@ class ItemTagFilterWidget extends BaseDrawerFilterWidget<ItemTagFilterOptions> {
   Widget buildOptions(BuildContext context, ItemTagFilterOptions data) {
     final itemNotes = context.watch<ItemNotesBloc>();
     final availableValues = data.availableValues;
-    final values = data.value;
+    final include = data.include;
+    final exclude = data.exclude;
     final allTags = itemNotes.availableTags;
     final availableTags = allTags.where((t) => availableValues.contains(t.tagId));
     final showNone = availableValues.contains(null);
@@ -45,9 +46,10 @@ class ItemTagFilterWidget extends BaseDrawerFilterWidget<ItemTagFilterOptions> {
                     ],
                   ),
                   background: Container(color: tag.backgroundColor),
-                  selected: values.contains(tag.tagId),
-                  onTap: () => updateOption(context, data, tag.tagId, false),
-                  onLongPress: () => updateOption(context, data, tag.tagId, true),
+                  selected: include.contains(tag.tagId),
+                  excluded: exclude.contains(tag.tagId),
+                  onTap: () => updateDiscreteOption(context, data, tag.tagId, false),
+                  onLongPress: () => updateDiscreteOption(context, data, tag.tagId, true),
                 ),
               )
               .toList() +
@@ -69,9 +71,10 @@ class ItemTagFilterWidget extends BaseDrawerFilterWidget<ItemTagFilterOptions> {
                     ),
                   ],
                 ),
-                selected: values.contains(null),
-                onTap: () => updateOption(context, data, null, false),
-                onLongPress: () => updateOption(context, data, null, true),
+                selected: include.contains(null),
+                excluded: exclude.contains(null),
+                onTap: () => updateDiscreteOption(context, data, null, false),
+                onLongPress: () => updateDiscreteOption(context, data, null, true),
               ),
           ],
     );

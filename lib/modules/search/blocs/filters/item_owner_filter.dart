@@ -5,16 +5,11 @@ import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enu
 import 'base_item_filter.dart';
 
 class ItemOwnerFilter extends BaseItemFilter<ItemOwnerFilterOptions> {
-  ItemOwnerFilter()
-    : super(
-        ItemOwnerFilterOptions(
-          ItemOwnerValues(),
-        ),
-      );
+  ItemOwnerFilter() : super(ItemOwnerFilterOptions(<ItemOwnerValue>{}));
 
   @override
   Future<List<DestinyItemInfo>> filter(BuildContext context, List<DestinyItemInfo> items) async {
-    if (data.value.isEmpty) {
+    if (data.isEmpty) {
       return items;
     }
     return super.filter(context, items);
@@ -24,12 +19,12 @@ class ItemOwnerFilter extends BaseItemFilter<ItemOwnerFilterOptions> {
   Future<bool> filterItem(DestinyItemInfo item) async {
     final characterId = item.characterId;
     if (characterId != null) {
-      return data.value.characters.contains(characterId);
+      return data.isSelected((ownerType: ItemOwnerType.Character, ownerValue: characterId));
     }
     if (item.bucketHash == InventoryBucket.general) {
-      return data.value.vault;
+      return data.isSelected(ItemOwnerVault);
     }
-    return data.value.profile;
+    return data.isSelected(ItemOwnerProfile);
   }
 
   @override
@@ -37,15 +32,14 @@ class ItemOwnerFilter extends BaseItemFilter<ItemOwnerFilterOptions> {
     for (final item in items) {
       final characterId = item.characterId;
       if (characterId != null) {
-        data.availableValues.characters.add(characterId);
+        data.availableValues.add((ownerType: ItemOwnerType.Character, ownerValue: characterId));
         continue;
       }
       if (item.bucketHash == InventoryBucket.general) {
-        data.availableValues.vault = true;
+        data.availableValues.add(ItemOwnerVault);
         continue;
       }
-
-      data.availableValues.profile = true;
+      data.availableValues.add(ItemOwnerProfile);
     }
   }
 

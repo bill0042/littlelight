@@ -10,7 +10,7 @@ class TierTypeFilter extends BaseItemFilter<TierTypeFilterOptions> with Manifest
 
   @override
   Future<List<DestinyItemInfo>> filter(BuildContext context, List<DestinyItemInfo> items) async {
-    if (data.value.isEmpty) return items;
+    if (data.isEmpty) return items;
     return super.filter(context, items);
   }
 
@@ -18,7 +18,7 @@ class TierTypeFilter extends BaseItemFilter<TierTypeFilterOptions> with Manifest
   Future<bool> filterItem(DestinyItemInfo item) async {
     final hash = item.itemHash;
     final def = await manifest.getDefinition<DestinyInventoryItemDefinition>(hash);
-    return data.value.contains(def?.inventory?.tierType);
+    return data.isSelected(def?.inventory?.tierType);
   }
 
   @override

@@ -20,7 +20,8 @@ class WishlistTagsFilterWidget extends BaseDrawerFilterWidget<WishlistTagFilterO
   @override
   Widget buildOptions(BuildContext context, WishlistTagFilterOptions data) {
     final availableValues = data.availableValues;
-    final values = data.value;
+    final include = data.include;
+    final exclude = data.exclude;
     final allTags = [WishlistTag.GodPVE, WishlistTag.GodPVP, WishlistTag.PVE, WishlistTag.PVP];
     final availableTags = allTags.where((t) => availableValues.contains(t));
     final showNone = availableValues.contains(null);
@@ -45,9 +46,10 @@ class WishlistTagsFilterWidget extends BaseDrawerFilterWidget<WishlistTagFilterO
                     ],
                   ),
                   background: Container(color: tag.getColor(context)),
-                  selected: values.contains(tag),
-                  onTap: () => updateOption(context, data, tag, false),
-                  onLongPress: () => updateOption(context, data, tag, true),
+                  selected: include.contains(tag),
+                  excluded: exclude.contains(tag),
+                  onTap: () => updateDiscreteOption(context, data, tag, false),
+                  onLongPress: () => updateDiscreteOption(context, data, tag, true),
                 ),
               )
               .toList() +
@@ -69,9 +71,10 @@ class WishlistTagsFilterWidget extends BaseDrawerFilterWidget<WishlistTagFilterO
                     ),
                   ],
                 ),
-                selected: values.contains(null),
-                onTap: () => updateOption(context, data, null, false),
-                onLongPress: () => updateOption(context, data, null, true),
+                selected: include.contains(null),
+                excluded: exclude.contains(null),
+                onTap: () => updateDiscreteOption(context, data, null, false),
+                onLongPress: () => updateDiscreteOption(context, data, null, true),
               ),
           ],
     );

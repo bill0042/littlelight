@@ -13,7 +13,7 @@ class LoadoutFilter extends BaseItemFilter<LoadoutFilterOptions> {
 
   @override
   Future<List<DestinyItemInfo>> filter(BuildContext context, List<DestinyItemInfo> items) async {
-    if (data.value.isEmpty) {
+    if (data.isEmpty) {
       return items;
     }
     return super.filter(context, items);
@@ -25,12 +25,12 @@ class LoadoutFilter extends BaseItemFilter<LoadoutFilterOptions> {
     if (instanceId == null) return false;
     final itemLoadouts = _loadoutsByItem[instanceId];
     if (itemLoadouts == null || itemLoadouts.isEmpty) {
-      if (data.value.contains(null)) {
+      if (data.isSelected(null)) {
         return true;
       }
       return false;
     }
-    return itemLoadouts.any((id) => data.value.contains(id));
+    return data.anySelected(itemLoadouts);
   }
 
   @override

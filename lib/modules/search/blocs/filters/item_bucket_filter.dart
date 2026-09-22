@@ -10,7 +10,7 @@ class ItemBucketFilter extends BaseItemFilter<ItemBucketFilterOptions> with Mani
 
   @override
   Future<List<DestinyItemInfo>> filter(BuildContext context, List<DestinyItemInfo> items) async {
-    if (data.value.isEmpty) {
+    if (data.isEmpty) {
       return items;
     }
     return super.filter(context, items);
@@ -20,7 +20,7 @@ class ItemBucketFilter extends BaseItemFilter<ItemBucketFilterOptions> with Mani
   Future<bool> filterItem(DestinyItemInfo item) async {
     final hash = item.itemHash;
     final def = await manifest.getDefinition<DestinyInventoryItemDefinition>(hash);
-    return data.value.contains(def?.inventory?.bucketTypeHash);
+    return data.isSelected(def?.inventory?.bucketTypeHash);
   }
 
   @override

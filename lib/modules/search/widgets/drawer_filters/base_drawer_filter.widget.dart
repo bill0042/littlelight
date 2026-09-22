@@ -68,3 +68,9 @@ extension BaseSetFilterWidget<Y, T extends BaseFilterOptions<Set<Y>>> on BaseFil
     context.read<SearchFilterBloc>().changeSetValue(data, option, forceAdd);
   }
 }
+
+extension BaseDiscreteFilterWidget<Y, T extends BaseDiscreteFilterOptions<Y>> on BaseFilterWidget<T> {
+  void updateDiscreteOption(BuildContext context, T data, Y option, bool forceAdd) {
+    context.read<SearchFilterBloc>().changeDiscreteValue(data, option, forceAdd);
+  }
+}

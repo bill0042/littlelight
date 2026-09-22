@@ -13,7 +13,7 @@ class ItemTagFilter extends BaseItemFilter<ItemTagFilterOptions> {
 
   @override
   Future<List<DestinyItemInfo>> filter(BuildContext context, List<DestinyItemInfo> items) async {
-    if (data.value.isEmpty) {
+    if (data.isEmpty) {
       return items;
     }
     return super.filter(context, items);
@@ -27,9 +27,11 @@ class ItemTagFilter extends BaseItemFilter<ItemTagFilterOptions> {
 
     final tags = _itemNotes?.tagIdsFor(hash, instanceId);
     if (tags == null || tags.isEmpty) {
-      return data.value.contains(null);
+      return data.isSelected(null);
+      //return data.value.contains(null);
     }
-    return data.value.any((element) => tags.contains(element));
+    return data.anySelected(tags);
+    //return data.value.any((element) => tags.contains(element));
   }
 
   @override

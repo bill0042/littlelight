@@ -14,16 +14,16 @@ class BreakerTypeFilter extends BaseItemFilter<BreakerTypeFilterOptions>
 
   @override
   Future<List<DestinyItemInfo>> filter(BuildContext context, List<DestinyItemInfo> items) async {
-    if (data.value.isNotEmpty) {
-      return super.filter(context, items);
+    if (data.isEmpty) {
+      return items;
     }
-    return items;
+    return super.filter(context, items);
   }
 
   @override
   Future<bool> filterItem(DestinyItemInfo item) async {
     final breakerType = await IntrinsicBreakerUtils.getWeaponBreakerType(manifest, littleLightData, item.itemHash);
-    return data.value.contains(breakerType);
+    return data.isSelected(breakerType);
   }
 
   @override

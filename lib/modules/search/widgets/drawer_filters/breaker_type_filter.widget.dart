@@ -21,7 +21,6 @@ class BreakerTypeFilterWidget extends BaseDrawerFilterWidget<BreakerTypeFilterOp
       DestinyBreakerType.Stagger,
       DestinyBreakerType.Disruption,
     ].where((e) => availableValues.contains(e));
-    final values = data.value;
     return Column(
       children: [
         Row(
@@ -30,9 +29,10 @@ class BreakerTypeFilterWidget extends BaseDrawerFilterWidget<BreakerTypeFilterOp
                 (type) => Expanded(
                   child: FilterButtonWidget(
                     buildIcon(context, type),
-                    selected: values.contains(type),
-                    onTap: () => updateOption(context, data, type, false),
-                    onLongPress: () => updateOption(context, data, type, true),
+                    selected: data.include.contains(type),
+                    excluded: data.exclude.contains(type),
+                    onTap: () => updateDiscreteOption(context, data, type, false),
+                    onLongPress: () => updateDiscreteOption(context, data, type, true),
                   ),
                 ),
               )

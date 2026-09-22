@@ -22,7 +22,9 @@ class ClassTypeFilterWidget extends BaseDrawerFilterWidget<ClassTypeFilterOption
       DestinyClass.Warlock,
     ].where((e) => availableValues.contains(e));
     final hasNone = availableValues.contains(DestinyClass.Unknown);
-    final values = data.value;
+    final include = data.include;
+    final exclude = data.exclude;
+    final noneType = DestinyClass.Unknown;
     return Column(
       children: [
         Row(
@@ -31,9 +33,10 @@ class ClassTypeFilterWidget extends BaseDrawerFilterWidget<ClassTypeFilterOption
                 (type) => Expanded(
                   child: FilterButtonWidget(
                     buildIcon(context, type),
-                    selected: values.contains(type),
-                    onTap: () => updateOption(context, data, type, false),
-                    onLongPress: () => updateOption(context, data, type, true),
+                    selected: include.contains(type),
+                    excluded: exclude.contains(type),
+                    onTap: () => updateDiscreteOption(context, data, type, false),
+                    onLongPress: () => updateDiscreteOption(context, data, type, true),
                   ),
                 ),
               )
@@ -42,9 +45,10 @@ class ClassTypeFilterWidget extends BaseDrawerFilterWidget<ClassTypeFilterOption
         if (hasNone)
           FilterButtonWidget(
             Text("None".translate(context).toUpperCase()),
-            selected: values.contains(DestinyClass.Unknown),
-            onTap: () => updateOption(context, data, DestinyClass.Unknown, false),
-            onLongPress: () => updateOption(context, data, DestinyClass.Unknown, true),
+            selected: include.contains(noneType),
+            excluded: exclude.contains(noneType),
+            onTap: () => updateDiscreteOption(context, data, noneType, false),
+            onLongPress: () => updateDiscreteOption(context, data, noneType, true),
           ),
       ],
     );
