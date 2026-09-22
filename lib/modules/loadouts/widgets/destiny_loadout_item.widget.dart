@@ -51,6 +51,9 @@ class DestinyLoadoutItemWidget extends StatelessWidget {
         ],
       );
     }
+    if (def?.isArtifact ?? false) {
+      return buildModIcons(context, []);
+    }
     return Container();
   }
 

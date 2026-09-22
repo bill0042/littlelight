@@ -92,6 +92,15 @@ class DestinyLoadoutDetailsView extends StatelessWidget {
                   child: BackButton(),
                 ),
                 Container(
+                  padding: const EdgeInsets.only(right: 8),
+                  height: kToolbarHeight,
+                  alignment: Alignment.center,
+                  child: Text(
+                    (state.loadoutIndex + 1).toString(),
+                    style: context.textTheme.itemNameHighDensity.copyWith(fontSize: 16),
+                  ),
+                ),
+                Container(
                   height: kToolbarHeight,
                   alignment: Alignment.center,
                   child: ManifestText<DestinyLoadoutNameDefinition>(
@@ -298,6 +307,7 @@ class DestinyLoadoutDetailsView extends StatelessWidget {
         buildLoadoutItem(context, items[InventoryBucket.chestArmor]),
         buildLoadoutItem(context, items[InventoryBucket.legArmor]),
         buildLoadoutItem(context, items[InventoryBucket.classArmor]),
+        buildLoadoutItem(context, items[InventoryBucket.artifact]),
       ],
     );
   }
